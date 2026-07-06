@@ -230,46 +230,44 @@ export default function GamePage() {
 }
 
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
-  const [src, setSrc] = useState('')
   const [visible, setVisible] = useState<'pending' | 'show' | 'hide'>('pending')
-
-  useEffect(() => {
-    setVisible('pending')
-
+  const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
+    if (!node) return
+    // Give the GameMonetize video API up to 8s to inject content, then hide if empty
+    const timer = setTimeout(() => setVisible('hide'), 8000)
     const handleMessage = (e: MessageEvent) => {
-      if (e.data?.type === 'gm-wt') setVisible(e.data.ok ? 'show' : 'hide')
+      if (e.data?.type === 'gm-wt') {
+        clearTimeout(timer)
+        setVisible(e.data.ok ? 'show' : 'hide')
+      }
     }
     window.addEventListener('message', handleMessage)
-
-    // Poll every 200ms for up to 6s, then report to parent
-    const script = [
-      `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#3f007e",getAds:"false"};`,
-      `(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js?v="+Date.now(),d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-video-api");`,
-      `var _n=0,_iv=setInterval(function(){`,
-      `var el=document.getElementById("gamemonetize-video");`,
-      `if(el&&el.children.length>0){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:true},"*");}`,
-      `else if(++_n>30){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:false},"*");}`,
-      `},200);`,
-    ].join('')
-
-    const html = [
-      '<!DOCTYPE html><html><head>',
-      '<style>*{box-sizing:border-box}body{margin:0;padding:0;}</style>',
-      '</head><body>',
-      '<div id="gamemonetize-video"></div>',
-      `<script type="text/javascript">${script}<\/script>`,
-      '</body></html>',
-    ].join('')
-
-    const blob = new Blob([html], { type: 'text/html' })
-    const url = URL.createObjectURL(blob)
-    setSrc(url)
-
     return () => {
+      clearTimeout(timer)
       window.removeEventListener('message', handleMessage)
-      URL.revokeObjectURL(url)
     }
   }, [gameId])
+
+  const script = [
+    `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#1a56db",getAds:"false"};`,
+    `(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js?v="+Date.now(),d.parentNode.insertBefore(a,d))})(document,"script","gm-video-api");`,
+    `var _n=0,_iv=setInterval(function(){`,
+    `var el=document.getElementById("gamemonetize-video");`,
+    `if(el&&el.children.length>0){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:true},"*");}`,
+    `else if(++_n>40){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:false},"*");}`,
+    `},200);`,
+  ].join('')
+
+  const html = [
+    '<!DOCTYPE html><html><head>',
+    '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000}</style>',
+    '</head><body>',
+    '<div id="gamemonetize-video"></div>',
+    `<script>${script}<\/script>`,
+    '</body></html>',
+  ].join('')
+
+  const src = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
 
   if (visible === 'hide') return null
 
@@ -278,14 +276,14 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
       <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
         {title} — Walkthrough
       </h2>
-      {src && (
-        <iframe
-          src={src}
-          style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
-          allow="autoplay"
-          title={`${title} walkthrough`}
-        />
-      )}
+      <iframe
+        ref={iframeRef}
+        src={src}
+        style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
+        allow="autoplay"
+        sandbox="allow-scripts allow-same-origin"
+        title={`${title} walkthrough`}
+      />
     </div>
   )
 }
