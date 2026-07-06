@@ -194,8 +194,10 @@ export default function GamePage() {
 
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [hasContent, setHasContent] = useState<boolean | null>(null) // null = loading
 
   useEffect(() => {
+    setHasContent(null)
     const container = containerRef.current
     if (!container) return
 
@@ -205,17 +207,31 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
     const existing = document.getElementById(scriptId)
     if (existing) existing.remove()
 
-    // Target div that walkthrough.js looks for
     const target = document.createElement('div')
     target.id = 'gamemonetize-video'
     container.appendChild(target)
+
+    // Watch for the script injecting content into the target div
+    const observer = new MutationObserver(() => {
+      if (target.children.length > 0 || target.innerHTML.trim() !== '') {
+        setHasContent(true)
+        observer.disconnect()
+      }
+    })
+    observer.observe(target, { childList: true, subtree: true, characterData: true })
+
+    // If nothing appears within 4 seconds, the game has no walkthrough
+    const timeout = setTimeout(() => {
+      observer.disconnect()
+      setHasContent(prev => prev === null ? false : prev)
+    }, 4000)
 
     ;(window as Window & typeof globalThis & { gm_walkthrough?: object }).gm_walkthrough = {
       game: gameId,
       width: '100%',
       height: '480',
       color: '#007bff',
-      getAds: 'false',
+      getAds: 'true',
     }
 
     const script = document.createElement('script')
@@ -225,17 +241,21 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
     container.appendChild(script)
 
     return () => {
+      clearTimeout(timeout)
+      observer.disconnect()
       script.remove()
       container.innerHTML = ''
     }
   }, [gameId])
+
+  if (hasContent === false) return null
 
   return (
     <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
       <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
         {title} — Walkthrough
       </h2>
-      <div ref={containerRef} />
+      <div ref={containerRef} style={{ minHeight: hasContent ? undefined : '60px' }} />
     </div>
   )
 }
