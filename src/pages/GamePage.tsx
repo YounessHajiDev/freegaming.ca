@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Eye } from 'lucide-react'
@@ -195,41 +195,15 @@ export default function GamePage() {
   )
 }
 
+type WinWithVideo = Window & typeof globalThis & { VIDEO_OPTIONS?: object }
+
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [hasContent, setHasContent] = useState<boolean | null>(null)
-
   useEffect(() => {
-    setHasContent(null)
-    const container = containerRef.current
-    if (!container) return
+    // Clean up any previous script instance so video.js re-initialises on navigation
+    document.getElementById('gamemonetize-video-api')?.remove()
+    document.getElementById('gamemonetize-video')?.innerHTML
 
-    container.innerHTML = ''
-
-    // Remove any prior script instance
-    const existing = document.getElementById('gamemonetize-video-api')
-    if (existing) existing.remove()
-
-    // Target div the video.js script looks for
-    const target = document.createElement('div')
-    target.id = 'gamemonetize-video'
-    container.appendChild(target)
-
-    // Watch for the script injecting content
-    const observer = new MutationObserver(() => {
-      if (target.children.length > 0 || target.innerHTML.trim() !== '') {
-        setHasContent(true)
-        observer.disconnect()
-      }
-    })
-    observer.observe(target, { childList: true, subtree: true })
-
-    const timeout = setTimeout(() => {
-      observer.disconnect()
-      setHasContent(prev => prev === null ? false : prev)
-    }, 5000)
-
-    ;(window as Window & typeof globalThis & { VIDEO_OPTIONS?: object }).VIDEO_OPTIONS = {
+    ;(window as WinWithVideo).VIDEO_OPTIONS = {
       gameid: gameId,
       width: '100%',
       height: '480px',
@@ -237,29 +211,28 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
       getAds: 'false',
     }
 
-    const script = document.createElement('script')
-    script.id = 'gamemonetize-video-api'
-    script.src = 'https://api.gamemonetize.com/video.js'
-    script.async = true
-    container.appendChild(script)
+    // Replicate the exact IIFE from the GameMonetize embed:
+    // insert the script before the first <script> tag in the document
+    const firstScript = document.getElementsByTagName('script')[0]
+    const s = document.createElement('script')
+    s.id = 'gamemonetize-video-api'
+    s.src = 'https://api.gamemonetize.com/video.js'
+    firstScript.parentNode!.insertBefore(s, firstScript)
 
     return () => {
-      clearTimeout(timeout)
-      observer.disconnect()
       document.getElementById('gamemonetize-video-api')?.remove()
-      container.innerHTML = ''
-      delete (window as Window & typeof globalThis & { VIDEO_OPTIONS?: object }).VIDEO_OPTIONS
+      delete (window as WinWithVideo).VIDEO_OPTIONS
+      const el = document.getElementById('gamemonetize-video')
+      if (el) el.innerHTML = ''
     }
   }, [gameId])
-
-  if (hasContent === false) return null
 
   return (
     <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
       <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
         {title} — Walkthrough
       </h2>
-      <div ref={containerRef} />
+      <div id="gamemonetize-video" />
     </div>
   )
 }
