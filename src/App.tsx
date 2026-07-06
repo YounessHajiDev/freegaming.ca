@@ -5,6 +5,11 @@ import GamePage from './pages/GamePage'
 import CategoryPage from './pages/CategoryPage'
 import PopularPage from './pages/PopularPage'
 import NewGamesPage from './pages/NewGamesPage'
+import SearchPage from './pages/SearchPage'
+import AboutPage from './pages/AboutPage'
+import ContactPage from './pages/ContactPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsPage from './pages/TermsPage'
 import AdminPage from './pages/AdminPage'
 import PinterestPinsPage from './pages/PinterestPinsPage'
 import FreeGamesPage from './pages/seo/FreeGamesPage'
@@ -25,6 +30,11 @@ export default function App() {
           <Route path="/category/:slug" element={<CategoryPage />} />
           <Route path="/popular" element={<PopularPage />} />
           <Route path="/new-games" element={<NewGamesPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-of-service" element={<TermsPage />} />
           <Route path="/free-games" element={<FreeGamesPage />} />
           <Route path="/play-online" element={<PlayOnlinePage />} />
           <Route path="/unblocked-games" element={<UnblockedGamesPage />} />
