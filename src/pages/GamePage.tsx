@@ -149,6 +149,22 @@ export default function GamePage() {
               <span className="badge badge-free">Free</span>
             </div>
           </div>
+
+          {/* Walkthrough — GameMonetize games only */}
+          {game.source === 'GAMEMONETIZE' && game.source_id && (
+            <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
+              <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>Game Walkthrough</h2>
+              <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'var(--bg-base)' }}>
+                <iframe
+                  src={`https://walkthrough.gamemonetize.com/?game=${game.source_id}&width=100%&height=100%&color=%23007bff&getAds=false`}
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+                  allowFullScreen
+                  loading="lazy"
+                  title={`${game.title} walkthrough`}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sidebar — related games */}
