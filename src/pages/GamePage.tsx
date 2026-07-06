@@ -199,14 +199,17 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
     const container = containerRef.current
     if (!container) return
 
-    // Clean up any prior instance when gameId changes
     container.innerHTML = ''
 
     const scriptId = `gm-walkthrough-${gameId}`
     const existing = document.getElementById(scriptId)
     if (existing) existing.remove()
 
-    // GameMonetize walkthrough config must be set before the script loads
+    // Target div that walkthrough.js looks for
+    const target = document.createElement('div')
+    target.id = 'gamemonetize-video'
+    container.appendChild(target)
+
     ;(window as Window & typeof globalThis & { gm_walkthrough?: object }).gm_walkthrough = {
       game: gameId,
       width: '100%',
