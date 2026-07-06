@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Eye } from 'lucide-react'
@@ -152,18 +152,7 @@ export default function GamePage() {
 
           {/* Walkthrough — GameMonetize games only */}
           {game.source === 'GAMEMONETIZE' && game.source_id && (
-            <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
-              <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>Game Walkthrough</h2>
-              <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'var(--bg-base)' }}>
-                <iframe
-                  src={`https://walkthrough.gamemonetize.com/?game=${game.source_id}&width=100%&height=100%&color=%23007bff&getAds=false`}
-                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
-                  allowFullScreen
-                  loading="lazy"
-                  title={`${game.title} walkthrough`}
-                />
-              </div>
-            </div>
+            <GameWalkthrough gameId={game.source_id} title={game.title} />
           )}
         </div>
 
@@ -200,5 +189,50 @@ export default function GamePage() {
         </section>
       )}
     </>
+  )
+}
+
+function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    // Clean up any prior instance when gameId changes
+    container.innerHTML = ''
+
+    const scriptId = `gm-walkthrough-${gameId}`
+    const existing = document.getElementById(scriptId)
+    if (existing) existing.remove()
+
+    // GameMonetize walkthrough config must be set before the script loads
+    ;(window as Window & typeof globalThis & { gm_walkthrough?: object }).gm_walkthrough = {
+      game: gameId,
+      width: '100%',
+      height: '480',
+      color: '#007bff',
+      getAds: 'false',
+    }
+
+    const script = document.createElement('script')
+    script.id = scriptId
+    script.src = 'https://gamemonetize.com/walkthrough.js'
+    script.async = true
+    container.appendChild(script)
+
+    return () => {
+      script.remove()
+      container.innerHTML = ''
+    }
+  }, [gameId])
+
+  return (
+    <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
+      <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
+        {title} — Walkthrough
+      </h2>
+      <div ref={containerRef} />
+    </div>
   )
 }
