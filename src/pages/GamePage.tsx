@@ -197,17 +197,33 @@ export default function GamePage() {
 
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
   const [src, setSrc] = useState('')
+  const [visible, setVisible] = useState<'pending' | 'show' | 'hide'>('pending')
 
   useEffect(() => {
+    setVisible('pending')
+
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.type === 'gm-wt') setVisible(e.data.ok ? 'show' : 'hide')
+    }
+    window.addEventListener('message', handleMessage)
+
+    // Poll every 200ms for up to 6s, then report to parent
+    const script = [
+      `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#3f007e",getAds:"false"};`,
+      `(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js?v="+Date.now(),d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-video-api");`,
+      `var _n=0,_iv=setInterval(function(){`,
+      `var el=document.getElementById("gamemonetize-video");`,
+      `if(el&&el.children.length>0){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:true},"*");}`,
+      `else if(++_n>30){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:false},"*");}`,
+      `},200);`,
+    ].join('')
+
     const html = [
       '<!DOCTYPE html><html><head>',
-      '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000}</style>',
+      '<style>*{box-sizing:border-box}body{margin:0;padding:0;}</style>',
       '</head><body>',
       '<div id="gamemonetize-video"></div>',
-      '<script type="text/javascript">',
-      `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#3f007e",getAds:"false"};`,
-      '(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-video-api");',
-      '<\/script>',
+      `<script type="text/javascript">${script}<\/script>`,
       '</body></html>',
     ].join('')
 
@@ -215,22 +231,27 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
     const url = URL.createObjectURL(blob)
     setSrc(url)
 
-    return () => URL.revokeObjectURL(url)
+    return () => {
+      window.removeEventListener('message', handleMessage)
+      URL.revokeObjectURL(url)
+    }
   }, [gameId])
 
-  if (!src) return null
+  if (visible === 'hide') return null
 
   return (
     <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
       <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
         {title} — Walkthrough
       </h2>
-      <iframe
-        src={src}
-        style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
-        allow="autoplay"
-        title={`${title} walkthrough`}
-      />
+      {src && (
+        <iframe
+          src={src}
+          style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
+          allow="autoplay"
+          title={`${title} walkthrough`}
+        />
+      )}
     </div>
   )
 }
