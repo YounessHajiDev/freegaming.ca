@@ -194,7 +194,7 @@ export default function GamePage() {
 
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [hasContent, setHasContent] = useState<boolean | null>(null) // null = loading
+  const [hasContent, setHasContent] = useState<boolean | null>(null)
 
   useEffect(() => {
     setHasContent(null)
@@ -203,48 +203,49 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
 
     container.innerHTML = ''
 
-    const scriptId = `gm-walkthrough-${gameId}`
-    const existing = document.getElementById(scriptId)
+    // Remove any prior script instance
+    const existing = document.getElementById('gamemonetize-video-api')
     if (existing) existing.remove()
 
+    // Target div the video.js script looks for
     const target = document.createElement('div')
     target.id = 'gamemonetize-video'
     container.appendChild(target)
 
-    // Watch for the script injecting content into the target div
+    // Watch for the script injecting content
     const observer = new MutationObserver(() => {
       if (target.children.length > 0 || target.innerHTML.trim() !== '') {
         setHasContent(true)
         observer.disconnect()
       }
     })
-    observer.observe(target, { childList: true, subtree: true, characterData: true })
+    observer.observe(target, { childList: true, subtree: true })
 
-    // If nothing appears within 4 seconds, the game has no walkthrough
     const timeout = setTimeout(() => {
       observer.disconnect()
       setHasContent(prev => prev === null ? false : prev)
-    }, 4000)
+    }, 5000)
 
-    ;(window as Window & typeof globalThis & { gm_walkthrough?: object }).gm_walkthrough = {
-      game: gameId,
+    ;(window as Window & typeof globalThis & { VIDEO_OPTIONS?: object }).VIDEO_OPTIONS = {
+      gameid: gameId,
       width: '100%',
-      height: '480',
+      height: '480px',
       color: '#007bff',
-      getAds: 'true',
+      getAds: 'false',
     }
 
     const script = document.createElement('script')
-    script.id = scriptId
-    script.src = 'https://gamemonetize.com/walkthrough.js'
+    script.id = 'gamemonetize-video-api'
+    script.src = 'https://api.gamemonetize.com/video.js'
     script.async = true
     container.appendChild(script)
 
     return () => {
       clearTimeout(timeout)
       observer.disconnect()
-      script.remove()
+      document.getElementById('gamemonetize-video-api')?.remove()
       container.innerHTML = ''
+      delete (window as Window & typeof globalThis & { VIDEO_OPTIONS?: object }).VIDEO_OPTIONS
     }
   }, [gameId])
 
@@ -255,7 +256,7 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
       <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
         {title} — Walkthrough
       </h2>
-      <div ref={containerRef} style={{ minHeight: hasContent ? undefined : '60px' }} />
+      <div ref={containerRef} />
     </div>
   )
 }
