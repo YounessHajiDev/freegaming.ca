@@ -1,0 +1,28 @@
+# FreeGaming.ca
+
+## About
+FreeGaming.ca is Canada's free online games portal for English-speaking Canadians.
+Hundreds of HTML5 browser games playable instantly — no download, no signup required.
+
+## Categories
+Puzzle, Racing, Sports, Shooting, Card Games, Strategy, Arcade, Adventure,
+Multiplayer, Thinking Games, Action, Casual, IO Games
+
+## URL
+https://www.freegaming.ca
+
+## Language
+en-CA (Canadian English)
+
+## Target Audience
+English-speaking Canadians, all ages, all provinces
+
+## Key Facts
+- Free to play, forever
+- No download or account required
+- Works on desktop, tablet, and mobile
+- Updated daily with new games
+- Based in Canada (.ca domain)
+
+## Sitemap
+https://www.freegaming.ca/sitemap.xml
