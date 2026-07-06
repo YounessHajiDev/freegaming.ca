@@ -69,6 +69,54 @@ export default function GamePage() {
   const pageTitle = `${game.title} — Play Free Online | ${catName} | FreeGaming.ca`
   const pageDesc = `Play ${game.title} for free online at FreeGaming.ca. No download, no signup — just click and play! ${catName} game for desktop and mobile.`
 
+  const multiplayerTags = ['multiplayer', '2-player', 'two-player', 'co-op', 'coop', 'pvp', 'versus', 'online']
+  const isMultiplayer = game.tags?.some(t => multiplayerTags.includes(t.toLowerCase()))
+  const datePublished = game.created_at?.split('T')[0]
+  const dateModified  = game.updated_at?.split('T')[0]
+
+  const gameSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": game.title,
+    "description": game.description,
+    "image": game.thumbnail,
+    "screenshot": { "@type": "ImageObject", "url": game.thumbnail, "description": `Screenshot of ${game.title}` },
+    "url": `https://www.freegaming.ca/games/${game.slug}/`,
+    "genre": catName,
+    "keywords": game.tags?.join(', ') || undefined,
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web Browser",
+    "gamePlatform": ["Web Browser", "Mobile Browser"],
+    "playMode": isMultiplayer ? "MultiPlayer" : "SinglePlayer",
+    "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": isMultiplayer ? 2 : 1 },
+    "contentRating": "Everyone",
+    "interactivityType": "active",
+    "isAccessibleForFree": true,
+    "isFamilyFriendly": true,
+    "inLanguage": "en",
+    "datePublished": datePublished || undefined,
+    "dateModified": dateModified || undefined,
+    "publisher": { "@type": "Organization", "name": "FreeGaming.ca", "url": "https://www.freegaming.ca" },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CAD",
+      "availability": "https://schema.org/InStock",
+      "url": `https://www.freegaming.ca/games/${game.slug}/`
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": `https://www.freegaming.ca/games/${game.slug}/` }
+  }
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.freegaming.ca/" },
+      { "@type": "ListItem", "position": 2, "name": catName, "item": `https://www.freegaming.ca/category/${catSlug}/` },
+      { "@type": "ListItem", "position": 3, "name": game.title, "item": `https://www.freegaming.ca/games/${game.slug}/` },
+    ]
+  }
+
   return (
     <>
       <Helmet>
@@ -81,6 +129,8 @@ export default function GamePage() {
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDesc.slice(0, 165)} />
         <meta property="og:image" content={game.thumbnail} />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="384" />
         <meta property="og:image:alt" content={`Play ${game.title} free online`} />
         <meta property="og:locale" content="en_CA" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -88,42 +138,8 @@ export default function GamePage() {
         <meta name="twitter:description" content={`Play ${game.title} free in your browser. No download needed.`} />
         <meta name="twitter:image" content={game.thumbnail} />
         <meta name="twitter:image:alt" content={`${game.title} game screenshot`} />
-        <script type="application/ld+json">{JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "VideoGame",
-          "name": game.title,
-          "description": game.description,
-          "image": game.thumbnail,
-          "url": `https://www.freegaming.ca/games/${game.slug}/`,
-          "genre": catName,
-          "keywords": game.tags?.slice(0, 10).join(', '),
-          "isAccessibleForFree": true,
-          "applicationCategory": "Game",
-          "operatingSystem": "Web Browser",
-          "gamePlatform": ["Web Browser", "Mobile Browser"],
-          "inLanguage": "en",
-          "publisher": {
-            "@type": "Organization",
-            "name": "FreeGaming.ca",
-            "url": "https://www.freegaming.ca"
-          },
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "CAD",
-            "availability": "https://schema.org/InStock",
-            "url": `https://www.freegaming.ca/games/${game.slug}/`
-          }
-        })}</script>
-        <script type="application/ld+json">{JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.freegaming.ca/" },
-            { "@type": "ListItem", "position": 2, "name": catName, "item": `https://www.freegaming.ca/category/${catSlug}/` },
-            { "@type": "ListItem", "position": 3, "name": game.title, "item": `https://www.freegaming.ca/games/${game.slug}/` },
-          ]
-        })}</script>
+        <script type="application/ld+json">{JSON.stringify(gameSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
       </Helmet>
 
       {/* Breadcrumb */}
