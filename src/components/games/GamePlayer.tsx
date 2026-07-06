@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Play, Maximize2 } from 'lucide-react'
 import type { Game } from '../../lib/types'
 
@@ -6,8 +6,48 @@ interface Props {
   game: Game
 }
 
+function extractGmToken(iframeUrl: string): string | null {
+  try {
+    return new URL(iframeUrl).pathname.split('/').filter(Boolean)[0] ?? null
+  } catch {
+    return null
+  }
+}
+
 export default function GamePlayer({ game }: Props) {
   const [playing, setPlaying] = useState(false)
+  const [adPaused, setAdPaused] = useState(false)
+
+  const gmToken = game.source === 'GAMEMONETIZE' ? extractGmToken(game.iframe_url) : null
+
+  useEffect(() => {
+    if (!playing || !gmToken) return
+
+    ;(window as Window & { SDK_OPTIONS?: unknown }).SDK_OPTIONS = {
+      gameId: gmToken,
+      onEvent(e: { name: string }) {
+        if (e.name === 'SDK_GAME_PAUSE') setAdPaused(true)
+        if (e.name === 'SDK_GAME_START') setAdPaused(false)
+        if (e.name === 'SDK_READY') {
+          const sdk = (window as Window & { sdk?: { showBanner(): void } }).sdk
+          sdk?.showBanner()
+        }
+      },
+    }
+
+    if (!document.getElementById('gamemonetize-sdk')) {
+      const s = document.createElement('script')
+      s.id = 'gamemonetize-sdk'
+      s.src = 'https://api.gamemonetize.com/sdk.js'
+      document.head.appendChild(s)
+    }
+
+    return () => {
+      document.getElementById('gamemonetize-sdk')?.remove()
+      delete (window as Window & { SDK_OPTIONS?: unknown }).SDK_OPTIONS
+      setAdPaused(false)
+    }
+  }, [playing, gmToken])
 
   if (!playing) {
     return (
@@ -68,7 +108,8 @@ export default function GamePlayer({ game }: Props) {
           <Maximize2 size={16} />
         </button>
       </div>
-      <div id="game-iframe-container" style={{ width: '100%', aspectRatio: `${game.width}/${game.height}`, minHeight: '400px', background: '#000' }}>
+
+      <div id="game-iframe-container" style={{ width: '100%', aspectRatio: `${game.width}/${game.height}`, minHeight: '400px', background: '#000', position: 'relative' }}>
         <iframe
           src={game.iframe_url}
           title={game.title}
@@ -79,7 +120,23 @@ export default function GamePlayer({ game }: Props) {
           referrerPolicy="unsafe-url"
           allowFullScreen
         />
+
+        {/* Overlay when SDK shows an ad */}
+        {adPaused && (
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 20,
+            backgroundColor: 'rgba(8,13,10,0.85)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ width: '40px', height: '40px', border: '3px solid var(--neon-lime)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
+              <p style={{ color: 'var(--text-secondary)', fontFamily: 'Space Grotesk, sans-serif', fontSize: '0.875rem', margin: 0 }}>Ad playing — game will resume shortly</p>
+            </div>
+          </div>
+        )}
       </div>
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }
