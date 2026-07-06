@@ -195,44 +195,31 @@ export default function GamePage() {
   )
 }
 
-type WinWithVideo = Window & typeof globalThis & { VIDEO_OPTIONS?: object }
-
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
-  useEffect(() => {
-    // Clean up any previous script instance so video.js re-initialises on navigation
-    document.getElementById('gamemonetize-video-api')?.remove()
-    document.getElementById('gamemonetize-video')?.innerHTML
-
-    ;(window as WinWithVideo).VIDEO_OPTIONS = {
-      gameid: gameId,
-      width: '100%',
-      height: '480px',
-      color: '#007bff',
-      getAds: 'false',
-    }
-
-    // Replicate the exact IIFE from the GameMonetize embed:
-    // insert the script before the first <script> tag in the document
-    const firstScript = document.getElementsByTagName('script')[0]
-    const s = document.createElement('script')
-    s.id = 'gamemonetize-video-api'
-    s.src = 'https://api.gamemonetize.com/video.js'
-    firstScript.parentNode!.insertBefore(s, firstScript)
-
-    return () => {
-      document.getElementById('gamemonetize-video-api')?.remove()
-      delete (window as WinWithVideo).VIDEO_OPTIONS
-      const el = document.getElementById('gamemonetize-video')
-      if (el) el.innerHTML = ''
-    }
-  }, [gameId])
+  const srcDoc = [
+    '<!DOCTYPE html><html><head>',
+    '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000;overflow:hidden}</style>',
+    '</head><body>',
+    '<div id="gamemonetize-video"></div>',
+    '<script>',
+    `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#007bff",getAds:"false"};`,
+    '(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-video-api");',
+    '<\/script>',
+    '</body></html>',
+  ].join('')
 
   return (
     <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
       <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
         {title} — Walkthrough
       </h2>
-      <div id="gamemonetize-video" />
+      <iframe
+        key={gameId}
+        srcDoc={srcDoc}
+        style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
+        allow="autoplay"
+        title={`${title} walkthrough`}
+      />
     </div>
   )
 }
