@@ -108,11 +108,23 @@ async function syncGameMonetize(
 
   for (let page = 1; page <= maxPages; page++) {
     try {
-      const url = `https://gamemonetize.com/feed.php?format=0&num=100&page=${page}&category=all`
-      const res = await fetch(url, { signal: AbortSignal.timeout(20000) })
+      const url = `https://gamemonetize.com/feed.php?format=0&num=100&page=${page}`
+      const res = await fetch(url, {
+        signal: AbortSignal.timeout(25000),
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'application/json, text/plain, */*',
+        },
+      })
       if (!res.ok) { errors.push(`GM page ${page}: HTTP ${res.status}`); break }
 
-      const games: GMGame[] = await res.json()
+      let games: GMGame[]
+      try {
+        games = await res.json()
+      } catch {
+        errors.push(`GM page ${page}: invalid JSON`)
+        break
+      }
       if (!Array.isArray(games) || games.length === 0) break
       fetched += games.length
 
@@ -123,7 +135,8 @@ async function syncGameMonetize(
           if (!categoryId) continue
 
           const sourceId = String(game.id)
-          const iframeUrl = `https://html5.gamemonetize.com/${sourceId}/?domain=${SITE_DOMAIN}`
+          // Use the url field from the feed directly (most reliable)
+          const iframeUrl = game.url || `https://html5.gamemonetize.co/${sourceId}/`
           const description = buildDescription(game.title, game.description, game.category)
           const tags = game.tags ? game.tags.split(',').map((t: string) => t.trim()).filter(Boolean).slice(0, 15) : []
           const baseSlug = slugifyEn(game.title) + '-gm' + sourceId.slice(-6)
@@ -193,10 +206,15 @@ async function syncGameDistribution(
 
   for (let page = 0; page < maxPages; page++) {
     try {
-      const url = `https://gamedistribution.com/api/games/?tags[]=all&limit=${limit}&skip=${page * limit}&whitelabel=1`
+      const url = `https://api.gamedistribution.com/api/game/get-list/?amount=${limit}&start=${page * limit}`
       const res = await fetch(url, {
-        signal: AbortSignal.timeout(20000),
-        headers: { 'Accept': 'application/json', 'Referer': SITE_URL },
+        signal: AbortSignal.timeout(25000),
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Origin': SITE_URL,
+          'Referer': SITE_URL + '/',
+        },
       })
       if (!res.ok) { errors.push(`GD page ${page}: HTTP ${res.status}`); break }
 
@@ -283,10 +301,14 @@ async function syncHTML5Games(
   // HTML5Games.com API endpoint
   for (let page = 0; page < maxPages; page++) {
     try {
-      const url = `https://www.htmlgames.com/api.php?game=all&start=${page * 100}&num=100&format=json`
+      const url = `https://www.htmlgames.com/json.php?start=${page * 100}&num=100`
       const res = await fetch(url, {
-        signal: AbortSignal.timeout(20000),
-        headers: { 'Accept': 'application/json', 'Referer': SITE_URL },
+        signal: AbortSignal.timeout(25000),
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Referer': SITE_URL + '/',
+        },
       })
       if (!res.ok) { errors.push(`H5 page ${page}: HTTP ${res.status}`); break }
 
