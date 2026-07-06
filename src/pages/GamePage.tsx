@@ -151,9 +151,12 @@ export default function GamePage() {
           </div>
 
           {/* Walkthrough — GameMonetize games only */}
-          {game.source === 'GAMEMONETIZE' && game.source_id && (
-            <GameWalkthrough gameId={game.source_id} title={game.title} />
-          )}
+          {game.source === 'GAMEMONETIZE' && game.iframe_url && (() => {
+            try {
+              const token = new URL(game.iframe_url).pathname.split('/').filter(Boolean)[0]
+              return token ? <GameWalkthrough gameId={token} title={game.title} /> : null
+            } catch { return null }
+          })()}
         </div>
 
         {/* Sidebar — related games */}
