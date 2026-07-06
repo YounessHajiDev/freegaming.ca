@@ -75,6 +75,16 @@ export default function GamePage() {
         <title>{pageTitle}</title>
         <meta name="description" content={pageDesc.slice(0, 165)} />
         <link rel="canonical" href={`https://www.freegaming.ca/games/${game.slug}/`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://www.freegaming.ca/games/${game.slug}/`} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDesc.slice(0, 165)} />
+        <meta property="og:image" content={game.thumbnail} />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${game.title} — Play Free Online | FreeGaming.ca`} />
+        <meta name="twitter:description" content={`Play ${game.title} free in your browser. No download needed.`} />
+        <meta name="twitter:image" content={game.thumbnail} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "VideoGame",

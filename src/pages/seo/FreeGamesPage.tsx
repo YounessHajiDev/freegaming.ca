@@ -24,6 +24,16 @@ export default function FreeGamesPage() {
         <title>Free Online Games — No Download, No Signup | FreeGaming.ca</title>
         <meta name="description" content="Play hundreds of free online games instantly. No download, no account needed. Canada's #1 free games portal — puzzle, racing, sports & more." />
         <link rel="canonical" href="https://www.freegaming.ca/free-games/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.freegaming.ca/free-games/" />
+        <meta property="og:title" content="Free Online Games — No Download, No Signup | FreeGaming.ca" />
+        <meta property="og:description" content="Play hundreds of free online games instantly. No download, no account needed. Canada's #1 free games portal — puzzle, racing, sports &amp; more." />
+        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Free Online Games — No Download | FreeGaming.ca" />
+        <meta name="twitter:description" content="Hundreds of free browser games — no download, no signup. Play now at Canada's #1 free gaming portal." />
+        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
       </Helmet>
       <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3rem)', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>Free Online Games</h1>
       <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>

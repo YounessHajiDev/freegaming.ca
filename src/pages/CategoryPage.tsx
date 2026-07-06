@@ -60,6 +60,24 @@ export default function CategoryPage() {
         <title>{title}</title>
         <meta name="description" content={desc.slice(0, 165)} />
         <link rel="canonical" href={`https://www.freegaming.ca/category/${slug}/`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://www.freegaming.ca/category/${slug}/`} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={desc.slice(0, 165)} />
+        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={desc.slice(0, 165)} />
+        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": `Free ${category?.name ?? ''} Online`,
+          "description": desc.slice(0, 165),
+          "url": `https://www.freegaming.ca/category/${slug}/`,
+          "isPartOf": { "@type": "WebSite", "url": "https://www.freegaming.ca" }
+        })}</script>
       </Helmet>
 
       <nav style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '1.25rem', fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>

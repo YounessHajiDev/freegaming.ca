@@ -73,7 +73,18 @@ export default function HomePage() {
         <title>FreeGaming.ca — Free Online Games for Canadians | No Download Required</title>
         <meta name="description" content="Play thousands of free online games at FreeGaming.ca — Canada's #1 free gaming portal. No download, no signup. Puzzle, racing, sports, shooting & more. Play now!" />
         <link rel="canonical" href="https://www.freegaming.ca/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.freegaming.ca/" />
+        <meta property="og:title" content="FreeGaming.ca — Free Online Games for Canadians | No Download Required" />
+        <meta property="og:description" content="Play thousands of free online games at FreeGaming.ca — Canada's #1 free gaming portal. No download, no signup. Puzzle, racing, sports, shooting &amp; more." />
+        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="FreeGaming.ca — Free Online Games for Canadians" />
+        <meta name="twitter:description" content="Play thousands of free online games — Canada's #1 free gaming portal. No download, no signup." />
+        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",

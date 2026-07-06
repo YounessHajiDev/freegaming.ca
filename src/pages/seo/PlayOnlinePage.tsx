@@ -24,6 +24,16 @@ export default function PlayOnlinePage() {
         <title>Play Games Online Free — Browser Games | FreeGaming.ca</title>
         <meta name="description" content="Play games online for free in your browser. FreeGaming.ca offers hundreds of HTML5 games — desktop and mobile. No download needed." />
         <link rel="canonical" href="https://www.freegaming.ca/play-online/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.freegaming.ca/play-online/" />
+        <meta property="og:title" content="Play Games Online Free — Browser Games | FreeGaming.ca" />
+        <meta property="og:description" content="Play games online for free in your browser. FreeGaming.ca offers hundreds of HTML5 games — desktop and mobile. No download needed." />
+        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Play Games Online Free | FreeGaming.ca" />
+        <meta name="twitter:description" content="Hundreds of free HTML5 browser games — desktop and mobile. Click and play instantly, no download required." />
+        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
       </Helmet>
       <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3rem)', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>Play Games Online Free</h1>
       <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>

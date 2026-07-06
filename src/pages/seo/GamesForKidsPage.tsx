@@ -25,6 +25,16 @@ export default function GamesForKidsPage() {
         <title>Free Online Games for Kids — Safe & Fun | FreeGaming.ca</title>
         <meta name="description" content="Safe, fun, and free online games for kids. Age-appropriate browser games for children — puzzle, adventure, and arcade games with no downloads." />
         <link rel="canonical" href="https://www.freegaming.ca/games-for-kids/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.freegaming.ca/games-for-kids/" />
+        <meta property="og:title" content="Free Online Games for Kids — Safe &amp; Fun | FreeGaming.ca" />
+        <meta property="og:description" content="Safe, fun, and free online games for kids. Age-appropriate browser games for children — puzzle, adventure, and arcade games with no downloads." />
+        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Free Kids Games Online — Safe &amp; Fun | FreeGaming.ca" />
+        <meta name="twitter:description" content="Age-appropriate free browser games for kids — puzzle, adventure, and arcade. No downloads, no accounts required." />
+        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
       </Helmet>
       <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3rem)', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>Games for Kids</h1>
       <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>

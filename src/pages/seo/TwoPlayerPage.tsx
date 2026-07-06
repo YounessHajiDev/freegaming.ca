@@ -25,6 +25,16 @@ export default function TwoPlayerPage() {
         <title>Free 2 Player Games Online — Play with Friends | FreeGaming.ca</title>
         <meta name="description" content="Play 2 player games online for free. Multiplayer browser games you can enjoy with friends — no download, no account required." />
         <link rel="canonical" href="https://www.freegaming.ca/2-player-games/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.freegaming.ca/2-player-games/" />
+        <meta property="og:title" content="Free 2 Player Games Online — Play with Friends | FreeGaming.ca" />
+        <meta property="og:description" content="Play 2 player games online for free. Multiplayer browser games you can enjoy with friends — no download, no account required." />
+        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Free 2 Player Games Online | FreeGaming.ca" />
+        <meta name="twitter:description" content="Multiplayer and 2-player browser games — challenge a friend for free. No download needed." />
+        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
       </Helmet>
       <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3rem)', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>2 Player Games</h1>
       <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
