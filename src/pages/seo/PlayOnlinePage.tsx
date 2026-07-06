@@ -1,53 +1,43 @@
-import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
-import { supabase } from '../../lib/supabase'
-import type { Game } from '../../lib/types'
-import GameGrid from '../../components/games/GameGrid'
+import SeoGamePageTemplate from '../../components/seo/SeoGamePageTemplate'
 
 export default function PlayOnlinePage() {
-  const [games, setGames] = useState<(Game & { categories?: { name: string } })[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    supabase
-      .from('games')
-      .select('id, title, slug, thumbnail, short_description, is_new, is_hot, is_featured, views, category_id, categories(name)')
-      .eq('is_active', true)
-      .order('views', { ascending: false })
-      .limit(30)
-      .then(({ data }) => { setGames((data ?? []) as (Game & { categories?: { name: string } })[]) ; setLoading(false) })
-  }, [])
-
   return (
-    <>
-      <Helmet>
-        <title>Play Games Online Free — Browser Games | FreeGaming.ca</title>
-        <meta name="description" content="Play games online for free in your browser. FreeGaming.ca offers hundreds of HTML5 games — desktop and mobile. No download needed." />
-        <link rel="canonical" href="https://www.freegaming.ca/play-online/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.freegaming.ca/play-online/" />
-        <meta property="og:title" content="Play Games Online Free — Browser Games | FreeGaming.ca" />
-        <meta property="og:description" content="Play games online for free in your browser. FreeGaming.ca offers hundreds of HTML5 games — desktop and mobile. No download needed." />
-        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
-        <meta property="og:locale" content="en_CA" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Play Games Online Free | FreeGaming.ca" />
-        <meta name="twitter:description" content="Hundreds of free HTML5 browser games — desktop and mobile. Click and play instantly, no download required." />
-        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
-      </Helmet>
-      <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3rem)', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>Play Games Online Free</h1>
-      <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', margin: 0 }}>
-          Play games online free at FreeGaming.ca — no download, no registration, no fuss. Our browser-based gaming platform lets you jump into any game immediately from your desktop or mobile browser. We support Chrome, Firefox, Safari, and Edge on all operating systems.
-        </p>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', marginBottom: 0, marginTop: '1rem' }}>
-          Our online games use HTML5 technology — the same platform that powers professional gaming portals worldwide. This means buttery-smooth gameplay, instant loading, and compatibility with every modern device. Forget downloads and installers; playing online at FreeGaming.ca takes seconds from click to play.
-        </p>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', marginBottom: 0, marginTop: '1rem' }}>
-          Whether you have five minutes or five hours, our library has something for every mood. Quick puzzle games, epic racing challenges, sports simulations, multiplayer showdowns — all playable right now, directly in your browser, completely free.
-        </p>
-      </div>
-      <GameGrid games={games} loading={loading} columns={5} />
-    </>
+    <SeoGamePageTemplate cfg={{
+      title: 'Play Online Games Free — No Download Required | FreeGaming.ca',
+      metaDescription: 'Play online games for free — instant browser games, no download needed. Thousands of HTML5 games on Canada\'s #1 free gaming portal. Play now!',
+      canonical: 'https://www.freegaming.ca/play-online/',
+      h1: 'Play Online Games Free',
+      collectionName: 'Play Online Games',
+      intro: (
+        <>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', margin: 0 }}>
+            Ready to <strong style={{ color: 'var(--text-primary)' }}>play online games</strong> for free? FreeGaming.ca is Canada's premier destination for instant browser gaming. Thousands of HTML5 games — no download, no account, no cost. Click any game and start playing in seconds.
+          </p>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', marginBottom: 0, marginTop: '1rem' }}>
+            Playing online games used to mean downloading large files, installing software, or signing up for paid services. Not anymore. FreeGaming.ca delivers full-quality HTML5 games that run entirely in your web browser. The same technology that powers modern websites powers our games — fast, secure, and universally compatible.
+          </p>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', marginBottom: 0, marginTop: '1rem' }}>
+            Our online game catalogue spans every genre: action, puzzle, sports, racing, strategy, arcade, card games, io games, and more. Whether you want to play a solo puzzle or compete online, you'll find it on FreeGaming.ca. All games work on desktop, tablet, and smartphone.
+          </p>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', marginBottom: 0, marginTop: '1rem' }}>
+            FreeGaming.ca is updated constantly with fresh online games sourced from the world's leading HTML5 game publishers. Bookmark us and check back often — there's always something new to play online.
+          </p>
+        </>
+      ),
+      faqs: [
+        { q: 'Can I play online games for free without downloading?', a: 'Yes. Every game on FreeGaming.ca plays directly in your browser — no download, no installation, and no account required. Just click and play.' },
+        { q: 'What\'s the best free online game site in Canada?', a: 'FreeGaming.ca is Canada\'s #1 free online games portal, offering thousands of HTML5 browser games across every genre, updated weekly with new titles.' },
+        { q: 'What browser is best for playing online games?', a: 'Modern versions of Chrome, Firefox, Safari, and Edge all work great for playing HTML5 online games. We recommend keeping your browser updated for the best performance.' },
+        { q: 'Can I play online games on my phone?', a: 'Yes! All games on FreeGaming.ca are designed to work on mobile phones and tablets. Open the site in your mobile browser and play any game without installing an app.' },
+        { q: 'Are the online games on FreeGaming.ca safe?', a: 'Yes. We source all games from reputable licensed HTML5 publishers. We never ask for personal information to play, and our site uses HTTPS for secure browsing.' },
+      ],
+      relatedLinks: [
+        { href: '/free-games/', label: 'All Free Games' },
+        { href: '/popular/', label: 'Most Popular Games' },
+        { href: '/new-games/', label: 'New Games' },
+        { href: '/unblocked-games/', label: 'Unblocked Games' },
+        { href: '/2-player-games/', label: '2 Player Games' },
+      ],
+    }} />
   )
 }

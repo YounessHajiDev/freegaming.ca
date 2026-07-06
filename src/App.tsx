@@ -17,6 +17,12 @@ import PlayOnlinePage from './pages/seo/PlayOnlinePage'
 import UnblockedGamesPage from './pages/seo/UnblockedGamesPage'
 import GamesForKidsPage from './pages/seo/GamesForKidsPage'
 import TwoPlayerPage from './pages/seo/TwoPlayerPage'
+import FreePuzzleGamesPage from './pages/seo/FreePuzzleGamesPage'
+import FreeRacingGamesPage from './pages/seo/FreeRacingGamesPage'
+import FreeActionGamesPage from './pages/seo/FreeActionGamesPage'
+import FreeSportsGamesPage from './pages/seo/FreeSportsGamesPage'
+import FreeArcadeGamesPage from './pages/seo/FreeArcadeGamesPage'
+import FreeCarGamesPage from './pages/seo/FreeCarGamesPage'
 import NotFoundPage from './pages/NotFoundPage'
 import { CookieBanner } from './components/ui/CookieBanner'
 
@@ -40,6 +46,12 @@ export default function App() {
           <Route path="/unblocked-games" element={<UnblockedGamesPage />} />
           <Route path="/games-for-kids" element={<GamesForKidsPage />} />
           <Route path="/2-player-games" element={<TwoPlayerPage />} />
+          <Route path="/free-puzzle-games" element={<FreePuzzleGamesPage />} />
+          <Route path="/free-racing-games" element={<FreeRacingGamesPage />} />
+          <Route path="/free-action-games" element={<FreeActionGamesPage />} />
+          <Route path="/free-sports-games" element={<FreeSportsGamesPage />} />
+          <Route path="/free-arcade-games" element={<FreeArcadeGamesPage />} />
+          <Route path="/free-car-games" element={<FreeCarGamesPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/pinterest" element={<PinterestPinsPage />} />
           <Route path="*" element={<NotFoundPage />} />

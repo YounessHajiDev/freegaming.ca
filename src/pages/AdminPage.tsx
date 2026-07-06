@@ -45,25 +45,25 @@ const SOURCE_META: { id: SyncSource; label: string; icon: React.ReactNode; desc:
     id: 'gamemonetize',
     label: 'GameMonetize',
     icon: <Zap size={16} />,
-    desc: 'Pulls up to 2,000 games (20 pages × 100)',
+    desc: 'Bulk upsert — up to 50 pages × 100 = 5,000 games per call. Uses startPage for batching.',
   },
   {
     id: 'gamedistribution',
     label: 'GameDistribution',
     icon: <Globe size={16} />,
-    desc: 'Pulls up to 1,500 games (15 pages × 100)',
+    desc: 'Bulk upsert — up to 15 pages × 100 = 1,500 games per call.',
   },
   {
     id: 'html5games',
     label: 'HTML5Games.com',
     icon: <Layers size={16} />,
-    desc: 'Pulls up to 1,000 games (10 pages × 100)',
+    desc: 'Bulk upsert — up to 10 pages × 100 = 1,000 games per call.',
   },
   {
     id: 'all',
     label: 'Sync All Sources',
     icon: <RefreshCw size={16} />,
-    desc: 'Runs all three sources in sequence — up to 4,500 games',
+    desc: 'Runs GM (20 pp) + GD (15 pp) + H5 (10 pp) in sequence — up to 4,500 games.',
   },
 ]
 
@@ -74,6 +74,8 @@ export default function AdminPage() {
   const [password, setPassword]   = useState('')
   const [authed, setAuthed]       = useState(false)
   const [wrongPw, setWrongPw]     = useState(false)
+  const [startPage, setStartPage] = useState(1)
+  const [maxPages, setMaxPages]   = useState(20)
 
   const loadStats = async () => {
     const [total, gm, gd, h5, manual, hot, featured, newG, logsRes] = await Promise.all([
@@ -108,7 +110,7 @@ export default function AdminPage() {
       const res = await fetch(`${SUPABASE_URL}/functions/v1/sync-games`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ source }),
+        body: JSON.stringify({ source, startPage: source === 'all' ? 1 : startPage, maxPages: source === 'all' ? 20 : maxPages }),
       })
       const data = await res.json() as SyncResponse
       setSyncStatus({ running: false, source, result: data })
@@ -207,6 +209,23 @@ export default function AdminPage() {
         <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Database size={18} style={{ color: 'var(--neon-lime)' }} /> Import Games
         </h2>
+
+        {/* Batch controls */}
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', marginBottom: '1.25rem', flexWrap: 'wrap', padding: '1rem', backgroundColor: 'var(--bg-elevated)', borderRadius: '8px', border: '1px solid var(--line-subtle)' }}>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontFamily: 'Orbitron, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>Start Page</div>
+            <input type="number" min={1} max={999} value={startPage} onChange={e => setStartPage(Math.max(1, parseInt(e.target.value) || 1))}
+              style={{ width: '90px', padding: '8px 10px', background: 'var(--bg-void)', border: '1px solid var(--line-visible)', borderRadius: '6px', color: 'var(--text-primary)', fontSize: '0.9rem', fontFamily: 'Orbitron, monospace', textAlign: 'center' }} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontFamily: 'Orbitron, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>Max Pages</div>
+            <input type="number" min={1} max={50} value={maxPages} onChange={e => setMaxPages(Math.min(50, Math.max(1, parseInt(e.target.value) || 1)))}
+              style={{ width: '90px', padding: '8px 10px', background: 'var(--bg-void)', border: '1px solid var(--line-visible)', borderRadius: '6px', color: 'var(--text-primary)', fontSize: '0.9rem', fontFamily: 'Orbitron, monospace', textAlign: 'center' }} />
+          </div>
+          <div style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)', lineHeight: 1.5, maxWidth: '320px' }}>
+            To get all GM games: run multiple syncs with startPage 1, 21, 41, 61… Each call fetches up to <span style={{ color: 'var(--neon-lime)', fontWeight: 600 }}>{maxPages * 100}</span> games.
+          </div>
+        </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
           {SOURCE_META.map(s => {
