@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { RefreshCw, Database, Clock, CheckCircle, XCircle, Zap, Globe, Layers } from 'lucide-react'
+import { RefreshCw, Database, Clock, CheckCircle, XCircle, Zap, Globe, Layers, ExternalLink } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import type { SyncLog } from '../lib/types'
 
@@ -155,7 +156,23 @@ export default function AdminPage() {
         <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '2rem', textTransform: 'uppercase', color: 'var(--text-primary)', margin: 0 }}>
           Admin Dashboard
         </h1>
-        <button className="btn-ghost" onClick={loadStats}>Refresh Stats</button>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <Link
+            to="/admin/pinterest"
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '8px 16px', borderRadius: '8px',
+              background: 'var(--bg-elevated)', border: '1px solid var(--line-visible)',
+              color: 'var(--text-secondary)', textDecoration: 'none',
+              fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700,
+              fontSize: '0.9375rem', textTransform: 'uppercase',
+              transition: 'border-color 0.15s, color 0.15s',
+            }}
+          >
+            <ExternalLink size={14} /> Pinterest Pins
+          </Link>
+          <button className="btn-ghost" onClick={loadStats}>Refresh Stats</button>
+        </div>
       </div>
 
       {/* Stats grid */}

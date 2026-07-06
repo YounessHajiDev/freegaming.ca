@@ -6,6 +6,7 @@ import CategoryPage from './pages/CategoryPage'
 import PopularPage from './pages/PopularPage'
 import NewGamesPage from './pages/NewGamesPage'
 import AdminPage from './pages/AdminPage'
+import PinterestPinsPage from './pages/PinterestPinsPage'
 import FreeGamesPage from './pages/seo/FreeGamesPage'
 import PlayOnlinePage from './pages/seo/PlayOnlinePage'
 import UnblockedGamesPage from './pages/seo/UnblockedGamesPage'
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/games-for-kids" element={<GamesForKidsPage />} />
           <Route path="/2-player-games" element={<TwoPlayerPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/pinterest" element={<PinterestPinsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
