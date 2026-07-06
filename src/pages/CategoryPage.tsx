@@ -78,6 +78,28 @@ export default function CategoryPage() {
           "url": `https://www.freegaming.ca/category/${slug}/`,
           "isPartOf": { "@type": "WebSite", "url": "https://www.freegaming.ca" }
         })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": `Free ${category?.name ?? ''} Games`,
+          "url": `https://www.freegaming.ca/category/${slug}/`,
+          "numberOfItems": total,
+          "itemListElement": games.slice(0, 10).map((g, i) => ({
+            "@type": "ListItem",
+            "position": i + 1 + page * PAGE_SIZE,
+            "name": g.title,
+            "url": `https://www.freegaming.ca/games/${g.slug}/`,
+            "image": g.thumbnail
+          }))
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.freegaming.ca/" },
+            { "@type": "ListItem", "position": 2, "name": category?.name ?? '', "item": `https://www.freegaming.ca/category/${slug}/` }
+          ]
+        })}</script>
       </Helmet>
 
       <nav style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '1.25rem', fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>

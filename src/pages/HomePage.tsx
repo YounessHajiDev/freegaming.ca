@@ -91,7 +91,7 @@ export default function HomePage() {
           "@id": "https://www.freegaming.ca/#website",
           "name": "FreeGaming.ca",
           "url": "https://www.freegaming.ca",
-          "potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint", "urlTemplate": "https://www.freegaming.ca/?q={search_term_string}" }, "query-input": "required name=search_term_string" }
+          "potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint", "urlTemplate": "https://www.freegaming.ca/search?q={search_term_string}" }, "query-input": "required name=search_term_string" }
         })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",

@@ -74,28 +74,46 @@ export default function GamePage() {
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDesc.slice(0, 165)} />
+        {game.tags?.length > 0 && <meta name="keywords" content={game.tags.slice(0, 10).join(', ')} />}
         <link rel="canonical" href={`https://www.freegaming.ca/games/${game.slug}/`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`https://www.freegaming.ca/games/${game.slug}/`} />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDesc.slice(0, 165)} />
         <meta property="og:image" content={game.thumbnail} />
+        <meta property="og:image:alt" content={`Play ${game.title} free online`} />
         <meta property="og:locale" content="en_CA" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${game.title} — Play Free Online | FreeGaming.ca`} />
         <meta name="twitter:description" content={`Play ${game.title} free in your browser. No download needed.`} />
         <meta name="twitter:image" content={game.thumbnail} />
+        <meta name="twitter:image:alt" content={`${game.title} game screenshot`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "VideoGame",
           "name": game.title,
           "description": game.description,
           "image": game.thumbnail,
+          "url": `https://www.freegaming.ca/games/${game.slug}/`,
+          "genre": catName,
+          "keywords": game.tags?.slice(0, 10).join(', '),
           "isAccessibleForFree": true,
           "applicationCategory": "Game",
           "operatingSystem": "Web Browser",
           "gamePlatform": ["Web Browser", "Mobile Browser"],
-          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" }
+          "inLanguage": "en",
+          "publisher": {
+            "@type": "Organization",
+            "name": "FreeGaming.ca",
+            "url": "https://www.freegaming.ca"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "CAD",
+            "availability": "https://schema.org/InStock",
+            "url": `https://www.freegaming.ca/games/${game.slug}/`
+          }
         })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
