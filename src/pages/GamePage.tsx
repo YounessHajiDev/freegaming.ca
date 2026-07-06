@@ -196,17 +196,29 @@ export default function GamePage() {
 }
 
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
-  const srcDoc = [
-    '<!DOCTYPE html><html><head>',
-    '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000;overflow:hidden}</style>',
-    '</head><body>',
-    '<div id="gamemonetize-video"></div>',
-    '<script>',
-    `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#007bff",getAds:"false"};`,
-    '(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-video-api");',
-    '<\/script>',
-    '</body></html>',
-  ].join('')
+  const [src, setSrc] = useState('')
+
+  useEffect(() => {
+    const html = [
+      '<!DOCTYPE html><html><head>',
+      '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000}</style>',
+      '</head><body>',
+      '<div id="gamemonetize-video"></div>',
+      '<script type="text/javascript">',
+      `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#3f007e",getAds:"false"};`,
+      '(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-video-api");',
+      '<\/script>',
+      '</body></html>',
+    ].join('')
+
+    const blob = new Blob([html], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    setSrc(url)
+
+    return () => URL.revokeObjectURL(url)
+  }, [gameId])
+
+  if (!src) return null
 
   return (
     <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
@@ -214,8 +226,7 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
         {title} — Walkthrough
       </h2>
       <iframe
-        key={gameId}
-        srcDoc={srcDoc}
+        src={src}
         style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
         allow="autoplay"
         title={`${title} walkthrough`}
