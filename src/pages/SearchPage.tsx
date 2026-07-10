@@ -14,24 +14,28 @@ export default function SearchPage() {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase
-        .from('games')
-        .select('*, categories(*)')
-        .eq('is_active', true)
-        .limit(100)
+      try {
+        const { data } = await supabase
+          .from('games')
+          .select('*, categories(*)')
+          .eq('is_active', true)
+          .limit(100)
 
-      if (data && query) {
-        const fuse = new Fuse(data, {
-          keys: ['title', 'description', 'short_description', 'tags'],
-          threshold: 0.3,
-        })
-        const results = fuse.search(query)
-        setGames(results.map(r => r.item))
-      } else if (data) {
-        setGames(data)
+        if (data && query) {
+          const fuse = new Fuse(data, {
+            keys: ['title', 'description', 'short_description', 'tags'],
+            threshold: 0.3,
+          })
+          const results = fuse.search(query)
+          setGames(results.map(r => r.item))
+        } else if (data) {
+          setGames(data)
+        }
+      } catch (err) {
+        console.error('Failed to search games:', err)
+      } finally {
+        setLoading(false)
       }
-
-      setLoading(false)
     }
     fetch()
   }, [query])

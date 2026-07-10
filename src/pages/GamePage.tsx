@@ -16,28 +16,31 @@ export default function GamePage() {
   useEffect(() => {
     const fetch = async () => {
       if (!slug) return
-
-      const { data: gameData } = await supabase
-        .from('games')
-        .select('*, categories(*)')
-        .eq('slug', slug)
-        .single()
-
-      if (gameData) {
-        setGame(gameData)
-        setCategory(gameData.categories)
-
-        const { data: relatedData } = await supabase
+      try {
+        const { data: gameData } = await supabase
           .from('games')
-          .select('*')
-          .eq('category_id', gameData.category_id)
-          .neq('id', gameData.id)
-          .limit(8)
+          .select('*, categories(*)')
+          .eq('slug', slug)
+          .single()
 
-        if (relatedData) setRelated(relatedData)
+        if (gameData) {
+          setGame(gameData)
+          setCategory(gameData.categories)
+
+          const { data: relatedData } = await supabase
+            .from('games')
+            .select('*')
+            .eq('category_id', gameData.category_id)
+            .neq('id', gameData.id)
+            .limit(8)
+
+          if (relatedData) setRelated(relatedData)
+        }
+      } catch (err) {
+        console.error('Failed to load game:', err)
+      } finally {
+        setLoading(false)
       }
-
-      setLoading(false)
     }
 
     fetch()

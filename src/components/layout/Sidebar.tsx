@@ -14,7 +14,7 @@ export default function Sidebar() {
     ]).then(([cats, games]) => {
       if (cats.data) setCategories(cats.data)
       if (games.data) setHotGames(games.data)
-    })
+    }).catch(err => console.error('Failed to load sidebar:', err))
   }, [])
 
   return (

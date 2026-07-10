@@ -15,15 +15,20 @@ export default function HomePage() {
 
   useEffect(() => {
     const load = async () => {
-      const [f, h, r] = await Promise.all([
-        supabase.from('games').select('*, categories(name)').eq('is_featured', true).eq('is_active', true).limit(8),
-        supabase.from('games').select('*, categories(name)').eq('is_hot', true).eq('is_active', true).limit(8),
-        supabase.from('games').select('*, categories(name)').eq('is_active', true).order('created_at', { ascending: false }).limit(8),
-      ])
-      if (f.data) setFeatured(f.data)
-      if (h.data) setHot(h.data)
-      if (r.data) setRecent(r.data)
-      setLoading(false)
+      try {
+        const [f, h, r] = await Promise.all([
+          supabase.from('games').select('*, categories(name)').eq('is_featured', true).eq('is_active', true).limit(8),
+          supabase.from('games').select('*, categories(name)').eq('is_hot', true).eq('is_active', true).limit(8),
+          supabase.from('games').select('*, categories(name)').eq('is_active', true).order('created_at', { ascending: false }).limit(8),
+        ])
+        if (f.data) setFeatured(f.data)
+        if (h.data) setHot(h.data)
+        if (r.data) setRecent(r.data)
+      } catch (err) {
+        console.error('Failed to load home games:', err)
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [])

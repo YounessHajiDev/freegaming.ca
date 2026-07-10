@@ -10,15 +10,20 @@ export default function PopularPage() {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase
-        .from('games')
-        .select('*, categories(*)')
-        .eq('is_active', true)
-        .order('views', { ascending: false })
-        .limit(48)
+      try {
+        const { data } = await supabase
+          .from('games')
+          .select('*, categories(*)')
+          .eq('is_active', true)
+          .order('views', { ascending: false })
+          .limit(48)
 
-      if (data) setGames(data)
-      setLoading(false)
+        if (data) setGames(data)
+      } catch (err) {
+        console.error('Failed to load popular games:', err)
+      } finally {
+        setLoading(false)
+      }
     }
     fetch()
   }, [])

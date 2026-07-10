@@ -14,26 +14,29 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetch = async () => {
       if (!slug) return
+      try {
+        const { data: catData } = await supabase
+          .from('categories')
+          .select('*')
+          .eq('slug', slug)
+          .single()
 
-      const { data: catData } = await supabase
-        .from('categories')
-        .select('*')
-        .eq('slug', slug)
-        .single()
+        if (catData) {
+          setCategory(catData)
 
-      if (catData) {
-        setCategory(catData)
+          const { data: gamesData } = await supabase
+            .from('games')
+            .select('*, categories(*)')
+            .eq('category_id', catData.id)
+            .limit(48)
 
-        const { data: gamesData } = await supabase
-          .from('games')
-          .select('*, categories(*)')
-          .eq('category_id', catData.id)
-          .limit(48)
-
-        if (gamesData) setGames(gamesData)
+          if (gamesData) setGames(gamesData)
+        }
+      } catch (err) {
+        console.error('Failed to load category:', err)
+      } finally {
+        setLoading(false)
       }
-
-      setLoading(false)
     }
 
     fetch()

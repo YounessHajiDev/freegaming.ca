@@ -35,7 +35,11 @@ export default function MobileNav() {
       .select('id, title, slug, thumbnail, short_description, category_id, categories(name)')
       .eq('is_active', true)
       .limit(500)
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          console.error('Search load error:', error)
+          return
+        }
         if (data) {
           fuseRef.current = new Fuse(data as unknown as Game[], { keys: ['title', 'short_description'], threshold: 0.35 })
         }
