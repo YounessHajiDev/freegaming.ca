@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { supabase } from '../lib/supabase'
 import { Game } from '../lib/types'
 import GameCarousel from '../components/games/GameCarousel'
+import GameCardSkeleton from '../components/games/GameCardSkeleton'
 import LiveTicker from '../components/layout/LiveTicker'
 import SponsoredOffers from '../components/games/SponsoredOffers'
 
@@ -10,19 +11,21 @@ export default function HomePage() {
   const [featured, setFeatured] = useState<Game[]>([])
   const [hot, setHot] = useState<Game[]>([])
   const [recent, setRecent] = useState<Game[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetch = async () => {
+    const load = async () => {
       const [f, h, r] = await Promise.all([
-        supabase.from('games').select('*').eq('is_featured', true).limit(8),
-        supabase.from('games').select('*').eq('is_hot', true).limit(8),
-        supabase.from('games').select('*').order('created_at', { ascending: false }).limit(8),
+        supabase.from('games').select('*, categories(name)').eq('is_featured', true).eq('is_active', true).limit(8),
+        supabase.from('games').select('*, categories(name)').eq('is_hot', true).eq('is_active', true).limit(8),
+        supabase.from('games').select('*, categories(name)').eq('is_active', true).order('created_at', { ascending: false }).limit(8),
       ])
       if (f.data) setFeatured(f.data)
       if (h.data) setHot(h.data)
       if (r.data) setRecent(r.data)
+      setLoading(false)
     }
-    fetch()
+    load()
   }, [])
 
   return (
@@ -34,14 +37,29 @@ export default function HomePage() {
 
       <LiveTicker />
 
-      <h1 style={{ marginBottom: '1rem', color: 'var(--neon-lime)' }}>Play Free Games Online</h1>
+      <h1 style={{ marginBottom: '1.5rem', color: 'var(--neon-lime)' }}>Play Free Games Online</h1>
 
-      {featured.length > 0 && <GameCarousel games={featured} title="Featured Games" />}
-      {hot.length > 0 && <GameCarousel games={hot} title="Hot Games" />}
+      {loading ? (
+        <section style={{ marginBottom: '2rem' }}>
+          <div style={{ height: '2rem', width: '200px', background: 'var(--bg-elevated)', borderRadius: 'var(--r-sm)', marginBottom: '0.75rem' }} className="skeleton" />
+          <div style={{ display: 'flex', gap: 'var(--space-sm)', overflowX: 'hidden' }}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} style={{ flex: '0 0 200px' }}>
+                <GameCardSkeleton />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <>
+          {featured.length > 0 && <GameCarousel games={featured} title="Featured Games" />}
+          {hot.length > 0 && <GameCarousel games={hot} title="Hot Games" />}
+        </>
+      )}
 
       <SponsoredOffers />
 
-      {recent.length > 0 && <GameCarousel games={recent} title="Recently Added" />}
+      {!loading && recent.length > 0 && <GameCarousel games={recent} title="Recently Added" />}
     </>
   )
 }

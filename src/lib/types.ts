@@ -43,10 +43,3 @@ export interface SyncLog {
   errors: string | null
   created_at: string
 }
-
-export interface LiveStats {
-  totalPlayers: number
-  topGame: string
-  newToday: number
-  totalGames: number
-}
