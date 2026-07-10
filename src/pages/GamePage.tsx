@@ -43,8 +43,16 @@ export default function GamePage() {
     fetch()
   }, [slug])
 
-  if (loading) return <div>Loading...</div>
-  if (!game) return <div>Game not found</div>
+  if (loading) return (
+    <div style={{ padding: '4rem 0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)' }}>
+      Loading…
+    </div>
+  )
+  if (!game) return (
+    <div style={{ padding: '4rem 0', textAlign: 'center', color: 'var(--text-secondary)' }}>
+      Game not found.
+    </div>
+  )
 
   return (
     <>
@@ -56,9 +64,9 @@ export default function GamePage() {
         <meta property="og:image" content={game.thumbnail} />
       </Helmet>
 
-      <h1 style={{ marginBottom: '1rem', color: 'var(--neon-lime)' }}>{game.title}</h1>
+      <h1 style={{ marginBottom: '0.5rem', color: 'var(--neon-lime)', wordBreak: 'break-word' }}>{game.title}</h1>
 
-      <p style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
+      <p style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)', fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', lineHeight: 1.6 }}>
         {game.short_description}
       </p>
 
@@ -76,30 +84,30 @@ export default function GamePage() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-          gap: '1rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+          gap: '0.75rem',
           marginTop: '1.5rem',
           paddingTop: '1.5rem',
           borderTop: '1px solid var(--line-subtle)',
         }}>
           <div>
-            <span style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem' }}>Category</span>
-            <p style={{ color: 'var(--neon-lime)', fontWeight: 600 }}>{category?.name || 'Game'}</p>
+            <span style={{ color: 'var(--text-tertiary)', fontSize: '0.8125rem' }}>Category</span>
+            <p style={{ color: 'var(--neon-lime)', fontWeight: 600, margin: '2px 0 0' }}>{category?.name || 'Game'}</p>
           </div>
           <div>
-            <span style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem' }}>Views</span>
-            <p style={{ color: 'var(--neon-lime)', fontWeight: 600 }}>{game.views.toLocaleString()}</p>
+            <span style={{ color: 'var(--text-tertiary)', fontSize: '0.8125rem' }}>Views</span>
+            <p style={{ color: 'var(--neon-lime)', fontWeight: 600, margin: '2px 0 0' }}>{game.views.toLocaleString()}</p>
           </div>
           <div>
-            <span style={{ color: 'var(--text-tertiary)', fontSize: '0.9rem' }}>Cost</span>
-            <p style={{ color: 'var(--ember)', fontWeight: 600 }}>FREE</p>
+            <span style={{ color: 'var(--text-tertiary)', fontSize: '0.8125rem' }}>Cost</span>
+            <p style={{ color: 'var(--ember)', fontWeight: 600, margin: '2px 0 0' }}>FREE</p>
           </div>
         </div>
       </div>
 
       {related.length > 0 && (
-        <div>
-          <h2 style={{ marginBottom: '1.5rem' }}>More in {category?.name}</h2>
+        <div style={{ marginTop: '2rem' }}>
+          <h2 style={{ marginBottom: '1rem' }}>More in {category?.name}</h2>
           <GameGrid games={related} />
         </div>
       )}

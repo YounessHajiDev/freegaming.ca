@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Game } from '../../lib/types'
 import GameCard from './GameCard'
@@ -9,64 +9,67 @@ interface GameCarouselProps {
 }
 
 export default function GameCarousel({ games, title }: GameCarouselProps) {
-  const [scroll, setScroll] = useState(0)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [canLeft, setCanLeft] = useState(false)
+  const [canRight, setCanRight] = useState(true)
 
-  const scroll_amount = 300
+  const updateArrows = () => {
+    const el = trackRef.current
+    if (!el) return
+    setCanLeft(el.scrollLeft > 4)
+    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4)
+  }
 
-  const handleScroll = (direction: 'left' | 'right') => {
-    const container = document.getElementById(`carousel-${title}`)
-    if (container) {
-      const newScroll = direction === 'left' ? scroll - scroll_amount : scroll + scroll_amount
-      container.scrollLeft = newScroll
-      setScroll(newScroll)
-      setCanScrollLeft(newScroll > 0)
-      setCanScrollRight(newScroll < container.scrollWidth - container.clientWidth)
-    }
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el) return
+    updateArrows()
+    el.addEventListener('scroll', updateArrows, { passive: true })
+    const ro = new ResizeObserver(updateArrows)
+    ro.observe(el)
+    return () => { el.removeEventListener('scroll', updateArrows); ro.disconnect() }
+  }, [games])
+
+  const scroll = (dir: 'left' | 'right') => {
+    const el = trackRef.current
+    if (!el) return
+    const amount = el.clientWidth * 0.75
+    el.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' })
   }
 
   return (
-    <div style={{ marginBottom: '3rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h2 style={{ color: 'var(--neon-lime)' }}>{title}</h2>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+    <section style={{ marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', gap: '0.5rem' }}>
+        <h2 style={{ color: 'var(--neon-lime)', fontSize: 'clamp(1.25rem, 3vw, 1.75rem)', margin: 0 }}>{title}</h2>
+        <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
           <button
-            onClick={() => handleScroll('left')}
-            disabled={!canScrollLeft}
+            onClick={() => scroll('left')}
+            disabled={!canLeft}
             className="btn-ghost"
-            style={{ opacity: canScrollLeft ? 1 : 0.5 }}
+            style={{ padding: '6px 10px', opacity: canLeft ? 1 : 0.35, minHeight: '36px' }}
+            aria-label="Scroll left"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={18} />
           </button>
           <button
-            onClick={() => handleScroll('right')}
-            disabled={!canScrollRight}
+            onClick={() => scroll('right')}
+            disabled={!canRight}
             className="btn-ghost"
-            style={{ opacity: canScrollRight ? 1 : 0.5 }}
+            style={{ padding: '6px 10px', opacity: canRight ? 1 : 0.35, minHeight: '36px' }}
+            aria-label="Scroll right"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
         </div>
       </div>
 
-      <div
-        id={`carousel-${title}`}
-        style={{
-          display: 'flex',
-          gap: '1.5rem',
-          overflowX: 'auto',
-          scrollBehavior: 'smooth',
-          paddingBottom: '1rem',
-          scrollbarWidth: 'none',
-        }}
-      >
+      <div ref={trackRef} className="carousel-track">
         {games.map(game => (
-          <div key={game.id} style={{ flex: '0 0 250px' }}>
+          <div key={game.id} className="carousel-card">
             <GameCard game={game} />
           </div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

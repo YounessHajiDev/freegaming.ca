@@ -36,5 +36,5 @@ export default function TwoPlayerPage() {
     ],
   }
 
-  return <SeoGamePageTemplate config={config} />
+  return <SeoGamePageTemplate cfg={config} />
 }

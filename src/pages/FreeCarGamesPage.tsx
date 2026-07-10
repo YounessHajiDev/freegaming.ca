@@ -36,5 +36,5 @@ export default function FreeCarGamesPage() {
     ],
   }
 
-  return <SeoGamePageTemplate config={config} />
+  return <SeoGamePageTemplate cfg={config} />
 }

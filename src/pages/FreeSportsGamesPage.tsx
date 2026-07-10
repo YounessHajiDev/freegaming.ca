@@ -36,5 +36,5 @@ export default function FreeSportsGamesPage() {
     ],
   }
 
-  return <SeoGamePageTemplate config={config} />
+  return <SeoGamePageTemplate cfg={config} />
 }

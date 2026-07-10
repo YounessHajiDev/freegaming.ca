@@ -122,11 +122,7 @@ export default function SponsoredOffers() {
       </div>
 
       {/* Offers grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-        gap: '1rem',
-      }}>
+      <div className="offers-grid">
         {loading
           ? Array.from({ length: 6 }).map((_, i) => <OfferSkeleton key={i} />)
           : offers.map(offer => (

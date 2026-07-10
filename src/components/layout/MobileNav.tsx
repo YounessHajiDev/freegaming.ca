@@ -37,7 +37,7 @@ export default function MobileNav() {
       .limit(500)
       .then(({ data }) => {
         if (data) {
-          fuseRef.current = new Fuse(data as Game[], { keys: ['title', 'short_description'], threshold: 0.35 })
+          fuseRef.current = new Fuse(data as unknown as Game[], { keys: ['title', 'short_description'], threshold: 0.35 })
         }
         setTimeout(() => inputRef.current?.focus(), 50)
       })

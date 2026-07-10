@@ -18,10 +18,10 @@ export interface SeoPageConfig {
 }
 
 interface SeoGamePageTemplateProps {
-  config: SeoPageConfig
+  cfg: SeoPageConfig
 }
 
-export default function SeoGamePageTemplate({ config }: SeoGamePageTemplateProps) {
+export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplateProps) {
   const [games, setGames] = useState<Game[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)

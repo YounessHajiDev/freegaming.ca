@@ -1,140 +1,73 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
-import { Category, Game } from '../../lib/types'
+import type { Category, Game } from '../../lib/types'
 
 export default function Sidebar() {
   const [categories, setCategories] = useState<Category[]>([])
   const [hotGames, setHotGames] = useState<Game[]>([])
 
   useEffect(() => {
-    const fetch = async () => {
-      const [catsRes, gamesRes] = await Promise.all([
-        supabase
-          .from('categories')
-          .select('*')
-          .order('order_num')
-          .limit(8),
-        supabase
-          .from('games')
-          .select('*')
-          .eq('is_hot', true)
-          .eq('is_active', true)
-          .limit(5)
-          .order('views', { ascending: false })
-      ])
-      if (catsRes.data) setCategories(catsRes.data)
-      if (gamesRes.data) setHotGames(gamesRes.data)
-    }
-    fetch()
+    Promise.all([
+      supabase.from('categories').select('*').order('order_num').limit(10),
+      supabase.from('games').select('*').eq('is_hot', true).eq('is_active', true).order('views', { ascending: false }).limit(5),
+    ]).then(([cats, games]) => {
+      if (cats.data) setCategories(cats.data)
+      if (games.data) setHotGames(games.data)
+    })
   }, [])
 
   return (
-    <aside style={sidebarStyles.container}>
-      <div style={sidebarStyles.section}>
-        <h3 style={sidebarStyles.heading}>Top Categories</h3>
-        <ul style={sidebarStyles.list}>
+    <aside className="sidebar">
+      <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--line-subtle)', borderRadius: '10px', padding: '1rem' }}>
+        <h3 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', color: 'var(--neon-lime)', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
+          Categories
+        </h3>
+        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {categories.map(cat => (
             <li key={cat.id}>
-              <Link to={`/category/${cat.slug}`} style={sidebarStyles.link}>
-                {cat.icon} {cat.name}
+              <Link
+                to={`/category/${cat.slug}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', borderRadius: '6px', color: 'var(--text-secondary)', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.15s, background 0.15s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-primary)'; (e.currentTarget as HTMLAnchorElement).style.background = 'var(--bg-void)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-secondary)'; (e.currentTarget as HTMLAnchorElement).style.background = 'transparent' }}
+              >
+                {cat.name}
               </Link>
             </li>
           ))}
         </ul>
       </div>
 
-      <div style={sidebarStyles.section}>
-        <h3 style={sidebarStyles.heading}>Hot Games</h3>
-        <ul style={sidebarStyles.gameList}>
-          {hotGames.map(game => (
-            <li key={game.id}>
-              <Link to={`/games/${game.slug}`} style={sidebarStyles.gameLink}>
-                <img src={game.thumbnail} alt={game.title} style={sidebarStyles.gameThumbnail} />
-                <span style={sidebarStyles.gameTitle}>{game.title}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {hotGames.length > 0 && (
+        <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--line-subtle)', borderRadius: '10px', padding: '1rem' }}>
+          <h3 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', color: 'var(--state-hot)', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
+            Hot Right Now
+          </h3>
+          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {hotGames.map(game => (
+              <li key={game.id}>
+                <Link
+                  to={`/games/${game.slug}`}
+                  style={{ display: 'flex', gap: '10px', alignItems: 'center', textDecoration: 'none', transition: 'opacity 0.15s' }}
+                  onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.opacity = '0.8')}
+                  onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.opacity = '1')}
+                >
+                  <img
+                    src={game.thumbnail}
+                    alt={game.title}
+                    style={{ width: '52px', height: '40px', objectFit: 'cover', borderRadius: '5px', flexShrink: 0, background: 'var(--bg-void)' }}
+                    onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
+                  />
+                  <span style={{ fontSize: '0.8125rem', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.4 }}>
+                    {game.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </aside>
   )
-}
-
-const sidebarStyles = {
-  container: {
-    width: '280px',
-    display: 'none',
-    flexDirection: 'column' as const,
-    gap: '2rem',
-    padding: '1.5rem 0',
-  },
-  section: {
-    background: 'var(--bg-elevated)',
-    border: '1px solid var(--line-subtle)',
-    borderRadius: '0.5rem',
-    padding: '1rem',
-  },
-  heading: {
-    fontSize: '1rem',
-    fontWeight: 700,
-    fontFamily: "'Barlow Condensed', sans-serif",
-    marginBottom: '1rem',
-    color: 'var(--neon-lime)',
-  },
-  list: {
-    listStyle: 'none',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '0.5rem',
-  },
-  link: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    color: 'var(--text-secondary)',
-    fontSize: '0.9rem',
-    padding: '0.5rem',
-    borderRadius: '0.25rem',
-    transition: 'all 0.2s ease',
-  } as const,
-  gameList: {
-    listStyle: 'none',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '0.75rem',
-  },
-  gameLink: {
-    display: 'flex',
-    gap: '0.75rem',
-    alignItems: 'flex-start',
-    color: 'var(--text-primary)',
-    fontSize: '0.85rem',
-    transition: 'all 0.2s ease',
-  } as const,
-  gameThumbnail: {
-    width: '50px',
-    height: '50px',
-    objectFit: 'cover' as const,
-    borderRadius: '0.25rem',
-    flexShrink: 0,
-  },
-  gameTitle: {
-    display: 'line-clamp',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'pre-wrap' as const,
-  },
-}
-
-if (typeof document !== 'undefined') {
-  const style = document.createElement('style')
-  style.textContent = `
-    @media (min-width: 1024px) {
-      [style*="sidebarStyles.container"] {
-        display: flex !important;
-      }
-    }
-  `
-  document.head.appendChild(style)
 }
