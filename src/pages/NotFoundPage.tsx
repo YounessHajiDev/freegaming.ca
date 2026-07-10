@@ -1,20 +1,31 @@
-import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Gamepad2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export default function NotFoundPage() {
   return (
     <>
-      <Helmet><title>Page Not Found | FreeGaming.ca</title></Helmet>
-      <div style={{ textAlign: 'center', padding: '6rem 2rem' }}>
-        <Gamepad2 size={64} style={{ color: 'var(--text-tertiary)', marginBottom: '1.5rem' }} />
-        <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '4rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-          404
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.125rem', marginBottom: '2rem' }}>
-          This page respawned somewhere else. Let's get you back in the game.
+      <Helmet>
+        <title>Page Not Found - FreeGaming.ca</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
+      <div style={{
+        textAlign: 'center',
+        padding: '3rem 1rem',
+        minHeight: '50vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <h1 style={{ fontSize: '4rem', color: 'var(--state-hot)', marginBottom: '1rem' }}>404</h1>
+        <h2 style={{ marginBottom: '1rem' }}>Page Not Found</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+          The page you're looking for doesn't exist or has been moved.
         </p>
-        <Link to="/" className="btn-primary">Back to Home</Link>
+        <Link to="/" className="btn-primary">
+          Back to Home
+        </Link>
       </div>
     </>
   )

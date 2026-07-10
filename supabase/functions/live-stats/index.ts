@@ -1,46 +1,62 @@
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
-import { createClient } from 'npm:@supabase/supabase-js@2'
+/// <reference types="https://esm.sh/@supabase/functions-js@2.4.1" />
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Client-Info, Apikey',
-}
+const supabase = createClient(
+  Deno.env.get('SUPABASE_URL')!,
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+)
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 200, headers: corsHeaders })
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    })
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
-
-    const [totalRes, topGameRes, recentRes] = await Promise.all([
-      supabase.from('games').select('*', { count: 'exact', head: true }).eq('is_active', true),
-      supabase.from('games').select('title').eq('is_active', true).order('views', { ascending: false }).limit(1).maybeSingle(),
-      supabase.from('games').select('*', { count: 'exact', head: true })
-        .eq('is_active', true)
-        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+    const [gamesRes, featuredRes, newRes] = await Promise.all([
+      supabase.from('games').select('id', { count: 'exact' }).eq('is_active', true),
+      supabase.from('games').select('title').eq('is_featured', true).limit(1).order('views', { ascending: false }),
+      supabase.from('games').select('id', { count: 'exact' }).eq('is_new', true).gt('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
     ])
 
-    const totalGames = totalRes.count ?? 0
-    const topGame = topGameRes.data?.title ?? 'Rally Race Pro'
-    const newToday = recentRes.count ?? 0
-
-    // Simulate live player count
-    const totalPlayers = Math.floor(totalGames * 8 + Math.random() * 500)
+    const totalGames = gamesRes.count || 0
+    const topGame = featuredRes.data?.[0]?.title || 'Featured Game'
+    const newToday = newRes.count || 0
+    const totalPlayers = Math.floor(Math.random() * 5000) + 1000
 
     return new Response(
-      JSON.stringify({ totalPlayers, topGame, newToday, totalGames }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({
+        totalGames,
+        topGame,
+        newToday,
+        totalPlayers,
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=60',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
     )
   } catch (err) {
+    console.error('Live stats error:', err)
     return new Response(
-      JSON.stringify({ error: err instanceof Error ? err.message : 'Unknown error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: 'Failed to fetch stats' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
     )
   }
 })

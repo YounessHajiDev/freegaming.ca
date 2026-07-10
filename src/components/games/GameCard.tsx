@@ -1,53 +1,93 @@
 import { Link } from 'react-router-dom'
-import type { Game } from '../../lib/types'
+import { Eye } from 'lucide-react'
+import { Game } from '../../lib/types'
 
-interface Props {
-  game: Game & { categories?: { name: string } }
-  size?: 'sm' | 'md' | 'lg'
+interface GameCardProps {
+  game: Game
 }
 
-export default function GameCard({ game, size = 'md' }: Props) {
-  const imgHeight = size === 'lg' ? 200 : size === 'sm' ? 120 : 160
-
+export default function GameCard({ game }: GameCardProps) {
   return (
-    <Link to={`/games/${game.slug}`} className="game-card" style={{ display: 'block', textDecoration: 'none' }}>
-      <div style={{ position: 'relative', width: '100%', height: `${imgHeight}px`, overflow: 'hidden', backgroundColor: 'var(--bg-elevated)' }}>
-        <img
-          src={game.thumbnail || `https://placehold.co/400x300/0f1a12/39ff14?text=${encodeURIComponent(game.title)}`}
-          alt={game.title}
-          loading="lazy"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.3s ease' }}
-          onError={e => { (e.target as HTMLImageElement).src = `https://placehold.co/400x300/0f1a12/39ff14?text=${encodeURIComponent(game.title)}` }}
-        />
-        {/* Badges */}
-        <div style={{ position: 'absolute', top: '8px', left: '8px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-          {game.is_featured && <span className="badge badge-featured">Featured</span>}
-          {game.is_hot     && <span className="badge badge-hot">Hot</span>}
-          {game.is_new     && <span className="badge badge-new">New</span>}
+    <Link to={`/games/${game.slug}`} style={cardStyles.card} className="game-card">
+      <div style={cardStyles.imageContainer}>
+        <img src={game.thumbnail} alt={game.title} style={cardStyles.image} />
+        <div style={cardStyles.badges}>
+          {game.is_hot && <span className="badge-hot">HOT</span>}
+          {game.is_new && <span className="badge-new">NEW</span>}
+          {game.is_featured && <span className="badge-featured">FEATURED</span>}
         </div>
       </div>
-
-      <div style={{ padding: size === 'sm' ? '8px' : '12px' }}>
-        <h3 style={{
-          margin: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700,
-          textTransform: 'uppercase', fontSize: size === 'sm' ? '0.85rem' : '1rem',
-          color: 'var(--text-primary)', letterSpacing: '0.02em',
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>
-          {game.title}
-        </h3>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: 'Space Grotesk, sans-serif' }}>
-            {game.categories?.name || ''}
-          </span>
-          {game.views > 0 && (
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', fontFamily: 'Orbitron, monospace' }}>
-              {game.views >= 1000 ? `${(game.views / 1000).toFixed(1)}k` : game.views}
-            </span>
-          )}
+      <div style={cardStyles.content}>
+        <h3 style={cardStyles.title}>{game.title}</h3>
+        <p style={cardStyles.category}>{game.categories?.name || 'Game'}</p>
+        <div style={cardStyles.stats}>
+          <div style={cardStyles.stat}>
+            <Eye size={14} style={{ color: 'var(--neon-lime)' }} />
+            <span>{(game.views / 1000).toFixed(1)}K</span>
+          </div>
+          <span className="badge-free">FREE</span>
         </div>
       </div>
     </Link>
   )
+}
+
+const cardStyles = {
+  card: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    height: '100%',
+    textDecoration: 'none',
+  },
+  imageContainer: {
+    position: 'relative' as const,
+    overflow: 'hidden',
+    borderRadius: '0.5rem 0.5rem 0 0',
+  },
+  image: {
+    width: '100%',
+    height: '160px',
+    objectFit: 'cover' as const,
+    display: 'block',
+  },
+  badges: {
+    position: 'absolute' as const,
+    top: '0.5rem',
+    left: '0.5rem',
+    display: 'flex',
+    gap: '0.5rem',
+    flexWrap: 'wrap' as const,
+  },
+  content: {
+    padding: '0.75rem',
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column' as const,
+  },
+  title: {
+    fontSize: '0.95rem',
+    fontWeight: 700,
+    marginBottom: '0.25rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    color: 'var(--text-primary)',
+  },
+  category: {
+    fontSize: '0.75rem',
+    color: 'var(--text-tertiary)',
+    marginBottom: '0.5rem',
+  },
+  stats: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '0.8rem',
+    color: 'var(--text-secondary)',
+  } as const,
+  stat: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+  } as const,
 }

@@ -1,35 +1,31 @@
+import { Game } from '../../lib/types'
 import GameCard from './GameCard'
 import GameCardSkeleton from './GameCardSkeleton'
-import type { Game } from '../../lib/types'
 
-interface Props {
-  games: (Game & { categories?: { name: string } })[]
+interface GameGridProps {
+  games: Game[]
   loading?: boolean
-  columns?: number
+  columns?: 3 | 4
 }
 
-export default function GameGrid({ games, loading = false, columns = 5 }: Props) {
-  const cols = Math.min(columns, 5)
-  const gridStyle: React.CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-    gap: '1rem',
-  }
-  const responsiveStyle = `
-    @media (max-width: 1280px) { .game-grid-${cols} { grid-template-columns: repeat(4, minmax(0,1fr)) !important; } }
-    @media (max-width: 1024px) { .game-grid-${cols} { grid-template-columns: repeat(3, minmax(0,1fr)) !important; } }
-    @media (max-width: 640px)  { .game-grid-${cols} { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } }
-  `
+export default function GameGrid({ games, loading = false, columns = 4 }: GameGridProps) {
+  const skeletonCount = columns * 2
 
   return (
-    <>
-      <style>{responsiveStyle}</style>
-      <div className={`game-grid-${cols}`} style={gridStyle}>
-        {loading
-          ? <GameCardSkeleton count={cols * 2} />
-          : games.map(g => <GameCard key={g.id} game={g} />)
-        }
-      </div>
-    </>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: `repeat(auto-fill, minmax(${columns === 3 ? '280px' : '250px'}, 1fr))`,
+      gap: '1.5rem',
+    }}>
+      {loading ? (
+        Array.from({ length: skeletonCount }).map((_, i) => (
+          <GameCardSkeleton key={i} />
+        ))
+      ) : (
+        games.map(game => (
+          <GameCard key={game.id} game={game} />
+        ))
+      )}
+    </div>
   )
 }

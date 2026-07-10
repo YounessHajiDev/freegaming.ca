@@ -1,63 +1,72 @@
-import { useRef } from 'react'
+import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Game } from '../../lib/types'
 import GameCard from './GameCard'
-import type { Game } from '../../lib/types'
 
-interface Props {
-  games: (Game & { categories?: { name: string } })[]
+interface GameCarouselProps {
+  games: Game[]
   title: string
-  icon?: React.ReactNode
-  accentColor?: string
-  linkTo?: string
-  linkLabel?: string
 }
 
-export default function GameCarousel({ games, title, icon, accentColor = 'var(--neon-lime)', linkTo, linkLabel = 'See All' }: Props) {
-  const scrollRef = useRef<HTMLDivElement>(null)
+export default function GameCarousel({ games, title }: GameCarouselProps) {
+  const [scroll, setScroll] = useState(0)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
 
-  const scroll = (dir: 'left' | 'right') => {
-    if (!scrollRef.current) return
-    scrollRef.current.scrollBy({ left: dir === 'left' ? -280 : 280, behavior: 'smooth' })
+  const scroll_amount = 300
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    const container = document.getElementById(`carousel-${title}`)
+    if (container) {
+      const newScroll = direction === 'left' ? scroll - scroll_amount : scroll + scroll_amount
+      container.scrollLeft = newScroll
+      setScroll(newScroll)
+      setCanScrollLeft(newScroll > 0)
+      setCanScrollRight(newScroll < container.scrollWidth - container.clientWidth)
+    }
   }
 
   return (
-    <section style={{ marginBottom: '2.5rem' }}>
-      <div className="section-header">
-        <div className="section-title">
-          {icon && <span style={{ color: accentColor }}>{icon}</span>}
-          {title}
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {linkTo && (
-            <Link to={linkTo} className="section-link">{linkLabel} →</Link>
-          )}
-          <button onClick={() => scroll('left')} style={{
-            background: 'var(--bg-surface)', border: '1px solid var(--line-visible)',
-            color: 'var(--text-secondary)', borderRadius: '6px', padding: '5px',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s',
-          }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ice)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ice)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--line-visible)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)' }}
-          ><ChevronLeft size={16} /></button>
-          <button onClick={() => scroll('right')} style={{
-            background: 'var(--bg-surface)', border: '1px solid var(--line-visible)',
-            color: 'var(--text-secondary)', borderRadius: '6px', padding: '5px',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s',
-          }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ice)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ice)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--line-visible)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)' }}
-          ><ChevronRight size={16} /></button>
+    <div style={{ marginBottom: '3rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h2 style={{ color: 'var(--neon-lime)' }}>{title}</h2>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button
+            onClick={() => handleScroll('left')}
+            disabled={!canScrollLeft}
+            className="btn-ghost"
+            style={{ opacity: canScrollLeft ? 1 : 0.5 }}
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            onClick={() => handleScroll('right')}
+            disabled={!canScrollRight}
+            className="btn-ghost"
+            style={{ opacity: canScrollRight ? 1 : 0.5 }}
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
       </div>
 
-      <div ref={scrollRef} className="carousel-scroll" style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '8px' }}>
-        {games.map(g => (
-          <div key={g.id} style={{ width: '200px', flexShrink: 0 }}>
-            <GameCard game={g} size="sm" />
+      <div
+        id={`carousel-${title}`}
+        style={{
+          display: 'flex',
+          gap: '1.5rem',
+          overflowX: 'auto',
+          scrollBehavior: 'smooth',
+          paddingBottom: '1rem',
+          scrollbarWidth: 'none',
+        }}
+      >
+        {games.map(game => (
+          <div key={game.id} style={{ flex: '0 0 250px' }}>
+            <GameCard game={game} />
           </div>
         ))}
       </div>
-    </section>
+    </div>
   )
 }

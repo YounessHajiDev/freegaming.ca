@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
+import CookieBanner from './components/ui/CookieBanner'
+
+// Pages
 import HomePage from './pages/HomePage'
 import GamePage from './pages/GamePage'
 import CategoryPage from './pages/CategoryPage'
@@ -10,21 +13,22 @@ import AboutPage from './pages/AboutPage'
 import ContactPage from './pages/ContactPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import TermsPage from './pages/TermsPage'
+import NotFoundPage from './pages/NotFoundPage'
 import AdminPage from './pages/AdminPage'
 import PinterestPinsPage from './pages/PinterestPinsPage'
-import FreeGamesPage from './pages/seo/FreeGamesPage'
-import PlayOnlinePage from './pages/seo/PlayOnlinePage'
-import UnblockedGamesPage from './pages/seo/UnblockedGamesPage'
-import GamesForKidsPage from './pages/seo/GamesForKidsPage'
-import TwoPlayerPage from './pages/seo/TwoPlayerPage'
-import FreePuzzleGamesPage from './pages/seo/FreePuzzleGamesPage'
-import FreeRacingGamesPage from './pages/seo/FreeRacingGamesPage'
-import FreeActionGamesPage from './pages/seo/FreeActionGamesPage'
-import FreeSportsGamesPage from './pages/seo/FreeSportsGamesPage'
-import FreeArcadeGamesPage from './pages/seo/FreeArcadeGamesPage'
-import FreeCarGamesPage from './pages/seo/FreeCarGamesPage'
-import NotFoundPage from './pages/NotFoundPage'
-import { CookieBanner } from './components/ui/CookieBanner'
+
+// SEO Landing Pages
+import FreeGamesPage from './pages/FreeGamesPage'
+import PlayOnlinePage from './pages/PlayOnlinePage'
+import UnblockedGamesPage from './pages/UnblockedGamesPage'
+import GamesForKidsPage from './pages/GamesForKidsPage'
+import TwoPlayerPage from './pages/TwoPlayerPage'
+import FreePuzzleGamesPage from './pages/FreePuzzleGamesPage'
+import FreeRacingGamesPage from './pages/FreeRacingGamesPage'
+import FreeActionGamesPage from './pages/FreeActionGamesPage'
+import FreeSportsGamesPage from './pages/FreeSportsGamesPage'
+import FreeArcadeGamesPage from './pages/FreeArcadeGamesPage'
+import FreeCarGamesPage from './pages/FreeCarGamesPage'
 
 export default function App() {
   return (
@@ -41,6 +45,8 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-of-service" element={<TermsPage />} />
+
+          {/* SEO Landing Pages */}
           <Route path="/free-games" element={<FreeGamesPage />} />
           <Route path="/play-online" element={<PlayOnlinePage />} />
           <Route path="/unblocked-games" element={<UnblockedGamesPage />} />
@@ -52,11 +58,16 @@ export default function App() {
           <Route path="/free-sports-games" element={<FreeSportsGamesPage />} />
           <Route path="/free-arcade-games" element={<FreeArcadeGamesPage />} />
           <Route path="/free-car-games" element={<FreeCarGamesPage />} />
+
+          {/* Admin */}
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/pinterest" element={<PinterestPinsPage />} />
+
+          {/* 404 */}
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
+
       <CookieBanner />
     </BrowserRouter>
   )

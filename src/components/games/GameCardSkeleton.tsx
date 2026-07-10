@@ -1,15 +1,15 @@
-export default function GameCardSkeleton({ count = 5 }: { count?: number }) {
+export default function GameCardSkeleton() {
   return (
-    <>
-      {Array.from({ length: count }).map((_, i) => (
-        <div key={i} style={{ borderRadius: '12px', overflow: 'hidden', background: 'var(--bg-surface)', border: '1px solid var(--line-subtle)' }}>
-          <div className="skeleton" style={{ width: '100%', height: '160px' }} />
-          <div style={{ padding: '12px' }}>
-            <div className="skeleton" style={{ height: '16px', width: '80%', marginBottom: '8px' }} />
-            <div className="skeleton" style={{ height: '12px', width: '50%' }} />
-          </div>
+    <div className="skeleton-card">
+      <div className="skeleton-card-img" />
+      <div style={{ padding: '0.75rem' }}>
+        <div className="skeleton-line" style={{ height: '1rem', marginBottom: '0.5rem' }} />
+        <div className="skeleton-line" style={{ height: '0.75rem', marginBottom: '0.75rem', width: '60%' }} />
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div className="skeleton-line" style={{ height: '0.75rem', flex: 1 }} />
+          <div className="skeleton-line" style={{ height: '0.75rem', width: '50px' }} />
         </div>
-      ))}
-    </>
+      </div>
+    </div>
   )
 }

@@ -1,84 +1,140 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import {
-  Gamepad2, Flame, Sparkles, Puzzle, Car, Trophy, Crosshair,
-  Layers, Brain, MapPin, Users, Lightbulb, Zap, Smile, Globe, Gamepad,
-} from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
-import type { Category } from '../../lib/types'
-
-const NAV_ICONS: Record<string, React.ReactNode> = {
-  'puzzle':    <Puzzle size={15} />,
-  'car':       <Car size={15} />,
-  'trophy':    <Trophy size={15} />,
-  'crosshair': <Crosshair size={15} />,
-  'layers':    <Layers size={15} />,
-  'brain':     <Brain size={15} />,
-  'gamepad-2': <Gamepad2 size={15} />,
-  'map':       <MapPin size={15} />,
-  'users':     <Users size={15} />,
-  'lightbulb': <Lightbulb size={15} />,
-  'zap':       <Zap size={15} />,
-  'smile':     <Smile size={15} />,
-  'globe':     <Globe size={15} />,
-  'gamepad':   <Gamepad size={15} />,
-}
+import { Category, Game } from '../../lib/types'
 
 export default function Sidebar() {
   const [categories, setCategories] = useState<Category[]>([])
-  const location = useLocation()
+  const [hotGames, setHotGames] = useState<Game[]>([])
 
   useEffect(() => {
-    supabase.from('categories').select('*').order('order_num').then(({ data }) => {
-      if (data) setCategories(data as Category[])
-    })
+    const fetch = async () => {
+      const [catsRes, gamesRes] = await Promise.all([
+        supabase
+          .from('categories')
+          .select('*')
+          .order('order_num')
+          .limit(8),
+        supabase
+          .from('games')
+          .select('*')
+          .eq('is_hot', true)
+          .eq('is_active', true)
+          .limit(5)
+          .order('views', { ascending: false })
+      ])
+      if (catsRes.data) setCategories(catsRes.data)
+      if (gamesRes.data) setHotGames(gamesRes.data)
+    }
+    fetch()
   }, [])
 
-  const isActive = (path: string) => location.pathname === path
-
-  const navItemStyle = (active: boolean): React.CSSProperties => ({
-    display: 'flex', alignItems: 'center', gap: '10px',
-    padding: '9px 14px', borderRadius: '8px', textDecoration: 'none',
-    fontSize: '0.875rem', fontFamily: 'Space Grotesk, sans-serif',
-    fontWeight: active ? 600 : 400,
-    color: active ? 'var(--neon-lime)' : 'var(--text-secondary)',
-    background: active ? 'rgba(57,255,20,0.07)' : 'transparent',
-    borderLeft: active ? '2px solid var(--neon-lime)' : '2px solid transparent',
-    transition: 'all 0.15s ease',
-    marginBottom: '2px',
-  })
-
   return (
-    <aside style={{
-      width: '230px', flexShrink: 0, borderRight: '1px solid var(--line-subtle)',
-      padding: '1.25rem 0.75rem', position: 'sticky', top: '100px', height: 'calc(100vh - 100px)',
-      overflowY: 'auto', display: 'none',
-    }}
-      className="sidebar-desktop"
-    >
-      <style>{`@media (min-width:1024px){.sidebar-desktop{display:block!important}}`}</style>
+    <aside style={sidebarStyles.container}>
+      <div style={sidebarStyles.section}>
+        <h3 style={sidebarStyles.heading}>Top Categories</h3>
+        <ul style={sidebarStyles.list}>
+          {categories.map(cat => (
+            <li key={cat.id}>
+              <Link to={`/category/${cat.slug}`} style={sidebarStyles.link}>
+                {cat.icon} {cat.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <Link to="/" style={navItemStyle(isActive('/'))}>
-        <Gamepad2 size={15} />
-        All Games
-      </Link>
-      <Link to="/popular" style={navItemStyle(isActive('/popular'))}>
-        <Flame size={15} />
-        Most Popular
-      </Link>
-      <Link to="/new-games" style={navItemStyle(isActive('/new-games'))}>
-        <Sparkles size={15} />
-        New Games
-      </Link>
-
-      <div style={{ height: '1px', background: 'var(--line-subtle)', margin: '12px 0' }} />
-
-      {categories.map(cat => (
-        <Link key={cat.id} to={`/category/${cat.slug}`} style={navItemStyle(isActive(`/category/${cat.slug}`))}>
-          {NAV_ICONS[cat.icon] || <Gamepad size={15} />}
-          {cat.name}
-        </Link>
-      ))}
+      <div style={sidebarStyles.section}>
+        <h3 style={sidebarStyles.heading}>Hot Games</h3>
+        <ul style={sidebarStyles.gameList}>
+          {hotGames.map(game => (
+            <li key={game.id}>
+              <Link to={`/games/${game.slug}`} style={sidebarStyles.gameLink}>
+                <img src={game.thumbnail} alt={game.title} style={sidebarStyles.gameThumbnail} />
+                <span style={sidebarStyles.gameTitle}>{game.title}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </aside>
   )
+}
+
+const sidebarStyles = {
+  container: {
+    width: '280px',
+    display: 'none',
+    flexDirection: 'column' as const,
+    gap: '2rem',
+    padding: '1.5rem 0',
+  },
+  section: {
+    background: 'var(--bg-elevated)',
+    border: '1px solid var(--line-subtle)',
+    borderRadius: '0.5rem',
+    padding: '1rem',
+  },
+  heading: {
+    fontSize: '1rem',
+    fontWeight: 700,
+    fontFamily: "'Barlow Condensed', sans-serif",
+    marginBottom: '1rem',
+    color: 'var(--neon-lime)',
+  },
+  list: {
+    listStyle: 'none',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '0.5rem',
+  },
+  link: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    color: 'var(--text-secondary)',
+    fontSize: '0.9rem',
+    padding: '0.5rem',
+    borderRadius: '0.25rem',
+    transition: 'all 0.2s ease',
+  } as const,
+  gameList: {
+    listStyle: 'none',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '0.75rem',
+  },
+  gameLink: {
+    display: 'flex',
+    gap: '0.75rem',
+    alignItems: 'flex-start',
+    color: 'var(--text-primary)',
+    fontSize: '0.85rem',
+    transition: 'all 0.2s ease',
+  } as const,
+  gameThumbnail: {
+    width: '50px',
+    height: '50px',
+    objectFit: 'cover' as const,
+    borderRadius: '0.25rem',
+    flexShrink: 0,
+  },
+  gameTitle: {
+    display: 'line-clamp',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'pre-wrap' as const,
+  },
+}
+
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style')
+  style.textContent = `
+    @media (min-width: 1024px) {
+      [style*="sidebarStyles.container"] {
+        display: flex !important;
+      }
+    }
+  `
+  document.head.appendChild(style)
 }

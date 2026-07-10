@@ -1,23 +1,19 @@
 import { Outlet } from 'react-router-dom'
 import Header from './Header'
-import LiveTicker from './LiveTicker'
-import Sidebar from './Sidebar'
 import Footer from './Footer'
-import MobileNav from './MobileNav'
+import Sidebar from './Sidebar'
 
 export default function Layout() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-void)' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-void)' }}>
       <Header />
-      <LiveTicker />
-      <div style={{ display: 'flex', flex: 1 }}>
-        <Sidebar />
-        <main style={{ flex: 1, minWidth: 0, padding: '1.5rem', paddingBottom: '5rem' }}>
+      <div style={{ display: 'flex', flex: 1, maxWidth: '1400px', margin: '0 auto', width: '100%', padding: '0 1rem', gap: '1.5rem' }}>
+        <main style={{ flex: 1, minWidth: 0, padding: '1.5rem 0' }}>
           <Outlet />
         </main>
+        <Sidebar />
       </div>
       <Footer />
-      <MobileNav />
     </div>
   )
 }
