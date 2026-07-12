@@ -106,8 +106,8 @@ export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplate
         </script>
       </Helmet>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
-        <nav style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 var(--space-sm)' }}>
+        <nav style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem', fontSize: 'clamp(0.8rem, 2vw, 0.9rem)' }}>
           {breadcrumbs.map((b, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <a href={b.path} style={{ color: 'var(--neon-lime)' }}>{b.label}</a>
@@ -122,7 +122,7 @@ export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplate
           background: 'var(--bg-elevated)',
           border: '1px solid var(--line-visible)',
           borderRadius: '0.5rem',
-          padding: '1.5rem',
+          padding: 'clamp(1rem, 4vw, 1.5rem)',
           marginBottom: '2rem',
         }}>
           {config.intro}
@@ -135,7 +135,7 @@ export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplate
             background: 'var(--bg-elevated)',
             border: '1px solid var(--line-visible)',
             borderRadius: '0.5rem',
-            padding: '1.5rem',
+            padding: 'clamp(1rem, 4vw, 1.5rem)',
             marginTop: '2rem',
             marginBottom: '2rem',
           }}>
@@ -156,7 +156,7 @@ export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplate
           background: 'var(--bg-elevated)',
           border: '1px solid var(--line-visible)',
           borderRadius: '0.5rem',
-          padding: '1.5rem',
+          padding: 'clamp(1rem, 4vw, 1.5rem)',
           marginBottom: '2rem',
         }}>
           <h2 style={{ marginBottom: '1rem' }}>Frequently Asked Questions</h2>

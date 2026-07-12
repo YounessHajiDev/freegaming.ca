@@ -79,7 +79,7 @@ export default function GamePage() {
         background: 'var(--bg-elevated)',
         border: '1px solid var(--line-visible)',
         borderRadius: '0.5rem',
-        padding: '1.5rem',
+        padding: 'clamp(1rem, 4vw, 1.5rem)',
         marginBottom: '2rem',
       }}>
         <h2 style={{ marginBottom: '1rem' }}>About this game</h2>

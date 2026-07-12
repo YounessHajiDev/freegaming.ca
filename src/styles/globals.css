@@ -86,9 +86,9 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
 }
 
-h1 { font-size: 2.5rem; font-weight: 800; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; }
+h1 { font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 800; }
+h2 { font-size: clamp(1.25rem, 4vw, 2rem); }
+h3 { font-size: clamp(1.125rem, 3vw, 1.5rem); }
 h4 { font-size: 1.125rem; font-weight: 600; }
 
 /* ─── Buttons ─── */
@@ -202,14 +202,14 @@ h4 { font-size: 1.125rem; font-weight: 600; }
   max-width: var(--max-width);
   margin: 0 auto;
   width: 100%;
-  padding: 0 var(--space-md);
+  padding: 0 var(--space-sm);
   gap: var(--space-lg);
 }
 
 .main-area {
   flex: 1;
   min-width: 0;
-  padding: var(--space-lg) 0;
+  padding: var(--space-md) 0;
 }
 
 /* ─── Sidebar ─── */
@@ -233,11 +233,11 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 .header-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 var(--space-md);
+  padding: 0 var(--space-sm);
   height: 100%;
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .header-logo {
@@ -539,6 +539,18 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 
 /* ─── Breakpoints ─── */
 
+/* Small phone < 400px */
+@media (max-width: 399px) {
+  .game-grid { grid-template-columns: 1fr; }
+  .carousel-card { flex: 0 0 150px; }
+  .mobile-cat-grid { grid-template-columns: 1fr; }
+}
+
+/* Phone ≥ 400px */
+@media (min-width: 400px) {
+  .carousel-card { flex: 0 0 170px; }
+}
+
 /* Tablet ≥ 640px */
 @media (min-width: 640px) {
   .game-grid {
@@ -546,6 +558,13 @@ h4 { font-size: 1.125rem; font-weight: 600; }
     gap: var(--space-md);
   }
   .carousel-card { flex: 0 0 200px; }
+}
+
+/* Tablet landscape ≥ 768px */
+@media (min-width: 768px) {
+  .game-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Desktop ≥ 1024px */
