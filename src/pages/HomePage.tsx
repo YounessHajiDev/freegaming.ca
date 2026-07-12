@@ -3,9 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { supabase } from '../lib/supabase'
 import { Game } from '../lib/types'
 import GameCarousel from '../components/games/GameCarousel'
-import GameCardSkeleton from '../components/games/GameCardSkeleton'
 import LiveTicker from '../components/layout/LiveTicker'
-import SponsoredOffers from '../components/games/SponsoredOffers'
 
 export default function HomePage() {
   const [featured, setFeatured] = useState<Game[]>([])
@@ -45,24 +43,13 @@ export default function HomePage() {
       <h1 style={{ marginBottom: '1.5rem', color: 'var(--neon-lime)' }}>Play Free Games Online</h1>
 
       {loading ? (
-        <section style={{ marginBottom: '2rem' }}>
-          <div style={{ height: '2rem', width: '200px', background: 'var(--bg-elevated)', borderRadius: 'var(--r-sm)', marginBottom: '0.75rem' }} className="skeleton" />
-          <div style={{ display: 'flex', gap: 'var(--space-sm)', overflowX: 'hidden' }}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} style={{ flex: '0 0 200px' }}>
-                <GameCardSkeleton />
-              </div>
-            ))}
-          </div>
-        </section>
+        <p style={{ color: 'var(--text-tertiary)', padding: '2rem 0' }}>Loading games…</p>
       ) : (
         <>
           {featured.length > 0 && <GameCarousel games={featured} title="Featured Games" />}
           {hot.length > 0 && <GameCarousel games={hot} title="Hot Games" />}
         </>
       )}
-
-      <SponsoredOffers />
 
       {!loading && recent.length > 0 && <GameCarousel games={recent} title="Recently Added" />}
     </>
