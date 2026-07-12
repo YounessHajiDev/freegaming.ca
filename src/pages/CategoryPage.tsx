@@ -62,7 +62,7 @@ export default function CategoryPage() {
         </p>
       )}
 
-      <GameGrid games={games} loading={loading} />
+      <GameGrid games={games} />
     </>
   )
 }

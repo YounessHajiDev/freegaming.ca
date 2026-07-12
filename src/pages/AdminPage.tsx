@@ -4,9 +4,8 @@ import AdminGameManager from '../components/admin/AdminGameManager'
 import AdminAddGame from '../components/admin/AdminAddGame'
 import AdminCategories from '../components/admin/AdminCategories'
 import AdminSync from '../components/admin/AdminSync'
-import AdminOGAds from '../components/admin/AdminOGAds'
 
-type Tab = 'dashboard' | 'games' | 'add' | 'categories' | 'sync' | 'ogads'
+type Tab = 'dashboard' | 'games' | 'add' | 'categories' | 'sync'
 
 export default function AdminPage() {
   const [password, setPassword] = useState('')
@@ -95,7 +94,7 @@ export default function AdminPage() {
           marginBottom: '2rem',
           overflowX: 'auto',
         }}>
-          {['dashboard', 'games', 'add', 'categories', 'sync', 'ogads'].map(tab => (
+          {['dashboard', 'games', 'add', 'categories', 'sync'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as typeof activeTab)}
@@ -110,7 +109,7 @@ export default function AdminPage() {
                 transition: 'all 0.2s ease',
               }}
             >
-              {tab === 'ogads' ? 'OGAds' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
         </div>
@@ -133,7 +132,6 @@ export default function AdminPage() {
         {activeTab === 'add' && <AdminAddGame />}
         {activeTab === 'categories' && <AdminCategories />}
         {activeTab === 'sync' && <AdminSync />}
-        {activeTab === 'ogads' && <AdminOGAds />}
       </div>
     </>
   )

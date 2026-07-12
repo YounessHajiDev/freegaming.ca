@@ -86,9 +86,9 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
 }
 
-h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; }
-h2 { font-size: clamp(1.375rem, 3vw, 2rem); }
-h3 { font-size: clamp(1.125rem, 2.5vw, 1.5rem); }
+h1 { font-size: 2.5rem; font-weight: 800; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
 h4 { font-size: 1.125rem; font-weight: 600; }
 
 /* ─── Buttons ─── */
@@ -110,7 +110,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
   transition: all 0.2s ease;
   box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
   white-space: nowrap;
-  min-height: 44px; /* touch target */
 }
 
 .btn-primary:hover {
@@ -133,7 +132,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 36px;
   white-space: nowrap;
 }
 
@@ -151,7 +149,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   display: block;
   text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .game-card:hover {
@@ -179,19 +176,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 .badge-featured { background: rgba(126,249,255,0.15); color: var(--ice);      border-color: var(--ice); }
 .badge-free     { background: rgba(255,140,0,0.15);  color: var(--ember);    border-color: var(--ember); }
 
-/* ─── Skeleton Loading ─── */
-.skeleton {
-  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-elevated) 50%, var(--bg-surface) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
-  border-radius: var(--r-sm);
-}
-
-@keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
 /* ─── Site Layout ─── */
 .site-wrapper {
   min-height: 100vh;
@@ -207,13 +191,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
   width: 100%;
   padding: 0 var(--space-md);
   gap: var(--space-lg);
-}
-
-@media (max-width: 639px) {
-  .content-row {
-    padding: 0 var(--space-sm);
-    gap: var(--space-sm);
-  }
 }
 
 .main-area {
@@ -510,37 +487,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
   flex: 0 0 160px;
 }
 
-/* ─── Offers Grid ─── */
-.offers-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-sm);
-}
-
-/* ─── Skeleton Cards ─── */
-.skeleton-card {
-  background: var(--bg-elevated);
-  border: 1px solid var(--line-subtle);
-  border-radius: var(--r-md);
-  overflow: hidden;
-}
-
-.skeleton-card-img {
-  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-elevated) 50%, var(--bg-surface) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
-  aspect-ratio: 16/10;
-  width: 100%;
-}
-
-.skeleton-line {
-  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-elevated) 50%, var(--bg-surface) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
-  border-radius: 4px;
-  width: 100%;
-}
-
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-surface); }
@@ -556,26 +502,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 
 /* ─── Breakpoints ─── */
 
-/* Small phone < 380px */
-@media (max-width: 379px) {
-  .game-grid {
-    grid-template-columns: 1fr;
-  }
-  .offers-grid {
-    grid-template-columns: 1fr;
-  }
-  .mobile-cat-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Large phone ≥ 420px */
-@media (min-width: 420px) {
-  .game-grid {
-    gap: var(--space-md);
-  }
-}
-
 /* Tablet ≥ 640px */
 @media (min-width: 640px) {
   .game-grid {
@@ -583,7 +509,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
     gap: var(--space-md);
   }
   .carousel-card { flex: 0 0 200px; }
-  .offers-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
 }
 
 /* Desktop ≥ 1024px */
@@ -601,7 +526,6 @@ h4 { font-size: 1.125rem; font-weight: 600; }
     gap: var(--space-lg);
   }
   .carousel-card { flex: 0 0 220px; }
-  .offers-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); }
 }
 
 /* Large desktop ≥ 1280px */

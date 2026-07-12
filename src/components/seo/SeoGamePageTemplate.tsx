@@ -23,13 +23,11 @@ interface SeoGamePageTemplateProps {
 
 export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplateProps) {
   const [games, setGames] = useState<Game[]>([])
-  const [loading, setLoading] = useState(true)
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const [breadcrumbs, setBreadcrumbs] = useState<{ label: string; path: string }[]>([])
 
   useEffect(() => {
     const fetchGames = async () => {
-      setLoading(true)
       try {
         let query = supabase
           .from('games')
@@ -53,7 +51,7 @@ export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplate
       } catch (err) {
         console.error('Failed to fetch games:', err)
       } finally {
-        setLoading(false)
+        // no-op
       }
     }
 
@@ -129,7 +127,7 @@ export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplate
           {config.intro}
         </div>
 
-        <GameGrid games={games} loading={loading} />
+        <GameGrid games={games} />
 
         {config.relatedLinks && config.relatedLinks.length > 0 && (
           <div style={{
