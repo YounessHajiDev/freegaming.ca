@@ -607,7 +607,4 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 /* Large desktop ≥ 1280px */
 @media (min-width: 1280px) {
   .carousel-card { flex: 0 0 240px; }
-  .game-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
 }

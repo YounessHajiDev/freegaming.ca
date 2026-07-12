@@ -39,12 +39,11 @@ export default function GamePlayer({ iframeUrl, title, width = 800, height = 600
   }
 
   return (
-    <div style={{ marginBottom: '1.5rem', maxWidth: '100%' }}>
+    <div style={{ marginBottom: '1.5rem' }}>
       {/* Responsive aspect-ratio container */}
       <div style={{
         position: 'relative', width: '100%', paddingTop, background: 'var(--bg-void)',
         borderRadius: '10px', overflow: 'hidden', border: '2px solid var(--line-visible)',
-        maxWidth: '960px', margin: '0 auto',
       }}>
         <iframe
           src={iframeUrl}
@@ -56,7 +55,7 @@ export default function GamePlayer({ iframeUrl, title, width = 800, height = 600
       </div>
 
       {/* Controls bar */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px', maxWidth: '960px', margin: '8px auto 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px' }}>
         <button
           onClick={() => setIsFullscreen(true)}
           style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 14px', background: 'var(--bg-elevated)', border: '1px solid var(--line-visible)', borderRadius: '6px', color: 'var(--text-secondary)', cursor: 'pointer', fontFamily: 'Space Grotesk, sans-serif', fontSize: '0.8125rem', transition: 'border-color 0.15s, color 0.15s', minHeight: '40px' }}

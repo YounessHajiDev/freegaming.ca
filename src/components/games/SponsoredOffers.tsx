@@ -93,7 +93,7 @@ export default function SponsoredOffers() {
           <h2 style={{
             fontFamily: 'Barlow Condensed, sans-serif',
             fontWeight: 800,
-            fontSize: 'clamp(1.1rem, 3vw, 1.375rem)',
+            fontSize: '1.375rem',
             textTransform: 'uppercase',
             color: 'var(--text-primary)',
             margin: 0,
@@ -175,7 +175,7 @@ function OfferCard({ offer }: { offer: Offer }) {
         }}
       >
         {/* Thumbnail */}
-        <div style={{ position: 'relative', height: 'clamp(100px, 25vw, 130px)', background: 'var(--bg-void)', flexShrink: 0 }}>
+        <div style={{ position: 'relative', height: '130px', background: 'var(--bg-void)', flexShrink: 0 }}>
           {offer.picture ? (
             <img
               src={offer.picture}
@@ -231,7 +231,7 @@ function OfferCard({ offer }: { offer: Offer }) {
         </div>
 
         {/* Content */}
-        <div style={{ padding: 'clamp(10px, 2vw, 12px)', flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <div style={{
             fontFamily: 'Barlow Condensed, sans-serif',
             fontWeight: 700,
@@ -269,7 +269,7 @@ function OfferCard({ offer }: { offer: Offer }) {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              padding: 'clamp(7px, 2vw, 8px) clamp(10px, 2vw, 12px)',
+              padding: '8px 12px',
               background: 'linear-gradient(135deg, var(--ember) 0%, #ff6b35 100%)',
               borderRadius: '7px',
               color: '#fff',
