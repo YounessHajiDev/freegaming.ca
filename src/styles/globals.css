@@ -176,6 +176,19 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 .badge-featured { background: rgba(126,249,255,0.15); color: var(--ice);      border-color: var(--ice); }
 .badge-free     { background: rgba(255,140,0,0.15);  color: var(--ember);    border-color: var(--ember); }
 
+/* ─── Skeleton Loading ─── */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-elevated) 50%, var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: var(--r-sm);
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* ─── Site Layout ─── */
 .site-wrapper {
   min-height: 100vh;
@@ -485,6 +498,30 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 
 .carousel-card {
   flex: 0 0 160px;
+}
+
+/* ─── Skeleton Cards ─── */
+.skeleton-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.skeleton-card-img {
+  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-elevated) 50%, var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  aspect-ratio: 16/10;
+  width: 100%;
+}
+
+.skeleton-line {
+  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-elevated) 50%, var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  width: 100%;
 }
 
 /* ─── Scrollbar ─── */

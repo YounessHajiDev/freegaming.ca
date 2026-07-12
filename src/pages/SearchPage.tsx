@@ -10,6 +10,7 @@ export default function SearchPage() {
   const [params] = useSearchParams()
   const query = params.get('q') || ''
   const [games, setGames] = useState<Game[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetch = async () => {
@@ -33,6 +34,7 @@ export default function SearchPage() {
       } catch (err) {
         console.error('Failed to search games:', err)
       } finally {
+        setLoading(false)
       }
     }
     fetch()
@@ -62,7 +64,7 @@ export default function SearchPage() {
         </p>
       )}
 
-      <GameGrid games={games} />
+      <GameGrid games={games} loading={loading} />
     </>
   )
 }

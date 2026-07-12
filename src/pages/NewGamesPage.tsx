@@ -6,6 +6,7 @@ import GameGrid from '../components/games/GameGrid'
 
 export default function NewGamesPage() {
   const [games, setGames] = useState<Game[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetch = async () => {
@@ -21,6 +22,7 @@ export default function NewGamesPage() {
       } catch (err) {
         console.error('Failed to load new games:', err)
       } finally {
+        setLoading(false)
       }
     }
     fetch()
@@ -38,7 +40,7 @@ export default function NewGamesPage() {
         Latest games added to our collection
       </p>
 
-      <GameGrid games={games} />
+      <GameGrid games={games} loading={loading} />
     </>
   )
 }

@@ -23,6 +23,7 @@ interface SeoGamePageTemplateProps {
 
 export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplateProps) {
   const [games, setGames] = useState<Game[]>([])
+  const [loading, setLoading] = useState(true)
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const [breadcrumbs, setBreadcrumbs] = useState<{ label: string; path: string }[]>([])
 
@@ -51,7 +52,7 @@ export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplate
       } catch (err) {
         console.error('Failed to fetch games:', err)
       } finally {
-        // no-op
+        setLoading(false)
       }
     }
 
@@ -127,7 +128,7 @@ export default function SeoGamePageTemplate({ cfg: config }: SeoGamePageTemplate
           {config.intro}
         </div>
 
-        <GameGrid games={games} />
+        <GameGrid games={games} loading={loading} />
 
         {config.relatedLinks && config.relatedLinks.length > 0 && (
           <div style={{
