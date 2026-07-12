@@ -5,7 +5,10 @@ export default function Footer() {
     <footer style={footerStyles.container}>
       <div style={footerStyles.content}>
         <div style={footerStyles.brand}>
-          <h3 style={{ color: 'var(--neon-lime)', marginBottom: '0.5rem' }}>FreeGaming.ca</h3>
+          <h3 style={{ marginBottom: '0.5rem' }}>
+            <span style={{ color: 'var(--ember)' }}>FreeGaming</span>
+            <span style={{ color: 'var(--text-primary)' }}>.ca</span>
+          </h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             Discover and play hundreds of free online games. No registration required.
           </p>

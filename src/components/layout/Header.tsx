@@ -46,7 +46,7 @@ export default function Header() {
     <>
       <header className="site-header">
         <div className="header-inner">
-          <Link to="/" className="header-logo">FreeGaming.ca</Link>
+          <Link to="/" className="header-logo">FreeGaming<span className="logo-suffix">.ca</span></Link>
 
           {/* Desktop nav */}
           <nav className="header-nav">
@@ -95,7 +95,7 @@ export default function Header() {
       {/* Mobile menu */}
       <div className={`mobile-menu${mobileOpen ? ' open' : ''}`} aria-hidden={!mobileOpen}>
         <div className="mobile-menu-header">
-          <Link to="/" className="header-logo" onClick={() => setMobileOpen(false)}>FreeGaming.ca</Link>
+          <Link to="/" className="header-logo" onClick={() => setMobileOpen(false)}>FreeGaming<span className="logo-suffix">.ca</span></Link>
           <button className="hamburger-btn" onClick={() => setMobileOpen(false)} aria-label="Close menu">
             <X size={20} />
           </button>
