@@ -209,6 +209,13 @@ h4 { font-size: 1.125rem; font-weight: 600; }
   gap: var(--space-lg);
 }
 
+@media (max-width: 639px) {
+  .content-row {
+    padding: 0 var(--space-sm);
+    gap: var(--space-sm);
+  }
+}
+
 .main-area {
   flex: 1;
   min-width: 0;
@@ -549,6 +556,26 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 
 /* ─── Breakpoints ─── */
 
+/* Small phone < 380px */
+@media (max-width: 379px) {
+  .game-grid {
+    grid-template-columns: 1fr;
+  }
+  .offers-grid {
+    grid-template-columns: 1fr;
+  }
+  .mobile-cat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Large phone ≥ 420px */
+@media (min-width: 420px) {
+  .game-grid {
+    gap: var(--space-md);
+  }
+}
+
 /* Tablet ≥ 640px */
 @media (min-width: 640px) {
   .game-grid {
@@ -580,4 +607,7 @@ h4 { font-size: 1.125rem; font-weight: 600; }
 /* Large desktop ≥ 1280px */
 @media (min-width: 1280px) {
   .carousel-card { flex: 0 0 240px; }
+  .game-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }

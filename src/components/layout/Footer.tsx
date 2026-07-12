@@ -37,15 +37,15 @@ const footerStyles = {
   container: {
     background: 'var(--bg-elevated)',
     borderTop: '1px solid var(--line-visible)',
-    padding: '3rem 1rem 1rem',
+    padding: 'clamp(2rem, 6vw, 3rem) 1rem 1rem',
     marginTop: 'auto',
   },
   content: {
     maxWidth: '1400px',
     margin: '0 auto',
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '2rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+    gap: 'clamp(1.5rem, 4vw, 2rem)',
     marginBottom: '2rem',
   } as const,
   brand: {

@@ -79,16 +79,16 @@ export default function GamePage() {
         background: 'var(--bg-elevated)',
         border: '1px solid var(--line-visible)',
         borderRadius: '0.5rem',
-        padding: '1.5rem',
+        padding: 'clamp(1rem, 3vw, 1.5rem)',
         marginBottom: '2rem',
       }}>
-        <h2 style={{ marginBottom: '1rem' }}>About this game</h2>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>{game.description}</p>
+        <h2 style={{ marginBottom: '1rem', fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)' }}>About this game</h2>
+        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>{game.description}</p>
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
-          gap: '0.75rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
+          gap: 'clamp(0.5rem, 2vw, 0.75rem)',
           marginTop: '1.5rem',
           paddingTop: '1.5rem',
           borderTop: '1px solid var(--line-subtle)',
