@@ -1,92 +1,75 @@
+'use client'
 import { useEffect, useState } from 'react'
-import { supabase } from '../../lib/supabase'
+import type { LiveStats } from '../../lib/types'
 
-interface LiveStats {
-  totalGames: number
-  newToday: number
-  topGame: string
-}
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string
+const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 
 export default function LiveTicker() {
-  const [stats, setStats] = useState<LiveStats | null>(null)
+  const [stats, setStats] = useState<string[]>([
+    '⚡ Loading live stats...',
+  ])
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const load = async () => {
       try {
-        const [{ count: total }, { count: newToday }, { data: topData }] = await Promise.all([
-          supabase.from('games').select('*', { count: 'exact', head: true }).eq('is_active', true),
-          supabase.from('games').select('*', { count: 'exact', head: true }).eq('is_active', true)
-            .gte('created_at', new Date(Date.now() - 86400000).toISOString()),
-          supabase.from('games').select('title').eq('is_active', true).order('views', { ascending: false }).limit(1),
-        ])
-        setStats({
-          totalGames: total ?? 0,
-          newToday: newToday ?? 0,
-          topGame: topData?.[0]?.title ?? 'Loading…',
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/live-stats`, {
+          headers: { Authorization: `Bearer ${SUPABASE_ANON}`, 'Content-Type': 'application/json' },
         })
+        if (!res.ok) return
+        const data: LiveStats = await res.json()
+        setStats([
+          `⚡ ${data.totalPlayers.toLocaleString('en-CA')} players online right now`,
+          `🔥 Most played today: ${data.topGame}`,
+          `✨ ${data.newToday} new games added this week`,
+          `🎮 ${data.totalGames.toLocaleString('en-CA')} free games in our library`,
+          `🍁 Canada's #1 free gaming portal`,
+          `⚡ No download. No signup. Just play.`,
+        ])
       } catch {
-        // silently fail — ticker is non-critical
+        setStats([
+          `🎮 Thousands of free games — no download required`,
+          `🍁 Canada's #1 free online gaming portal`,
+          `⚡ No signup. Just play.`,
+        ])
       }
     }
-
-    fetchStats()
+    load()
   }, [])
 
-  if (!stats) return null
-
   return (
-    <div style={tickerStyles.container}>
-      <div style={tickerStyles.stat}>
-        <span style={tickerStyles.label}>Total Games</span>
-        <span style={tickerStyles.value}>{stats.totalGames.toLocaleString()}</span>
+    <div style={{
+      width: '100%', height: '36px', display: 'flex', alignItems: 'center',
+      overflow: 'hidden', borderBottom: '1px solid var(--line-visible)',
+      backgroundColor: 'var(--bg-elevated)', position: 'sticky', top: '64px', zIndex: 39,
+    }}>
+      {/* LIVE label */}
+      <div style={{
+        flexShrink: 0, display: 'flex', alignItems: 'center', gap: '8px',
+        padding: '0 16px', borderRight: '1px solid var(--line-visible)', height: '100%',
+      }}>
+        <span style={{
+          width: '8px', height: '8px', borderRadius: '50%',
+          backgroundColor: 'var(--neon-lime)', display: 'inline-block',
+          animation: 'pulse 2s ease-in-out infinite',
+        }} />
+        <span style={{
+          fontFamily: 'Orbitron, monospace', fontSize: '10px',
+          color: 'var(--neon-lime)', textTransform: 'uppercase', letterSpacing: '0.15em',
+        }}>LIVE</span>
       </div>
-      <div style={tickerStyles.stat}>
-        <span style={tickerStyles.label}>New Today</span>
-        <span style={tickerStyles.value}>{stats.newToday}</span>
-      </div>
-      <div style={tickerStyles.stat}>
-        <span style={tickerStyles.label}>Top Game</span>
-        <span style={tickerStyles.value}>{stats.topGame}</span>
-      </div>
-      <div style={tickerStyles.stat}>
-        <span style={tickerStyles.label}>Access</span>
-        <span style={tickerStyles.value}>FREE</span>
+
+      {/* Scrolling content */}
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        <div className="animate-ticker" style={{ display: 'flex', gap: '64px', whiteSpace: 'nowrap' }}>
+          {[...stats, ...stats].map((stat, i) => (
+            <span key={i} style={{
+              color: 'var(--text-secondary)', fontSize: '12px',
+              fontFamily: 'Space Grotesk, sans-serif',
+            }}>{stat}</span>
+          ))}
+        </div>
       </div>
     </div>
   )
-}
-
-const tickerStyles = {
-  container: {
-    background: 'linear-gradient(90deg, var(--bg-surface), var(--bg-elevated))',
-    border: '1px solid var(--line-visible)',
-    padding: '1rem',
-    borderRadius: '0.5rem',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-    gap: '1rem',
-    marginBottom: '2rem',
-  } as const,
-  stat: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '0.25rem',
-    textAlign: 'center' as const,
-  },
-  label: {
-    fontSize: '0.75rem',
-    color: 'var(--text-tertiary)',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.05em',
-    fontWeight: 600,
-  },
-  value: {
-    fontSize: '1.25rem',
-    fontWeight: 700,
-    color: 'var(--neon-lime)',
-    fontFamily: "'Barlow Condensed', sans-serif",
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap' as const,
-  },
 }

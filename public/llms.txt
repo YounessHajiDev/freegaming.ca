@@ -1,90 +1,28 @@
-# FreeGaming.ca - AI Assistant Overview
+# FreeGaming.ca
 
-FreeGaming.ca is a Canadian free gaming portal built with React, TypeScript, and Vite. It provides a comprehensive platform for discovering and playing hundreds of free online games.
+## About
+FreeGaming.ca is Canada's free online games portal for English-speaking Canadians.
+Hundreds of HTML5 browser games playable instantly — no download, no signup required.
 
-## Project Structure
+## Categories
+Puzzle, Racing, Sports, Shooting, Card Games, Strategy, Arcade, Adventure,
+Multiplayer, Thinking Games, Action, Casual, IO Games
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **Backend**: Supabase (PostgreSQL) with Edge Functions
-- **Styling**: CSS variables for dark gaming theme
-- **UI Components**: Lucide icons, custom React components
-- **Search**: Fuse.js for client-side fuzzy search
-- **SEO**: React Helmet for meta tags and schema markup
+## URL
+https://www.freegaming.ca
 
-## Core Features
+## Language
+en-CA (Canadian English)
 
-- **Game Library**: Browse, search, and play free games in categories
-- **Game Player**: Iframe-based game embedding with fullscreen support
-- **User Interface**: Dark gaming aesthetic with neon lime accent colors
-- **Mobile Responsive**: Works on desktop, tablet, and mobile devices
-- **SEO Optimized**: Landing pages for popular game categories with FAQ sections
-- **Admin Dashboard**: Password-protected management of games, categories, and sync
-- **Cookie Consent**: GDPR/PIPEDA compliant cookie banner
+## Target Audience
+English-speaking Canadians, all ages, all provinces
 
-## Database Schema
+## Key Facts
+- Free to play, forever
+- No download or account required
+- Works on desktop, tablet, and mobile
+- Updated daily with new games
+- Based in Canada (.ca domain)
 
-### Tables
-- `games`: Game records with metadata, iframe URLs, views, status flags
-- `categories`: Game categories with icons and descriptions
-- `sync_logs`: History of game data syncs from external sources
-
-### Types (src/lib/types.ts)
-- `Game`: Main game entity
-- `Category`: Category metadata
-- `SyncLog`: Sync operation history
-- `LiveStats`: Real-time statistics
-
-## Key Pages
-
-**Core Pages**:
-- `/` - Homepage with featured, hot, and recent games
-- `/games/:slug` - Individual game player page
-- `/category/:slug` - Category page with filtered games
-- `/search` - Search results with Fuse.js fuzzy matching
-- `/popular` - Top games by view count
-- `/new-games` - Recently added games
-
-**SEO Landing Pages**:
-- `/free-games`, `/play-online`, `/unblocked-games`
-- `/games-for-kids`, `/2-player-games`
-- `/free-puzzle-games`, `/free-racing-games`, `/free-action-games`
-- `/free-sports-games`, `/free-arcade-games`, `/free-car-games`
-
-**Admin Pages**:
-- `/admin` - Login and dashboard (password: freegaming2026)
-- Admin tabs: Dashboard, Games Manager, Add Game, Categories, Sync
-
-**Legal/Info**:
-- `/about`, `/contact`, `/privacy-policy`, `/terms-of-service`
-
-## Edge Functions (Supabase)
-
-1. **`live-stats`** - Returns real-time game statistics (total games, new today, trending game, player count)
-2. **`sitemap`** - Generates XML sitemap for SEO with all games and categories
-3. **`sync-games`** - Syncs games from GameMonetize, GameDistribution, HTML5Games APIs
-
-## Component Structure
-
-- **Layout**: Header, Footer, Sidebar, LiveTicker
-- **Games**: GameCard, GameGrid, GameCarousel, GamePlayer, GameCardSkeleton
-- **Admin**: AdminGameManager, AdminAddGame, AdminCategories, AdminSync
-- **UI**: CookieBanner
-- **SEO**: SeoGamePageTemplate (for landing pages)
-
-## Styling
-
-- **CSS Variables**: Dark gaming theme with neon accents
-  - `--bg-void` (#060d08), `--bg-surface`, `--bg-elevated`
-  - `--text-primary`, `--text-secondary`, `--text-tertiary`
-  - `--neon-lime` (#39ff14), `--ice` (#7ef9ff), `--ember` (#ff8c00)
-  - `--state-hot` (#ff3d57), line colors
-- **Fonts**: Barlow Condensed (headings), Space Grotesk (body), Orbitron (accents)
-- **Classes**: `.btn-primary`, `.btn-ghost`, `.badge-hot`, `.badge-new`, etc.
-- **Responsive**: Mobile-first with breakpoints at 480px, 768px, 1024px
-
-## Configuration Files
-
-- `vite.config.ts` - Vite build configuration
-- `tsconfig.json` - TypeScript compiler options
-- `index.html` - Entry point with Google Fonts
-- `vercel.json` - Deployment config with SPA rewrite
+## Sitemap
+https://www.freegaming.ca/sitemap.xml

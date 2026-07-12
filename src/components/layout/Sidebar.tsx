@@ -1,73 +1,84 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import {
+  Gamepad2, Flame, Sparkles, Puzzle, Car, Trophy, Crosshair,
+  Layers, Brain, MapPin, Users, Lightbulb, Zap, Smile, Globe, Gamepad,
+} from 'lucide-react'
 import { supabase } from '../../lib/supabase'
-import type { Category, Game } from '../../lib/types'
+import type { Category } from '../../lib/types'
+
+const NAV_ICONS: Record<string, React.ReactNode> = {
+  'puzzle':    <Puzzle size={15} />,
+  'car':       <Car size={15} />,
+  'trophy':    <Trophy size={15} />,
+  'crosshair': <Crosshair size={15} />,
+  'layers':    <Layers size={15} />,
+  'brain':     <Brain size={15} />,
+  'gamepad-2': <Gamepad2 size={15} />,
+  'map':       <MapPin size={15} />,
+  'users':     <Users size={15} />,
+  'lightbulb': <Lightbulb size={15} />,
+  'zap':       <Zap size={15} />,
+  'smile':     <Smile size={15} />,
+  'globe':     <Globe size={15} />,
+  'gamepad':   <Gamepad size={15} />,
+}
 
 export default function Sidebar() {
   const [categories, setCategories] = useState<Category[]>([])
-  const [hotGames, setHotGames] = useState<Game[]>([])
+  const location = useLocation()
 
   useEffect(() => {
-    Promise.all([
-      supabase.from('categories').select('*').order('order_num').limit(10),
-      supabase.from('games').select('*').eq('is_hot', true).eq('is_active', true).order('views', { ascending: false }).limit(5),
-    ]).then(([cats, games]) => {
-      if (cats.data) setCategories(cats.data)
-      if (games.data) setHotGames(games.data)
-    }).catch(err => console.error('Failed to load sidebar:', err))
+    supabase.from('categories').select('*').order('order_num').then(({ data }) => {
+      if (data) setCategories(data as Category[])
+    })
   }, [])
 
-  return (
-    <aside className="sidebar">
-      <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--line-subtle)', borderRadius: '10px', padding: '1rem' }}>
-        <h3 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', color: 'var(--neon-lime)', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
-          Categories
-        </h3>
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          {categories.map(cat => (
-            <li key={cat.id}>
-              <Link
-                to={`/category/${cat.slug}`}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', borderRadius: '6px', color: 'var(--text-secondary)', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.15s, background 0.15s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-primary)'; (e.currentTarget as HTMLAnchorElement).style.background = 'var(--bg-void)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-secondary)'; (e.currentTarget as HTMLAnchorElement).style.background = 'transparent' }}
-              >
-                {cat.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+  const isActive = (path: string) => location.pathname === path
 
-      {hotGames.length > 0 && (
-        <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--line-subtle)', borderRadius: '10px', padding: '1rem' }}>
-          <h3 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', color: 'var(--state-hot)', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
-            Hot Right Now
-          </h3>
-          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {hotGames.map(game => (
-              <li key={game.id}>
-                <Link
-                  to={`/games/${game.slug}`}
-                  style={{ display: 'flex', gap: '10px', alignItems: 'center', textDecoration: 'none', transition: 'opacity 0.15s' }}
-                  onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.opacity = '0.8')}
-                  onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.opacity = '1')}
-                >
-                  <img
-                    src={game.thumbnail}
-                    alt={game.title}
-                    style={{ width: '52px', height: '40px', objectFit: 'cover', borderRadius: '5px', flexShrink: 0, background: 'var(--bg-void)' }}
-                    onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
-                  />
-                  <span style={{ fontSize: '0.8125rem', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.4 }}>
-                    {game.title}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+  const navItemStyle = (active: boolean): React.CSSProperties => ({
+    display: 'flex', alignItems: 'center', gap: '10px',
+    padding: '9px 14px', borderRadius: '8px', textDecoration: 'none',
+    fontSize: '0.875rem', fontFamily: 'Space Grotesk, sans-serif',
+    fontWeight: active ? 600 : 400,
+    color: active ? 'var(--neon-lime)' : 'var(--text-secondary)',
+    background: active ? 'rgba(57,255,20,0.07)' : 'transparent',
+    borderLeft: active ? '2px solid var(--neon-lime)' : '2px solid transparent',
+    transition: 'all 0.15s ease',
+    marginBottom: '2px',
+  })
+
+  return (
+    <aside style={{
+      width: '230px', flexShrink: 0, borderRight: '1px solid var(--line-subtle)',
+      padding: '1.25rem 0.75rem', position: 'sticky', top: '100px', height: 'calc(100vh - 100px)',
+      overflowY: 'auto', display: 'none',
+    }}
+      className="sidebar-desktop"
+    >
+      <style>{`@media (min-width:1024px){.sidebar-desktop{display:block!important}}`}</style>
+
+      <Link to="/" style={navItemStyle(isActive('/'))}>
+        <Gamepad2 size={15} />
+        All Games
+      </Link>
+      <Link to="/popular" style={navItemStyle(isActive('/popular'))}>
+        <Flame size={15} />
+        Most Popular
+      </Link>
+      <Link to="/new-games" style={navItemStyle(isActive('/new-games'))}>
+        <Sparkles size={15} />
+        New Games
+      </Link>
+
+      <div style={{ height: '1px', background: 'var(--line-subtle)', margin: '12px 0' }} />
+
+      {categories.map(cat => (
+        <Link key={cat.id} to={`/category/${cat.slug}`} style={navItemStyle(isActive(`/category/${cat.slug}`))}>
+          {NAV_ICONS[cat.icon] || <Gamepad size={15} />}
+          {cat.name}
+        </Link>
+      ))}
     </aside>
   )
 }

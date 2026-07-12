@@ -43,3 +43,32 @@ export interface SyncLog {
   errors: string | null
   created_at: string
 }
+
+export interface LiveStats {
+  totalPlayers: number
+  topGame: string
+  newToday: number
+  totalGames: number
+}
+
+export type Database = {
+  public: {
+    Tables: {
+      categories: {
+        Row: Category
+        Insert: Omit<Category, 'id' | 'created_at'>
+        Update: Partial<Omit<Category, 'id' | 'created_at'>>
+      }
+      games: {
+        Row: Game
+        Insert: Omit<Game, 'id' | 'created_at' | 'updated_at' | 'categories'>
+        Update: Partial<Omit<Game, 'id' | 'created_at' | 'updated_at' | 'categories'>>
+      }
+      sync_logs: {
+        Row: SyncLog
+        Insert: Omit<SyncLog, 'id' | 'created_at'>
+        Update: never
+      }
+    }
+  }
+}
