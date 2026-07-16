@@ -60,13 +60,12 @@ export default function LiveTicker() {
       </div>
 
       {/* Scrolling content */}
-      <div style={{ flex: 1, overflow: 'hidden' }}>
-        <div className="animate-ticker" style={{ display: 'flex', gap: '64px', whiteSpace: 'nowrap' }}>
+      <div className="flex-1 overflow-hidden">
+        <div className="animate-ticker ticker-list">
           {[...stats, ...stats].map((stat, i) => (
-            <span key={i} style={{
-              color: 'var(--text-secondary)', fontSize: '12px',
-              fontFamily: 'Space Grotesk, sans-serif',
-            }}>{stat}</span>
+            <span key={i} className="text-[11px] md:text-xs text-[var(--text-secondary)] font-body">
+              {stat}
+            </span>
           ))}
         </div>
       </div>

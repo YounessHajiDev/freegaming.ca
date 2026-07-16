@@ -7,42 +7,39 @@ interface Props {
 }
 
 export default function GameCard({ game, size = 'md' }: Props) {
-  const imgHeight = size === 'lg' ? 200 : size === 'sm' ? 120 : 160
+  const titleClass = size === 'sm'
+    ? 'text-xs md:text-sm'
+    : 'text-sm md:text-base'
 
   return (
-    <Link to={`/games/${game.slug}`} className="game-card" style={{ display: 'block', textDecoration: 'none' }}>
-      <div style={{ position: 'relative', width: '100%', height: `${imgHeight}px`, overflow: 'hidden', backgroundColor: 'var(--bg-elevated)' }}>
+    <Link to={`/games/${game.slug}`} className="game-card block no-underline">
+      <div className="game-card-image relative bg-[var(--bg-elevated)] overflow-hidden group">
         <img
           src={game.thumbnail || `https://placehold.co/400x300/0f1a12/39ff14?text=${encodeURIComponent(game.title)}`}
           alt={game.title}
           loading="lazy"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.3s ease' }}
+          className="w-full h-full object-cover block transition-transform duration-300 group-hover:scale-105"
           onError={e => { (e.target as HTMLImageElement).src = `https://placehold.co/400x300/0f1a12/39ff14?text=${encodeURIComponent(game.title)}` }}
         />
         {/* Badges */}
-        <div style={{ position: 'absolute', top: '8px', left: '8px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+        <div className="absolute top-2 left-2 flex flex-wrap gap-1">
           {game.is_featured && <span className="badge badge-featured">Featured</span>}
           {game.is_hot     && <span className="badge badge-hot">Hot</span>}
           {game.is_new     && <span className="badge badge-new">New</span>}
         </div>
       </div>
 
-      <div style={{ padding: size === 'sm' ? '8px' : '12px' }}>
-        <h3 style={{
-          margin: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700,
-          textTransform: 'uppercase', fontSize: size === 'sm' ? '0.85rem' : '1rem',
-          color: 'var(--text-primary)', letterSpacing: '0.02em',
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>
+      <div className={size === 'sm' ? 'p-2' : 'p-3'}>
+        <h3 className={`m-0 font-display font-bold uppercase tracking-wide text-[var(--text-primary)] line-clamp-1 ${titleClass}`}>
           {game.title}
         </h3>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: 'Space Grotesk, sans-serif' }}>
+        <div className="flex items-center justify-between mt-1 gap-2">
+          <span className="text-xs text-[var(--text-secondary)] font-body truncate">
             {game.categories?.name || ''}
           </span>
           {game.views > 0 && (
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', fontFamily: 'Orbitron, monospace' }}>
+            <span className="text-[0.65rem] text-[var(--text-tertiary)] font-data flex-shrink-0">
               {game.views >= 1000 ? `${(game.views / 1000).toFixed(1)}k` : game.views}
             </span>
           )}

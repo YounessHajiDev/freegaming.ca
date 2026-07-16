@@ -7,12 +7,12 @@ import MobileNav from './MobileNav'
 
 export default function Layout() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-void)' }}>
+    <div className="min-h-screen flex flex-col bg-void">
       <Header />
       <LiveTicker />
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div className="flex flex-1">
         <Sidebar />
-        <main style={{ flex: 1, minWidth: 0, padding: '1.5rem', paddingBottom: '5rem' }}>
+        <main className="flex-1 min-w-0 p-4 md:p-6 pb-24 md:pb-6">
           <Outlet />
         </main>
       </div>

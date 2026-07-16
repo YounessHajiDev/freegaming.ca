@@ -18,42 +18,33 @@ export default function GameCarousel({ games, title, icon, accentColor = 'var(--
 
   const scroll = (dir: 'left' | 'right') => {
     if (!scrollRef.current) return
-    scrollRef.current.scrollBy({ left: dir === 'left' ? -280 : 280, behavior: 'smooth' })
+    const amount = scrollRef.current.clientWidth < 640 ? 170 : 280
+    scrollRef.current.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' })
   }
 
   return (
-    <section style={{ marginBottom: '2.5rem' }}>
+    <section className="mb-10">
       <div className="section-header">
         <div className="section-title">
           {icon && <span style={{ color: accentColor }}>{icon}</span>}
           {title}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="flex items-center gap-2">
           {linkTo && (
-            <Link to={linkTo} className="section-link">{linkLabel} →</Link>
+            <Link to={linkTo} className="section-link hidden sm:inline">{linkLabel} →</Link>
           )}
-          <button onClick={() => scroll('left')} style={{
-            background: 'var(--bg-surface)', border: '1px solid var(--line-visible)',
-            color: 'var(--text-secondary)', borderRadius: '6px', padding: '5px',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s',
-          }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ice)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ice)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--line-visible)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)' }}
-          ><ChevronLeft size={16} /></button>
-          <button onClick={() => scroll('right')} style={{
-            background: 'var(--bg-surface)', border: '1px solid var(--line-visible)',
-            color: 'var(--text-secondary)', borderRadius: '6px', padding: '5px',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s',
-          }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ice)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ice)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--line-visible)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)' }}
-          ><ChevronRight size={16} /></button>
+          <button onClick={() => scroll('left')} className="p-1.5 rounded-md border border-[var(--line-visible)] bg-[var(--bg-surface)] text-[var(--text-secondary)] flex items-center transition-colors hover:border-[var(--ice)] hover:text-[var(--ice)]">
+            <ChevronLeft size={16} />
+          </button>
+          <button onClick={() => scroll('right')} className="p-1.5 rounded-md border border-[var(--line-visible)] bg-[var(--bg-surface)] text-[var(--text-secondary)] flex items-center transition-colors hover:border-[var(--ice)] hover:text-[var(--ice)]">
+            <ChevronRight size={16} />
+          </button>
         </div>
       </div>
 
-      <div ref={scrollRef} className="carousel-scroll" style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '8px' }}>
+      <div ref={scrollRef} className="carousel-scroll">
         {games.map(g => (
-          <div key={g.id} style={{ width: '200px', flexShrink: 0 }}>
+          <div key={g.id} className="w-36 sm:w-44 md:w-52 flex-shrink-0">
             <GameCard game={g} size="sm" />
           </div>
         ))}

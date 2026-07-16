@@ -3,14 +3,9 @@ import { Link } from 'react-router-dom'
 export default function Footer() {
   const year = new Date().getFullYear()
   return (
-    <footer style={{
-      borderTop: '1px solid var(--line-subtle)',
-      backgroundColor: 'var(--bg-elevated)',
-      padding: '2.5rem 1.5rem 1.5rem',
-      marginBottom: '60px',
-    }}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
+    <footer className="border-t border-[var(--line-subtle)] bg-[var(--bg-elevated)] pt-10 pb-6 px-6 mb-16 md:mb-0">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="footer-grid mb-8">
           <div>
             <div style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.75rem' }}>
               <span style={{ color: 'var(--ember)' }}>FREE</span>
@@ -32,10 +27,7 @@ export default function Footer() {
                 ['/category/racing-games', 'Racing Games'],
                 ['/category/action-games', 'Action Games'],
               ].map(([href, label]) => (
-                <Link key={href} to={href} style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--neon-lime)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
-                >{label}</Link>
+                <Link key={href} to={href} className="text-sm text-[var(--text-secondary)] no-underline transition-colors hover:text-[var(--neon-lime)]">{label}</Link>
               ))}
             </nav>
           </div>
@@ -50,10 +42,7 @@ export default function Footer() {
                 ['/games-for-kids', 'Games for Kids'],
                 ['/2-player-games', '2 Player Games'],
               ].map(([href, label]) => (
-                <Link key={href} to={href} style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--neon-lime)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
-                >{label}</Link>
+                <Link key={href} to={href} className="text-sm text-[var(--text-secondary)] no-underline transition-colors hover:text-[var(--neon-lime)]">{label}</Link>
               ))}
             </nav>
           </div>
@@ -67,20 +56,17 @@ export default function Footer() {
                 ['/privacy-policy', 'Privacy Policy'],
                 ['/terms-of-service', 'Terms of Service'],
               ].map(([href, label]) => (
-                <Link key={href} to={href} style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--neon-lime)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
-                >{label}</Link>
+                <Link key={href} to={href} className="text-sm text-[var(--text-secondary)] no-underline transition-colors hover:text-[var(--neon-lime)]">{label}</Link>
               ))}
             </nav>
           </div>
         </div>
 
-        <div style={{ borderTop: '1px solid var(--line-subtle)', paddingTop: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <p style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
+        <div className="border-t border-[var(--line-subtle)] pt-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-[var(--text-tertiary)] text-center sm:text-left">
             © {year} FreeGaming.ca — Proudly Canadian 🍁. All rights reserved.
           </p>
-          <p style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
+          <p className="text-xs text-[var(--text-tertiary)] text-center sm:text-right">
             Free to play. No download required. For Canadians, by Canadians.
           </p>
         </div>

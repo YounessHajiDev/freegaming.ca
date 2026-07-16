@@ -117,38 +117,42 @@ export default function HomePage() {
 
       {/* Hero / Featured */}
       {(featured.length > 0 || loading) && (
-        <section style={{ marginBottom: '2.5rem' }}>
+        <section className="mb-10">
           <div className="section-header">
             <div className="section-title"><Gamepad2 size={20} style={{ color: 'var(--ember)' }} />Featured Games</div>
           </div>
           {loading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr repeat(4, 1fr)', gap: '1rem' }}>
-              <div className="skeleton" style={{ height: '220px', borderRadius: '12px' }} />
-              {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton" style={{ height: '220px', borderRadius: '12px' }} />)}
+            <div className="hero-grid">
+              <div className="hero-featured">
+                <div className="hero-card-image skeleton rounded-xl" />
+              </div>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="hero-card-image skeleton rounded-xl" />
+              ))}
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div className="hero-grid">
               {featuredMain && (
-                <div style={{ gridColumn: 'span 2' }}>
-                  <Link to={`/games/${featuredMain.slug}`} className="game-card" style={{ display: 'block', textDecoration: 'none' }}>
-                    <div style={{ position: 'relative', height: '260px', overflow: 'hidden', backgroundColor: 'var(--bg-elevated)' }}>
-                      <img src={featuredMain.thumbnail} alt={featuredMain.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.5rem', background: 'linear-gradient(transparent, rgba(8,13,10,0.95))' }}>
-                        <span className="badge badge-featured" style={{ marginBottom: '6px', display: 'inline-block' }}>Featured</span>
-                        <h2 style={{ margin: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{featuredMain.title}</h2>
-                        <p style={{ margin: '4px 0 0', fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>{featuredMain.short_description}</p>
+                <div className="hero-featured">
+                  <Link to={`/games/${featuredMain.slug}`} className="game-card block no-underline h-full">
+                    <div className="hero-card-image bg-[var(--bg-elevated)]">
+                      <img src={featuredMain.thumbnail} alt={featuredMain.title} className="w-full h-full object-cover block" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-[rgba(8,13,10,0.95)] to-transparent">
+                        <span className="badge badge-featured mb-1 inline-block">Featured</span>
+                        <h2 className="m-0 font-display font-extrabold text-xl md:text-2xl uppercase text-[var(--text-primary)] line-clamp-1">{featuredMain.title}</h2>
+                        <p className="hidden sm:block mt-1 text-sm text-[var(--text-secondary)] line-clamp-2">{featuredMain.short_description}</p>
                       </div>
                     </div>
                   </Link>
                 </div>
               )}
               {featuredRest.map(g => (
-                <Link key={g.id} to={`/games/${g.slug}`} className="game-card" style={{ display: 'block', textDecoration: 'none' }}>
-                  <div style={{ position: 'relative', height: '260px', overflow: 'hidden', backgroundColor: 'var(--bg-elevated)' }}>
-                    <img src={g.thumbnail} alt={g.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem', background: 'linear-gradient(transparent, rgba(8,13,10,0.9))' }}>
-                      {g.is_hot && <span className="badge badge-hot" style={{ marginBottom: '4px', display: 'inline-block' }}>Hot</span>}
-                      <h3 style={{ margin: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{g.title}</h3>
+                <Link key={g.id} to={`/games/${g.slug}`} className="game-card block no-underline">
+                  <div className="hero-card-image bg-[var(--bg-elevated)]">
+                    <img src={g.thumbnail} alt={g.title} className="w-full h-full object-cover block" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 bg-gradient-to-t from-[rgba(8,13,10,0.9)] to-transparent">
+                      {g.is_hot && <span className="badge badge-hot mb-1 inline-block">Hot</span>}
+                      <h3 className="m-0 font-display font-bold text-sm md:text-base uppercase text-[var(--text-primary)] line-clamp-1">{g.title}</h3>
                     </div>
                   </div>
                 </Link>
@@ -165,7 +169,7 @@ export default function HomePage() {
 
       {/* New This Week */}
       {(newGames.length > 0 || loading) && (
-        <section style={{ marginBottom: '2.5rem' }}>
+        <section className="mb-10">
           <div className="section-header">
             <div className="section-title"><Sparkles size={18} style={{ color: 'var(--neon-lime)' }} />New This Week</div>
             <Link to="/new-games" className="section-link">See all new games →</Link>
@@ -183,11 +187,11 @@ export default function HomePage() {
       {byCategory['strategy-games']?.length > 0 && <GameCarousel games={byCategory['strategy-games']} title="Strategy Games" icon={<Gamepad2 size={18} />} linkTo="/category/strategy-games" />}
 
       {/* SEO Text Block */}
-      <section style={{ marginTop: '3rem', padding: '2rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
-        <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
+      <section className="mt-12 p-6 rounded-xl bg-[var(--bg-surface)] border border-[var(--line-subtle)]">
+        <h2 className="font-display font-bold text-xl md:text-2xl uppercase text-[var(--text-primary)] mb-4">
           Canada's #1 Free Online Games Portal
         </h2>
-        <div style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)', lineHeight: '1.75', display: 'grid', gap: '1rem' }}>
+        <div className="grid gap-4 text-[var(--text-secondary)] text-sm md:text-base leading-7">
           <p>Welcome to FreeGaming.ca — the best free online games destination built specifically for Canadians. Whether you're in Toronto, Vancouver, Montreal, Calgary, or anywhere across Canada, our portal delivers hundreds of high-quality HTML5 browser games you can play instantly, with zero downloads and zero sign-ups required.</p>
           <p>Our catalogue spans every genre: puzzle games to sharpen your mind, racing games to get your heart pumping, sports games to channel your inner athlete, action games for pure adrenaline, and casual games perfect for a quick break. We add new games every week and curate our top picks so you always find something worth playing.</p>
           <p>FreeGaming.ca is proudly Canadian. We know what Canadian gamers love — intense competition, clever strategy, and games that work on any device. Every game in our library is playable on desktop, tablet, and mobile browsers. No Flash, no plugins, no nonsense. Just click and play.</p>
@@ -196,21 +200,18 @@ export default function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section style={{ marginTop: '2.5rem' }}>
-        <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1.5rem' }}>
+      <section className="mt-10">
+        <h2 className="font-display font-bold text-xl md:text-2xl uppercase text-[var(--text-primary)] mb-6">
           Frequently Asked Questions
         </h2>
-        <div style={{ display: 'grid', gap: '1rem' }}>
+        <div className="grid gap-4">
           {FAQ.map((item, i) => (
-            <details key={i} style={{
-              backgroundColor: 'var(--bg-surface)', border: '1px solid var(--line-subtle)',
-              borderRadius: '8px', padding: '1rem 1.25rem',
-            }}>
-              <summary style={{ cursor: 'pointer', fontFamily: 'Space Grotesk, sans-serif', fontWeight: 600, color: 'var(--text-primary)', fontSize: '1rem', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <details key={i} className="rounded-lg bg-[var(--bg-surface)] border border-[var(--line-subtle)] p-4 md:p-5 group">
+              <summary className="cursor-pointer font-body font-semibold text-[var(--text-primary)] text-sm md:text-base list-none flex justify-between items-center">
                 {item.q}
-                <span style={{ color: 'var(--neon-lime)', marginLeft: '1rem', flexShrink: 0 }}>+</span>
+                <span className="text-[var(--neon-lime)] ml-4 flex-shrink-0 group-open:rotate-45 transition-transform">+</span>
               </summary>
-              <p style={{ marginTop: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: '1.65', marginBottom: 0 }}>{item.a}</p>
+              <p className="mt-3 text-[var(--text-secondary)] text-sm md:text-base leading-relaxed m-0">{item.a}</p>
             </details>
           ))}
         </div>

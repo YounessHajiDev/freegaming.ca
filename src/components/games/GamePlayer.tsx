@@ -52,70 +52,48 @@ export default function GamePlayer({ game }: Props) {
   if (!playing) {
     return (
       <div
-        style={{
-          position: 'relative', borderRadius: '12px', overflow: 'hidden',
-          aspectRatio: '16/10', backgroundColor: 'var(--bg-surface)',
-          cursor: 'pointer', border: '1px solid var(--line-visible)',
-        }}
+        className="relative rounded-xl overflow-hidden aspect-[16/10] min-h-[220px] md:min-h-[340px] bg-[var(--bg-surface)] cursor-pointer border border-[var(--line-visible)]"
         onClick={() => setPlaying(true)}
       >
         <img
           src={game.thumbnail}
           alt={game.title}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(0.5)' }}
+          className="w-full h-full object-cover block brightness-50"
           onError={e => { (e.target as HTMLImageElement).src = `https://placehold.co/800x500/0f1a12/39ff14?text=${encodeURIComponent(game.title)}` }}
         />
-        <div style={{
-          position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center', gap: '1rem',
-        }}>
-          <div style={{
-            width: '80px', height: '80px', borderRadius: '50%',
-            backgroundColor: 'var(--neon-lime)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 40px var(--neon-lime-glow)', transition: 'transform 0.2s',
-          }}
-            onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.transform = 'scale(1.1)')}
-            onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.transform = 'scale(1)')}
-          >
-            <Play size={36} fill="var(--bg-void)" color="var(--bg-void)" style={{ marginLeft: '4px' }} />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 md:gap-4 p-4 text-center">
+          <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[var(--neon-lime)] flex items-center justify-center shadow-[0_0_40px_var(--neon-lime-glow)] transition-transform hover:scale-110">
+            <Play size={36} fill="var(--bg-void)" color="var(--bg-void)" className="ml-1" />
           </div>
-          <span style={{
-            fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700,
-            fontSize: '1.25rem', textTransform: 'uppercase', letterSpacing: '0.1em',
-            color: 'var(--text-primary)',
-          }}>PLAY FREE</span>
-          <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>No download · No signup</span>
+          <span className="font-display font-bold text-lg md:text-xl uppercase tracking-widest text-[var(--text-primary)]">PLAY FREE</span>
+          <span className="text-xs md:text-sm text-[var(--text-secondary)]">No download · No signup</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--line-visible)' }}>
-      <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 10 }}>
+    <div className="relative rounded-xl overflow-hidden border border-[var(--line-visible)]">
+      <div className="absolute top-2 right-2 z-10">
         <button
           onClick={() => {
             const el = document.getElementById('game-iframe-container')
             if (el?.requestFullscreen) el.requestFullscreen()
           }}
-          style={{
-            background: 'rgba(0,0,0,0.7)', border: '1px solid var(--line-visible)',
-            color: 'var(--text-secondary)', borderRadius: '6px', padding: '6px',
-            cursor: 'pointer', display: 'flex', alignItems: 'center',
-          }}
+          className="bg-black/70 border border-[var(--line-visible)] text-[var(--text-secondary)] rounded-md p-1.5 cursor-pointer flex items-center hover:text-[var(--neon-lime)] hover:border-[var(--neon-lime)] transition-colors"
           title="Fullscreen"
         >
           <Maximize2 size={16} />
         </button>
       </div>
 
-      <div id="game-iframe-container" style={{ width: '100%', aspectRatio: `${game.width}/${game.height}`, minHeight: '400px', background: '#000', position: 'relative' }}>
+      <div id="game-iframe-container" className="w-full min-h-[260px] md:min-h-[400px] bg-black relative" style={{ aspectRatio: `${game.width}/${game.height}` }}>
         <iframe
           src={game.iframe_url}
           title={game.title}
           width="100%"
           height="100%"
-          style={{ border: 'none', display: 'block' }}
+          className="border-none block"
           allow="autoplay; fullscreen; payment"
           referrerPolicy="unsafe-url"
           allowFullScreen
@@ -123,20 +101,14 @@ export default function GamePlayer({ game }: Props) {
 
         {/* Overlay when SDK shows an ad */}
         {adPaused && (
-          <div style={{
-            position: 'absolute', inset: 0, zIndex: 20,
-            backgroundColor: 'rgba(8,13,10,0.85)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ width: '40px', height: '40px', border: '3px solid var(--neon-lime)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
-              <p style={{ color: 'var(--text-secondary)', fontFamily: 'Space Grotesk, sans-serif', fontSize: '0.875rem', margin: 0 }}>Ad playing — game will resume shortly</p>
+          <div className="absolute inset-0 z-20 bg-[rgba(8,13,10,0.85)] flex items-center justify-center">
+            <div className="text-center px-4">
+              <div className="w-10 h-10 border-[3px] border-[var(--neon-lime)] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-sm text-[var(--text-secondary)] font-body m-0">Ad playing — game will resume shortly</p>
             </div>
           </div>
         )}
       </div>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }

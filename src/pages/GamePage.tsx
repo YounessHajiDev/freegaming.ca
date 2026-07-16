@@ -155,29 +155,25 @@ export default function GamePage() {
         {game.title}
       </h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: '1.5rem', alignItems: 'start' }}>
-        <div style={{ minWidth: 0 }}>
+      <div className="game-page-layout">
+        <div className="min-w-0">
           <GamePlayer game={game} />
 
-          <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
-            <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>About This Game</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: '1.7', margin: 0 }}>{game.description}</p>
+          <div className="mt-6 p-4 md:p-6 rounded-xl bg-[var(--bg-surface)] border border-[var(--line-subtle)]">
+            <h2 className="font-display font-bold text-lg uppercase text-[var(--text-primary)] mb-3">About This Game</h2>
+            <p className="text-[var(--text-secondary)] text-sm md:text-base leading-relaxed m-0">{game.description}</p>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1.25rem' }}>
+            <div className="flex flex-wrap gap-2 mt-5">
               {game.tags.map(tag => (
-                <span key={tag} style={{
-                  fontSize: '0.75rem', padding: '4px 10px', borderRadius: '100px',
-                  backgroundColor: 'var(--bg-elevated)', border: '1px solid var(--line-subtle)',
-                  color: 'var(--text-secondary)', fontFamily: 'Space Grotesk, sans-serif',
-                }}>#{tag}</span>
+                <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-[var(--bg-elevated)] border border-[var(--line-subtle)] text-[var(--text-secondary)] font-body">#{tag}</span>
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid var(--line-subtle)', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
-                <Link to={`/category/${catSlug}`} style={{ color: 'var(--ice)', textDecoration: 'none' }}>{catName}</Link>
+            <div className="flex flex-wrap gap-4 mt-5 pt-4 border-t border-[var(--line-subtle)]">
+              <span className="text-sm text-[var(--text-tertiary)]">
+                <Link to={`/category/${catSlug}`} className="text-[var(--ice)] no-underline hover:underline">{catName}</Link>
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
+              <span className="flex items-center gap-1 text-sm text-[var(--text-tertiary)]">
                 <Eye size={13} /> {game.views.toLocaleString('en-CA')} plays
               </span>
               <span className="badge badge-free">Free</span>
@@ -195,18 +191,15 @@ export default function GamePage() {
 
         {/* Sidebar — related games */}
         <aside>
-          <h3 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '0.75rem', letterSpacing: '0.08em' }}>Similar Games</h3>
-          <div style={{ display: 'grid', gap: '0.75rem' }}>
+          <h3 className="font-display font-bold text-sm uppercase text-[var(--text-secondary)] mb-3 tracking-widest">Similar Games</h3>
+          <div className="grid gap-3">
             {related.length > 0
               ? related.map(g => (
-                <Link key={g.id} to={`/games/${g.slug}`} style={{ display: 'flex', gap: '10px', textDecoration: 'none', alignItems: 'center', padding: '8px', borderRadius: '8px', background: 'var(--bg-surface)', border: '1px solid var(--line-subtle)', transition: 'border-color 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--line-visible)')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--line-subtle)')}
-                >
-                  <img src={g.thumbnail} alt={g.title} style={{ width: '60px', height: '45px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'Space Grotesk, sans-serif', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{g.title}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{g.categories?.name}</div>
+                <Link key={g.id} to={`/games/${g.slug}`} className="flex gap-2.5 items-center p-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--line-subtle)] no-underline transition-colors hover:border-[var(--line-visible)]">
+                  <img src={g.thumbnail} alt={g.title} className="w-[60px] h-[45px] object-cover rounded flex-shrink-0" />
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-[var(--text-primary)] font-body truncate">{g.title}</div>
+                    <div className="text-xs text-[var(--text-tertiary)]">{g.categories?.name}</div>
                   </div>
                 </Link>
               ))
@@ -218,9 +211,9 @@ export default function GamePage() {
 
       {/* You might also like */}
       {related.length > 0 && (
-        <section style={{ marginTop: '2.5rem' }}>
-          <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>You Might Also Like</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem' }}>
+        <section className="mt-10">
+          <h2 className="font-display font-bold text-xl uppercase text-[var(--text-primary)] mb-4">You Might Also Like</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {related.map(g => <GameCard key={g.id} game={g} size="sm" />)}
           </div>
         </section>
