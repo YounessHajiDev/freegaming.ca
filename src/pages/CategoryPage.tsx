@@ -102,17 +102,17 @@ export default function CategoryPage() {
         })}</script>
       </Helmet>
 
-      <nav style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '1.25rem', fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
-        <Link to="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Home</Link>
+      <nav className="flex items-center gap-1.5 mb-5 text-sm text-[var(--text-tertiary)] flex-wrap">
+        <Link to="/" className="text-[var(--text-secondary)] no-underline hover:text-[var(--neon-lime)]">Home</Link>
         <span>/</span>
-        <span style={{ color: 'var(--text-primary)' }}>{category?.name}</span>
+        <span className="text-[var(--text-primary)]">{category?.name}</span>
       </nav>
 
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3rem)', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
-          {category?.name ?? <span className="skeleton" style={{ display: 'inline-block', width: '300px', height: '48px' }} />}
+      <div className="mb-8">
+        <h1 className="font-display font-extrabold text-3xl md:text-4xl lg:text-5xl uppercase text-[var(--text-primary)] mb-2">
+          {category?.name ?? <span className="skeleton inline-block w-64 h-10 md:w-80 md:h-12" />}
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>
+        <p className="text-[var(--text-secondary)] text-sm md:text-base">
           {total > 0 ? `${total.toLocaleString('en-CA')} free games — no download, no signup required` : 'Loading games...'}
         </p>
       </div>
@@ -121,14 +121,14 @@ export default function CategoryPage() {
 
       {/* Pagination */}
       {total > PAGE_SIZE && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginTop: '2rem' }}>
+        <div className="flex justify-center flex-wrap gap-3 mt-8">
           <button
             className="btn-ghost"
             disabled={page === 0}
             onClick={() => setPage(p => Math.max(0, p - 1))}
             style={{ opacity: page === 0 ? 0.4 : 1 }}
           >← Previous</button>
-          <span style={{ padding: '8px 16px', color: 'var(--text-secondary)', fontSize: '0.875rem', fontFamily: 'Orbitron, monospace' }}>
+          <span className="px-4 py-2 text-sm text-[var(--text-secondary)] font-data">
             {page + 1} / {Math.ceil(total / PAGE_SIZE)}
           </span>
           <button

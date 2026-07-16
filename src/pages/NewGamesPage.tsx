@@ -31,14 +31,14 @@ export default function NewGamesPage() {
         <link rel="canonical" href="https://www.freegaming.ca/new-games/" />
       </Helmet>
 
-      <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
           <Sparkles size={28} style={{ color: 'var(--neon-lime)' }} />
-          <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3rem)', textTransform: 'uppercase', color: 'var(--text-primary)', margin: 0 }}>
+          <h1 className="font-display font-extrabold text-3xl md:text-4xl lg:text-5xl uppercase text-[var(--text-primary)] m-0">
             New Games This Week
           </h1>
         </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>Fresh titles added to Canada's best free gaming portal</p>
+        <p className="text-[var(--text-secondary)] text-sm md:text-base">Fresh titles added to Canada's best free gaming portal</p>
       </div>
 
       <GameGrid games={games} loading={loading} columns={5} />

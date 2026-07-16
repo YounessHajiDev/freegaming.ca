@@ -8,28 +8,23 @@ interface Props {
   columns?: number
 }
 
+const COLS_CLASS: Record<number, string> = {
+  1: 'grid-cols-1',
+  2: 'grid-cols-2',
+  3: 'grid-cols-2 md:grid-cols-3',
+  4: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+  5: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5',
+}
+
 export default function GameGrid({ games, loading = false, columns = 5 }: Props) {
   const cols = Math.min(columns, 5)
-  const gridStyle: React.CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-    gap: '1rem',
-  }
-  const responsiveStyle = `
-    @media (max-width: 1280px) { .game-grid-${cols} { grid-template-columns: repeat(4, minmax(0,1fr)) !important; } }
-    @media (max-width: 1024px) { .game-grid-${cols} { grid-template-columns: repeat(3, minmax(0,1fr)) !important; } }
-    @media (max-width: 640px)  { .game-grid-${cols} { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } }
-  `
 
   return (
-    <>
-      <style>{responsiveStyle}</style>
-      <div className={`game-grid-${cols}`} style={gridStyle}>
-        {loading
-          ? <GameCardSkeleton count={cols * 2} />
-          : games.map(g => <GameCard key={g.id} game={g} />)
-        }
-      </div>
-    </>
+    <div className={`grid gap-4 ${COLS_CLASS[cols]}`}>
+      {loading
+        ? <GameCardSkeleton count={cols * 2} />
+        : games.map(g => <GameCard key={g.id} game={g} />)
+      }
+    </div>
   )
 }

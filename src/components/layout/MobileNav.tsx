@@ -58,12 +58,8 @@ export default function MobileNav() {
   }
 
   const itemStyle = (active: boolean): React.CSSProperties => ({
-    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px',
-    padding: '8px 12px', borderRadius: '8px', textDecoration: 'none',
     color: active ? 'var(--neon-lime)' : 'var(--text-secondary)',
-    fontSize: '10px', fontFamily: 'Space Grotesk, sans-serif',
     background: active ? 'rgba(57,255,20,0.07)' : 'transparent',
-    border: 'none', cursor: 'pointer',
   })
 
   return (
@@ -138,29 +134,24 @@ export default function MobileNav() {
       )}
 
       {/* Bottom nav bar */}
-      <nav className="mobile-nav-bar" style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
-        backgroundColor: 'var(--bg-elevated)', borderTop: '1px solid var(--line-visible)',
-        display: 'flex', justifyContent: 'space-around', alignItems: 'center',
-        padding: '6px 8px', height: '60px',
-      }}>
-        <Link to="/" style={itemStyle(isActive('/'))}>
+      <nav className="mobile-nav-bar fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center h-16 px-2 bg-[var(--bg-elevated)] border-t border-[var(--line-visible)] sm:hidden">
+        <Link to="/" className="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-body no-underline transition-colors hover:text-[var(--neon-lime)]" style={itemStyle(isActive('/'))}>
           <Home size={20} />
           Home
         </Link>
-        <Link to="/popular" style={itemStyle(isActive('/popular'))}>
+        <Link to="/popular" className="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-body no-underline transition-colors hover:text-[var(--neon-lime)]" style={itemStyle(isActive('/popular'))}>
           <Flame size={20} />
           Popular
         </Link>
-        <button onClick={handleRandomGame} style={itemStyle(false) as React.CSSProperties}>
+        <button onClick={handleRandomGame} className="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-body border-none bg-transparent cursor-pointer transition-colors hover:text-[var(--neon-lime)]" style={itemStyle(false)}>
           <Dices size={20} />
           Random
         </button>
-        <button onClick={() => setSearchOpen(true)} style={itemStyle(searchOpen)}>
+        <button onClick={() => setSearchOpen(true)} className="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-body border-none bg-transparent cursor-pointer transition-colors hover:text-[var(--neon-lime)]" style={itemStyle(searchOpen)}>
           <Search size={20} />
           Search
         </button>
-        <Link to="/category/action-games" style={itemStyle(location.pathname.startsWith('/category'))}>
+        <Link to="/category/action-games" className="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-body no-underline transition-colors hover:text-[var(--neon-lime)]" style={itemStyle(location.pathname.startsWith('/category'))}>
           <LayoutGrid size={20} />
           Browse
         </Link>

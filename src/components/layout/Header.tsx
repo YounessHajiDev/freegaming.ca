@@ -58,12 +58,11 @@ export default function Header() {
 
   return (
     <>
-      <header style={{
-        position: 'sticky', top: 0, zIndex: 40,
-        backgroundColor: 'var(--bg-glass)', backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid var(--line-visible)',
-      }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 1.5rem', height: '64px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <header
+        className="sticky top-0 z-40 border-b border-[var(--line-visible)] bg-[var(--bg-glass)] backdrop-blur-md"
+        style={{ backgroundColor: 'var(--bg-glass)' }}
+      >
+        <div className="max-w-[1400px] mx-auto h-16 flex items-center gap-4 px-4 lg:px-6">
           {/* Logo */}
           <Link to="/" style={{ textDecoration: 'none', flexShrink: 0 }} onClick={() => setMenuOpen(false)}>
             <span style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '1.5rem', letterSpacing: '0.02em' }}>
@@ -74,24 +73,18 @@ export default function Header() {
           </Link>
 
           {/* Search */}
-          <div style={{ flex: 1, maxWidth: '480px', position: 'relative' }}>
-            <div style={{ position: 'relative' }}>
+          <div className="hidden sm:block flex-1 max-w-[480px] relative">
+            <div className="relative">
               <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
               <input
                 type="search"
+                className="search-input w-full h-10 pl-10 pr-4 rounded-lg bg-[var(--bg-surface)] border border-[var(--line-visible)] text-[var(--text-primary)] text-sm font-body outline-none"
                 placeholder="Search games..."
                 value={query}
                 onChange={e => handleSearch(e.target.value)}
                 onFocus={() => results.length > 0 && setDropOpen(true)}
                 onBlur={() => setTimeout(() => setDropOpen(false), 150)}
                 onKeyDown={handleKeyDown}
-                style={{
-                  width: '100%', paddingLeft: '40px', paddingRight: '16px', height: '40px',
-                  background: 'var(--bg-surface)', border: '1px solid var(--line-visible)',
-                  borderRadius: '8px', color: 'var(--text-primary)', fontSize: '0.875rem',
-                  fontFamily: 'Space Grotesk, sans-serif', outline: 'none',
-                  transition: 'border-color 0.2s',
-                }}
               />
             </div>
             {dropOpen && results.length > 0 && (
@@ -127,17 +120,14 @@ export default function Header() {
             <button
               onClick={handleRandomGame}
               title="Random Game"
-              style={{ background: 'transparent', border: '1px solid var(--line-visible)', color: 'var(--text-secondary)', borderRadius: '8px', padding: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--neon-lime)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--neon-lime)' }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--line-visible)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-secondary)' }}
+              className="hidden sm:flex items-center justify-center p-2 rounded-lg border border-[var(--line-visible)] text-[var(--text-secondary)] bg-transparent transition-colors hover:border-[var(--neon-lime)] hover:text-[var(--neon-lime)]"
             >
               <Dices size={18} />
             </button>
             {/* Hamburger — hidden on desktop where sidebar is visible */}
             <button
               onClick={() => setMenuOpen(m => !m)}
-              style={{ background: 'transparent', border: '1px solid var(--line-visible)', color: 'var(--text-secondary)', borderRadius: '8px', padding: '8px', cursor: 'pointer', display: 'none', alignItems: 'center' }}
-              className="header-hamburger"
+              className="header-hamburger items-center justify-center p-2 rounded-lg border border-[var(--line-visible)] text-[var(--text-secondary)] bg-transparent transition-colors hover:border-[var(--neon-lime)] hover:text-[var(--neon-lime)]"
               aria-label="Toggle navigation"
             >
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -199,7 +189,6 @@ export default function Header() {
         </>
       )}
 
-      <style>{`@media (max-width:1023px){.header-hamburger{display:flex!important}}`}</style>
     </>
   )
 }

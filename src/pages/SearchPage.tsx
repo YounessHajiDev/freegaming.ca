@@ -49,37 +49,24 @@ export default function SearchPage() {
         <meta name="robots" content="noindex" />
       </Helmet>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '2rem', textTransform: 'uppercase', color: 'var(--text-primary)', margin: '0 0 1rem' }}>
-          Search Games
-        </h1>
+      <div className="mb-6">
+        <h1 className="font-display font-extrabold text-2xl md:text-3xl uppercase text-[var(--text-primary)] mb-4">Search Games</h1>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '8px', maxWidth: '600px' }}>
-          <div style={{ position: 'relative', flex: 1 }}>
-            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)', pointerEvents: 'none' }} />
+        <form onSubmit={handleSubmit} className="flex gap-2 max-w-[600px]">
+          <div className="relative flex-1">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] pointer-events-none" />
             <input
               autoFocus
               type="search"
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Search by title, category, or tag…"
-              style={{
-                width: '100%', paddingLeft: '40px', paddingRight: '16px', height: '44px',
-                background: 'var(--bg-surface)', border: '1px solid var(--line-visible)',
-                borderRadius: '8px', color: 'var(--text-primary)', fontSize: '1rem',
-                fontFamily: 'Space Grotesk, sans-serif', outline: 'none', boxSizing: 'border-box',
-              }}
+              className="search-input w-full h-11 pl-10 pr-4 rounded-lg bg-[var(--bg-surface)] border border-[var(--line-visible)] text-[var(--text-primary)] text-base font-body outline-none"
             />
           </div>
           <button
             type="submit"
-            style={{
-              padding: '0 20px', height: '44px', borderRadius: '8px', border: 'none',
-              background: 'var(--ember)', color: '#000',
-              fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700,
-              fontSize: '1rem', textTransform: 'uppercase', cursor: 'pointer',
-              flexShrink: 0,
-            }}
+            className="px-5 h-11 rounded-lg border-none bg-[var(--ember)] text-black font-display font-bold text-base uppercase cursor-pointer flex-shrink-0"
           >
             Search
           </button>
@@ -87,37 +74,37 @@ export default function SearchPage() {
       </div>
 
       {loading && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1rem' }}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {Array.from({ length: 12 }).map((_, i) => <GameCardSkeleton key={i} />)}
         </div>
       )}
 
       {!loading && q.trim() && (
         <>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>
+          <p className="text-sm md:text-base text-[var(--text-secondary)] mb-5">
             {results.length > 0
-              ? <><span style={{ color: 'var(--neon-lime)', fontWeight: 600 }}>{results.length}</span> result{results.length !== 1 ? 's' : ''} for "<span style={{ color: 'var(--text-primary)' }}>{q}</span>"</>
-              : <>No results for "<span style={{ color: 'var(--text-primary)' }}>{q}</span>"</>
+              ? <><span className="text-[var(--neon-lime)] font-semibold">{results.length}</span> result{results.length !== 1 ? 's' : ''} for "<span className="text-[var(--text-primary)]">{q}</span>"</>
+              : <>No results for "<span className="text-[var(--text-primary)]">{q}</span>"</>
             }
           </p>
 
           {results.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1rem' }}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {results.map(g => <GameCard key={g.id} game={g} />)}
             </div>
           ) : (
-            <div style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>Try a different search term or browse by category.</p>
-              <Link to="/" className="btn-primary" style={{ display: 'inline-flex' }}>Browse All Games</Link>
+            <div className="p-12 text-center rounded-xl bg-[var(--bg-surface)] border border-[var(--line-subtle)]">
+              <p className="text-[var(--text-secondary)] mb-4">Try a different search term or browse by category.</p>
+              <Link to="/" className="btn-primary inline-flex">Browse All Games</Link>
             </div>
           )}
         </>
       )}
 
       {!loading && !q.trim() && (
-        <div style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
-          <Search size={40} style={{ color: 'var(--text-tertiary)', marginBottom: '1rem' }} />
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Type a game title, category, or tag to find games.</p>
+        <div className="p-12 text-center rounded-xl bg-[var(--bg-surface)] border border-[var(--line-subtle)]">
+          <Search size={40} className="text-[var(--text-tertiary)] mx-auto mb-4" />
+          <p className="text-[var(--text-secondary)]">Type a game title, category, or tag to find games.</p>
         </div>
       )}
     </>
