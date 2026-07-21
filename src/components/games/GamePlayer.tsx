@@ -109,7 +109,7 @@ export default function GamePlayer({ game }: Props) {
         </button>
       </div>
 
-      <div id="game-iframe-container" style={{ width: '100%', aspectRatio: `${game.width}/${game.height}`, minHeight: '400px', background: '#000', position: 'relative' }}>
+      <div id="game-iframe-container" style={{ width: '100%', aspectRatio: `${game.width}/${game.height}`, minHeight: 'var(--game-player-min-height)', background: '#000', position: 'relative' }}>
         <iframe
           src={game.iframe_url}
           title={game.title}

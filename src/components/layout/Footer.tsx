@@ -9,7 +9,7 @@ export default function Footer() {
       padding: '2.5rem 1.5rem 1.5rem',
       marginBottom: '60px',
     }}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+      <div className="footer-inner">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
           <div>
             <div style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '1.25rem', marginBottom: '0.75rem' }}>

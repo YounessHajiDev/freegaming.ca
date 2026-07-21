@@ -122,16 +122,16 @@ export default function HomePage() {
             <div className="section-title"><Gamepad2 size={20} style={{ color: 'var(--ember)' }} />Featured Games</div>
           </div>
           {loading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr repeat(4, 1fr)', gap: '1rem' }}>
+            <div className="featured-skeleton">
               <div className="skeleton" style={{ height: '220px', borderRadius: '12px' }} />
               {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton" style={{ height: '220px', borderRadius: '12px' }} />)}
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div className="featured-grid">
               {featuredMain && (
-                <div style={{ gridColumn: 'span 2' }}>
+                <div className="featured-main">
                   <Link to={`/games/${featuredMain.slug}`} className="game-card" style={{ display: 'block', textDecoration: 'none' }}>
-                    <div style={{ position: 'relative', height: '260px', overflow: 'hidden', backgroundColor: 'var(--bg-elevated)' }}>
+                    <div className="featured-card">
                       <img src={featuredMain.thumbnail} alt={featuredMain.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.5rem', background: 'linear-gradient(transparent, rgba(8,13,10,0.95))' }}>
                         <span className="badge badge-featured" style={{ marginBottom: '6px', display: 'inline-block' }}>Featured</span>
@@ -144,7 +144,7 @@ export default function HomePage() {
               )}
               {featuredRest.map(g => (
                 <Link key={g.id} to={`/games/${g.slug}`} className="game-card" style={{ display: 'block', textDecoration: 'none' }}>
-                  <div style={{ position: 'relative', height: '260px', overflow: 'hidden', backgroundColor: 'var(--bg-elevated)' }}>
+                  <div className="featured-card">
                     <img src={g.thumbnail} alt={g.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem', background: 'linear-gradient(transparent, rgba(8,13,10,0.9))' }}>
                       {g.is_hot && <span className="badge badge-hot" style={{ marginBottom: '4px', display: 'inline-block' }}>Hot</span>}
@@ -183,7 +183,7 @@ export default function HomePage() {
       {byCategory['strategy-games']?.length > 0 && <GameCarousel games={byCategory['strategy-games']} title="Strategy Games" icon={<Gamepad2 size={18} />} linkTo="/category/strategy-games" />}
 
       {/* SEO Text Block */}
-      <section style={{ marginTop: '3rem', padding: '2rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
+      <section className="content-card" style={{ marginTop: '3rem' }}>
         <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
           Canada's #1 Free Online Games Portal
         </h2>
