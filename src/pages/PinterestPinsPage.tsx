@@ -2,9 +2,9 @@ import { useEffect, useState, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Download, ChevronRight, Search, Check, Image as ImageIcon } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { ADMIN_PASSWORD, isAdminPassword } from '../lib/adminAuth'
 import type { Game, Category } from '../lib/types'
 
-const ADMIN_PW = 'freegaming2026'
 const SITE_URL = 'https://www.freegaming.ca'
 
 // ─── Pin Templates ───────────────────────────────────────────────────────────
@@ -213,7 +213,7 @@ export default function PinterestPinsPage() {
   const [statusFilter, setStatusFilter] = useState('')  // 'hot' | 'new' | 'featured' | ''
 
   const handleAuth = () => {
-    if (password === ADMIN_PW) { setAuthed(true); setWrongPw(false) }
+    if (isAdminPassword(password)) { setAuthed(true); setWrongPw(false) }
     else setWrongPw(true)
   }
 
@@ -287,7 +287,8 @@ export default function PinterestPinsPage() {
           onKeyDown={e => e.key === 'Enter' && handleAuth()}
           style={{ width: '100%', padding: '12px', background: 'var(--bg-void)', border: `1px solid ${wrongPw ? 'var(--state-hot)' : 'var(--line-visible)'}`, borderRadius: '8px', color: 'var(--text-primary)', fontSize: '1rem', marginBottom: '0.75rem', boxSizing: 'border-box', fontFamily: 'Space Grotesk, sans-serif' }}
         />
-        {wrongPw && <p style={{ color: 'var(--state-hot)', fontSize: '0.8125rem', marginBottom: '0.75rem' }}>Incorrect password.</p>}
+        {!ADMIN_PASSWORD && <p style={{ color: 'var(--state-hot)', fontSize: '0.8125rem', marginBottom: '0.75rem' }}>Admin password not configured. Set VITE_ADMIN_PASSWORD in your environment.</p>}
+        {wrongPw && ADMIN_PASSWORD && <p style={{ color: 'var(--state-hot)', fontSize: '0.8125rem', marginBottom: '0.75rem' }}>Incorrect password.</p>}
         <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={handleAuth}>Enter Dashboard</button>
       </div>
     )
