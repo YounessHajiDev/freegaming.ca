@@ -3,9 +3,13 @@ import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { Flame, Sparkles, Puzzle, Car, Trophy, Zap, Gamepad2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { SITE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../lib/seo'
 import type { Game } from '../lib/types'
 import GameGrid from '../components/games/GameGrid'
 import GameCarousel from '../components/games/GameCarousel'
+
+const homeTitle = `${SITE_NAME} — Free Online Games for Canadians | No Download Required`
+const homeDesc = `Play thousands of free online games at ${SITE_NAME} — Canada's #1 free gaming portal. No download, no signup. Puzzle, racing, sports, shooting & more. Play now!`
 
 const FAQ = [
   { q: 'Are all games on FreeGaming.ca really free?', a: 'Yes — every single game on FreeGaming.ca is 100% free to play. No hidden fees, no subscriptions, no in-app purchases required to enjoy the full game.' },
@@ -70,35 +74,37 @@ export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title>FreeGaming.ca — Free Online Games for Canadians | No Download Required</title>
-        <meta name="description" content="Play thousands of free online games at FreeGaming.ca — Canada's #1 free gaming portal. No download, no signup. Puzzle, racing, sports, shooting & more. Play now!" />
-        <link rel="canonical" href="https://www.freegaming.ca/" />
+        <title>{homeTitle}</title>
+        <meta name="description" content={homeDesc} />
+        <link rel="canonical" href={`${SITE_URL}/`} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.freegaming.ca/" />
-        <meta property="og:title" content="FreeGaming.ca — Free Online Games for Canadians | No Download Required" />
-        <meta property="og:description" content="Play thousands of free online games at FreeGaming.ca — Canada's #1 free gaming portal. No download, no signup. Puzzle, racing, sports, shooting &amp; more." />
-        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:url" content={`${SITE_URL}/`} />
+        <meta property="og:title" content={homeTitle} />
+        <meta property="og:description" content={homeDesc} />
+        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`${SITE_NAME} — free online games for Canadians`} />
         <meta property="og:locale" content="en_CA" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="FreeGaming.ca — Free Online Games for Canadians" />
-        <meta name="twitter:description" content="Play thousands of free online games — Canada's #1 free gaming portal. No download, no signup." />
-        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta name="twitter:title" content={`${SITE_NAME} — Free Online Games for Canadians`} />
+        <meta name="twitter:description" content={`Play thousands of free online games — Canada's #1 free gaming portal. No download, no signup.`} />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
+        <meta name="twitter:image:alt" content={`${SITE_NAME} — free online games for Canadians`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          "@id": "https://www.freegaming.ca/#website",
-          "name": "FreeGaming.ca",
-          "url": "https://www.freegaming.ca",
-          "potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint", "urlTemplate": "https://www.freegaming.ca/search?q={search_term_string}" }, "query-input": "required name=search_term_string" }
+          "@id": `${SITE_URL}/#website`,
+          "name": SITE_NAME,
+          "url": SITE_URL,
+          "potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint", "urlTemplate": `${SITE_URL}/search?q={search_term_string}` }, "query-input": "required name=search_term_string" }
         })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          "@id": "https://www.freegaming.ca/#organization",
-          "name": "FreeGaming.ca",
-          "url": "https://www.freegaming.ca",
+          "@id": `${SITE_URL}/#organization`,
+          "name": SITE_NAME,
+          "url": SITE_URL,
           "description": "Canada's free online games portal. Play thousands of browser games with no download.",
           "foundingDate": "2026",
           "areaServed": { "@type": "Country", "name": "Canada" },
@@ -132,7 +138,7 @@ export default function HomePage() {
                 <div className="featured-main">
                   <Link to={`/games/${featuredMain.slug}`} className="game-card" style={{ display: 'block', textDecoration: 'none' }}>
                     <div className="featured-card">
-                      <img src={featuredMain.thumbnail} alt={featuredMain.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={featuredMain.thumbnail} alt={featuredMain.title} width={800} height={500} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.5rem', background: 'linear-gradient(transparent, rgba(8,13,10,0.95))' }}>
                         <span className="badge badge-featured" style={{ marginBottom: '6px', display: 'inline-block' }}>Featured</span>
                         <h2 style={{ margin: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{featuredMain.title}</h2>
@@ -145,7 +151,7 @@ export default function HomePage() {
               {featuredRest.map(g => (
                 <Link key={g.id} to={`/games/${g.slug}`} className="game-card" style={{ display: 'block', textDecoration: 'none' }}>
                   <div className="featured-card">
-                    <img src={g.thumbnail} alt={g.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={g.thumbnail} alt={g.title} width={400} height={300} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem', background: 'linear-gradient(transparent, rgba(8,13,10,0.9))' }}>
                       {g.is_hot && <span className="badge badge-hot" style={{ marginBottom: '4px', display: 'inline-block' }}>Hot</span>}
                       <h3 style={{ margin: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{g.title}</h3>

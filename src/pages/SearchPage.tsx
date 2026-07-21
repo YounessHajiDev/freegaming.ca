@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { Search } from 'lucide-react'
 import Fuse from 'fuse.js'
 import { supabase } from '../lib/supabase'
+import { SITE_URL, SITE_NAME } from '../lib/seo'
 import type { Game } from '../lib/types'
 import GameCard from '../components/games/GameCard'
 import GameCardSkeleton from '../components/games/GameCardSkeleton'
@@ -45,8 +46,10 @@ export default function SearchPage() {
   return (
     <>
       <Helmet>
-        <title>{q ? `"${q}" — Search Results | FreeGaming.ca` : 'Search Games | FreeGaming.ca'}</title>
-        <meta name="robots" content="noindex" />
+        <title>{q ? `"${q}" — Search Results | ${SITE_NAME}` : `Search Games | ${SITE_NAME}`}</title>
+        <meta name="description" content={`Search free online games on ${SITE_NAME}. Find puzzle, racing, action, sports, arcade and more — no download, no signup.`} />
+        <link rel="canonical" href={`${SITE_URL}/search/`} />
+        <meta name="robots" content="noindex, follow" />
       </Helmet>
 
       <div style={{ marginBottom: '1.5rem' }}>

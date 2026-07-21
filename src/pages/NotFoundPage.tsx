@@ -5,7 +5,12 @@ import { Gamepad2 } from 'lucide-react'
 export default function NotFoundPage() {
   return (
     <>
-      <Helmet><title>Page Not Found | FreeGaming.ca</title></Helmet>
+      <Helmet>
+        <title>Page Not Found | FreeGaming.ca</title>
+        <meta name="robots" content="noindex, follow" />
+        <meta name="description" content="The page you are looking for could not be found on FreeGaming.ca. Browse our free online games collection." />
+        <link rel="canonical" href="https://www.freegaming.ca/" />
+      </Helmet>
       <div style={{ textAlign: 'center', padding: '6rem 2rem' }}>
         <Gamepad2 size={64} style={{ color: 'var(--text-tertiary)', marginBottom: '1.5rem' }} />
         <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '4rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>

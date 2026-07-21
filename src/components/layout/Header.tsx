@@ -106,7 +106,7 @@ export default function Header() {
                     onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-surface)')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                   >
-                    <img src={g.thumbnail} alt={g.title} style={{ width: 40, height: 30, objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
+                    <img src={g.thumbnail} alt={g.title} width={40} height={30} loading="lazy" decoding="async" style={{ width: 40, height: 30, objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
                     <div>
                       <div style={{ fontSize: '0.875rem', color: 'var(--text-primary)', fontWeight: 500 }}>{g.title}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{(g as Game & { categories?: { name: string } }).categories?.name}</div>

@@ -273,7 +273,11 @@ export default function PinterestPinsPage() {
   if (!authed) {
     return (
       <div style={{ maxWidth: '400px', margin: '4rem auto', padding: '2rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-visible)' }}>
-        <Helmet><title>Pinterest Pins | FreeGaming.ca</title></Helmet>
+        <Helmet>
+          <title>Pinterest Pins | FreeGaming.ca</title>
+          <meta name="robots" content="noindex, nofollow" />
+          <meta name="description" content="FreeGaming.ca Pinterest pin generator." />
+        </Helmet>
         <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '1.75rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1.5rem', textAlign: 'center' }}>Admin Access</h1>
         <input
           type="password"
@@ -299,7 +303,11 @@ export default function PinterestPinsPage() {
 
   return (
     <>
-      <Helmet><title>Pinterest Pin Generator | FreeGaming.ca</title></Helmet>
+      <Helmet>
+        <title>Pinterest Pin Generator | FreeGaming.ca</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="description" content="FreeGaming.ca Pinterest pin generator." />
+      </Helmet>
 
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
