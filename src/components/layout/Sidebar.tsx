@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   Gamepad2, Flame, Sparkles, Puzzle, Car, Trophy, Crosshair,
-  Layers, Brain, MapPin, Users, Lightbulb, Zap, Smile, Globe, Gamepad,
+  Layers, Brain, MapPin, Users, Lightbulb, Zap, Smile, Globe, Gamepad, Gift,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import type { Category } from '../../lib/types'
@@ -69,6 +69,10 @@ export default function Sidebar() {
       <Link to="/new-games" style={navItemStyle(isActive('/new-games'))}>
         <Sparkles size={15} />
         New Games
+      </Link>
+      <Link to="/offers" style={navItemStyle(isActive('/offers'))}>
+        <Gift size={15} />
+        Offers
       </Link>
 
       <div style={{ height: '1px', background: 'var(--line-subtle)', margin: '12px 0' }} />
