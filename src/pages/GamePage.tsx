@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Eye } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { SITE_URL, SITE_NAME } from '../lib/seo'
 import type { Game } from '../lib/types'
 import GamePlayer from '../components/games/GamePlayer'
 import GameCard from '../components/games/GameCard'
@@ -66,8 +67,8 @@ export default function GamePage() {
 
   const catName = (game as Game & { categories?: { name: string; slug: string } }).categories?.name ?? ''
   const catSlug = (game as Game & { categories?: { name: string; slug: string } }).categories?.slug ?? ''
-  const pageTitle = `${game.title} — Play Free Online | ${catName} | FreeGaming.ca`
-  const pageDesc = `Play ${game.title} for free online at FreeGaming.ca. No download, no signup — just click and play! ${catName} game for desktop and mobile.`
+  const pageTitle = `${game.title} — Play Free Online | ${catName} | ${SITE_NAME}`
+  const pageDesc = `Play ${game.title} for free online at ${SITE_NAME}. No download, no signup — just click and play! ${catName} game for desktop and mobile.`
 
   const multiplayerTags = ['multiplayer', '2-player', 'two-player', 'co-op', 'coop', 'pvp', 'versus', 'online']
   const isMultiplayer = game.tags?.some(t => multiplayerTags.includes(t.toLowerCase()))
@@ -81,7 +82,7 @@ export default function GamePage() {
     "description": game.description,
     "image": game.thumbnail,
     "screenshot": { "@type": "ImageObject", "url": game.thumbnail, "description": `Screenshot of ${game.title}` },
-    "url": `https://www.freegaming.ca/games/${game.slug}/`,
+    "url": `${SITE_URL}/games/${game.slug}/`,
     "genre": catName,
     "keywords": game.tags?.join(', ') || undefined,
     "applicationCategory": "GameApplication",
@@ -96,24 +97,24 @@ export default function GamePage() {
     "inLanguage": "en",
     "datePublished": datePublished || undefined,
     "dateModified": dateModified || undefined,
-    "publisher": { "@type": "Organization", "name": "FreeGaming.ca", "url": "https://www.freegaming.ca" },
+    "publisher": { "@type": "Organization", "name": SITE_NAME, "url": SITE_URL },
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "CAD",
       "availability": "https://schema.org/InStock",
-      "url": `https://www.freegaming.ca/games/${game.slug}/`
+      "url": `${SITE_URL}/games/${game.slug}/`
     },
-    "mainEntityOfPage": { "@type": "WebPage", "@id": `https://www.freegaming.ca/games/${game.slug}/` }
+    "mainEntityOfPage": { "@type": "WebPage", "@id": `${SITE_URL}/games/${game.slug}/` }
   }
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.freegaming.ca/" },
-      { "@type": "ListItem", "position": 2, "name": catName, "item": `https://www.freegaming.ca/category/${catSlug}/` },
-      { "@type": "ListItem", "position": 3, "name": game.title, "item": `https://www.freegaming.ca/games/${game.slug}/` },
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+      { "@type": "ListItem", "position": 2, "name": catName, "item": `${SITE_URL}/category/${catSlug}/` },
+      { "@type": "ListItem", "position": 3, "name": game.title, "item": `${SITE_URL}/games/${game.slug}/` },
     ]
   }
 
@@ -123,9 +124,9 @@ export default function GamePage() {
         <title>{pageTitle}</title>
         <meta name="description" content={pageDesc.slice(0, 165)} />
         {game.tags?.length > 0 && <meta name="keywords" content={game.tags.slice(0, 10).join(', ')} />}
-        <link rel="canonical" href={`https://www.freegaming.ca/games/${game.slug}/`} />
+        <link rel="canonical" href={`${SITE_URL}/games/${game.slug}/`} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://www.freegaming.ca/games/${game.slug}/`} />
+        <meta property="og:url" content={`${SITE_URL}/games/${game.slug}/`} />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDesc.slice(0, 165)} />
         <meta property="og:image" content={game.thumbnail} />
@@ -134,7 +135,7 @@ export default function GamePage() {
         <meta property="og:image:alt" content={`Play ${game.title} free online`} />
         <meta property="og:locale" content="en_CA" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${game.title} — Play Free Online | FreeGaming.ca`} />
+        <meta name="twitter:title" content={`${game.title} — Play Free Online | ${SITE_NAME}`} />
         <meta name="twitter:description" content={`Play ${game.title} free in your browser. No download needed.`} />
         <meta name="twitter:image" content={game.thumbnail} />
         <meta name="twitter:image:alt" content={`${game.title} game screenshot`} />
@@ -203,7 +204,7 @@ export default function GamePage() {
                   onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--line-visible)')}
                   onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--line-subtle)')}
                 >
-                  <img src={g.thumbnail} alt={g.title} style={{ width: '60px', height: '45px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
+                  <img src={g.thumbnail} alt={g.title} width={60} height={45} loading="lazy" decoding="async" style={{ width: '60px', height: '45px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'Space Grotesk, sans-serif', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{g.title}</div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{g.categories?.name}</div>

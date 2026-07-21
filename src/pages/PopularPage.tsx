@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Flame } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { SITE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../lib/seo'
 import type { Game } from '../lib/types'
 import GameGrid from '../components/games/GameGrid'
 
@@ -25,9 +26,29 @@ export default function PopularPage() {
   return (
     <>
       <Helmet>
-        <title>Most Popular Free Online Games | FreeGaming.ca</title>
-        <meta name="description" content="Play the most popular free online games at FreeGaming.ca. Canada's top-rated browser games — no download, no signup required. See what Canadians are playing right now!" />
-        <link rel="canonical" href="https://www.freegaming.ca/popular/" />
+        <title>{`Most Popular Free Online Games | ${SITE_NAME}`}</title>
+        <meta name="description" content={`Play the most popular free online games at ${SITE_NAME}. Canada's top-rated browser games — no download, no signup required. See what Canadians are playing right now!`} />
+        <link rel="canonical" href={`${SITE_URL}/popular/`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${SITE_URL}/popular/`} />
+        <meta property="og:title" content={`Most Popular Free Online Games | ${SITE_NAME}`} />
+        <meta property="og:description" content={`Play the most popular free online games at ${SITE_NAME}. Canada's top-rated browser games — no download, no signup required.`} />
+        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`Most Popular Free Online Games | ${SITE_NAME}`} />
+        <meta name="twitter:description" content={`Play the most popular free online games at ${SITE_NAME}. Canada's top-rated browser games — no download, no signup required.`} />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+            { "@type": "ListItem", "position": 2, "name": "Most Popular", "item": `${SITE_URL}/popular/` }
+          ]
+        })}</script>
       </Helmet>
 
       <div style={{ marginBottom: '2rem' }}>

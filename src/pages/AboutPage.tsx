@@ -1,13 +1,44 @@
 import { Helmet } from 'react-helmet-async'
 import { Gamepad2, Globe, Zap, Shield } from 'lucide-react'
+import { SITE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../lib/seo'
 
 export default function AboutPage() {
   return (
     <>
       <Helmet>
-        <title>About FreeGaming.ca — Canada's Free Online Games Portal</title>
-        <meta name="description" content="FreeGaming.ca is Canada's largest free online games portal. Thousands of browser games with no download, no signup — just click and play." />
-        <link rel="canonical" href="https://www.freegaming.ca/about/" />
+        <title>About {SITE_NAME} — Canada's Free Online Games Portal</title>
+        <meta name="description" content={`${SITE_NAME} is Canada's largest free online games portal. Thousands of browser games with no download, no signup — just click and play.`} />
+        <link rel="canonical" href={`${SITE_URL}/about/`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${SITE_URL}/about/`} />
+        <meta property="og:title" content={`About ${SITE_NAME} — Canada's Free Online Games Portal`} />
+        <meta property="og:description" content={`${SITE_NAME} is Canada's largest free online games portal. Thousands of browser games with no download, no signup — just click and play.`} />
+        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`About ${SITE_NAME}`} />
+        <meta name="twitter:description" content={`${SITE_NAME} is Canada's largest free online games portal. Thousands of browser games with no download, no signup.`} />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+            { "@type": "ListItem", "position": 2, "name": "About Us", "item": `${SITE_URL}/about/` }
+          ]
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": `${SITE_URL}/#organization`,
+          "name": SITE_NAME,
+          "url": SITE_URL,
+          "description": "Canada's free online games portal. Play thousands of browser games with no download.",
+          "areaServed": { "@type": "Country", "name": "Canada" },
+          "inLanguage": "en-CA"
+        })}</script>
       </Helmet>
 
       <div style={{ maxWidth: '780px', margin: '0 auto' }}>

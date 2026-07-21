@@ -210,7 +210,11 @@ export default function AdminPage() {
 
   return (
     <>
-      <Helmet><title>Admin Dashboard | FreeGaming.ca</title></Helmet>
+      <Helmet>
+        <title>Admin Dashboard | FreeGaming.ca</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="description" content="FreeGaming.ca admin dashboard." />
+      </Helmet>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>

@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async'
+import { SITE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../lib/seo'
 
 const UPDATED = 'July 1, 2026'
 
@@ -17,9 +18,29 @@ export default function TermsPage() {
   return (
     <>
       <Helmet>
-        <title>Terms of Service | FreeGaming.ca</title>
-        <meta name="description" content="Read the FreeGaming.ca Terms of Service. By using our site you agree to these terms." />
-        <link rel="canonical" href="https://www.freegaming.ca/terms-of-service/" />
+        <title>Terms of Service | {SITE_NAME}</title>
+        <meta name="description" content={`Read the ${SITE_NAME} Terms of Service. By using our site you agree to these terms.`} />
+        <link rel="canonical" href={`${SITE_URL}/terms-of-service/`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${SITE_URL}/terms-of-service/`} />
+        <meta property="og:title" content={`Terms of Service | ${SITE_NAME}`} />
+        <meta property="og:description" content={`Read the ${SITE_NAME} Terms of Service. By using our site you agree to these terms.`} />
+        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`Terms of Service | ${SITE_NAME}`} />
+        <meta name="twitter:description" content={`Read the ${SITE_NAME} Terms of Service. By using our site you agree to these terms.`} />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+            { "@type": "ListItem", "position": 2, "name": "Terms of Service", "item": `${SITE_URL}/terms-of-service/` }
+          ]
+        })}</script>
       </Helmet>
 
       <div style={{ maxWidth: '780px', margin: '0 auto' }}>

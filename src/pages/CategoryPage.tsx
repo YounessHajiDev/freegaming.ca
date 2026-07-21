@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { supabase } from '../lib/supabase'
+import { SITE_URL, DEFAULT_OG_IMAGE } from '../lib/seo'
 import type { Game, Category } from '../lib/types'
 import GameGrid from '../components/games/GameGrid'
 
@@ -51,44 +52,48 @@ export default function CategoryPage() {
     </div>
   )
 
-  const title = `Free ${category?.name ?? ''} Online — ${total}+ Games | FreeGaming.ca`
-  const desc = `Play ${total}+ free ${(category?.name ?? '').toLowerCase()} online at FreeGaming.ca. No download required. Canada's best selection of free browser ${(category?.name ?? '').toLowerCase()}.`
+  const siteName = 'FreeGaming.ca'
+  const title = `Free ${category?.name ?? ''} Online — ${total}+ Games | ${siteName}`
+  const desc = `Play ${total}+ free ${(category?.name ?? '').toLowerCase()} online at ${siteName}. No download required. Canada's best selection of free browser ${(category?.name ?? '').toLowerCase()}.`
 
   return (
     <>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={desc.slice(0, 165)} />
-        <link rel="canonical" href={`https://www.freegaming.ca/category/${slug}/`} />
+        <link rel="canonical" href={`${SITE_URL}/category/${slug}/`} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://www.freegaming.ca/category/${slug}/`} />
+        <meta property="og:url" content={`${SITE_URL}/category/${slug}/`} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={desc.slice(0, 165)} />
-        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`Play free ${category?.name ?? ''} games online`} />
         <meta property="og:locale" content="en_CA" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={desc.slice(0, 165)} />
-        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           "name": `Free ${category?.name ?? ''} Online`,
           "description": desc.slice(0, 165),
-          "url": `https://www.freegaming.ca/category/${slug}/`,
-          "isPartOf": { "@type": "WebSite", "url": "https://www.freegaming.ca" }
+          "url": `${SITE_URL}/category/${slug}/`,
+          "isPartOf": { "@type": "WebSite", "url": SITE_URL }
         })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "ItemList",
           "name": `Free ${category?.name ?? ''} Games`,
-          "url": `https://www.freegaming.ca/category/${slug}/`,
+          "url": `${SITE_URL}/category/${slug}/`,
           "numberOfItems": total,
           "itemListElement": games.slice(0, 10).map((g, i) => ({
             "@type": "ListItem",
             "position": i + 1 + page * PAGE_SIZE,
             "name": g.title,
-            "url": `https://www.freegaming.ca/games/${g.slug}/`,
+            "url": `${SITE_URL}/games/${g.slug}/`,
             "image": g.thumbnail
           }))
         })}</script>
@@ -96,8 +101,8 @@ export default function CategoryPage() {
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.freegaming.ca/" },
-            { "@type": "ListItem", "position": 2, "name": category?.name ?? '', "item": `https://www.freegaming.ca/category/${slug}/` }
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+            { "@type": "ListItem", "position": 2, "name": category?.name ?? '', "item": `${SITE_URL}/category/${slug}/` }
           ]
         })}</script>
       </Helmet>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { SITE_URL, DEFAULT_OG_IMAGE } from '../../lib/seo'
 import type { Game } from '../../lib/types'
 import GameGrid from '../games/GameGrid'
 
@@ -46,7 +47,7 @@ export default function SeoGamePageTemplate({ cfg }: { cfg: SeoPageConfig }) {
     name: cfg.collectionName,
     description: cfg.metaDescription,
     url: cfg.canonical,
-    isPartOf: { '@type': 'WebSite', url: 'https://www.freegaming.ca' },
+    isPartOf: { '@type': 'WebSite', url: SITE_URL },
   }
 
   const faqSchema = {
@@ -63,7 +64,7 @@ export default function SeoGamePageTemplate({ cfg }: { cfg: SeoPageConfig }) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.freegaming.ca/' },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
       { '@type': 'ListItem', position: 2, name: cfg.collectionName, item: cfg.canonical },
     ],
   }
@@ -78,12 +79,16 @@ export default function SeoGamePageTemplate({ cfg }: { cfg: SeoPageConfig }) {
         <meta property="og:url" content={cfg.canonical} />
         <meta property="og:title" content={cfg.title} />
         <meta property="og:description" content={cfg.metaDescription} />
-        <meta property="og:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={cfg.h1} />
         <meta property="og:locale" content="en_CA" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={cfg.title} />
         <meta name="twitter:description" content={cfg.metaDescription} />
-        <meta name="twitter:image" content="https://www.freegaming.ca/og-image.png" />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
+        <meta name="twitter:image:alt" content={cfg.h1} />
         <script type="application/ld+json">{JSON.stringify(collectionSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>

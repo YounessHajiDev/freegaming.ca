@@ -1,13 +1,34 @@
 import { Helmet } from 'react-helmet-async'
 import { Mail, Clock } from 'lucide-react'
+import { SITE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../lib/seo'
 
 export default function ContactPage() {
   return (
     <>
       <Helmet>
-        <title>Contact FreeGaming.ca</title>
-        <meta name="description" content="Get in touch with the FreeGaming.ca team for business inquiries, game submissions, or general questions." />
-        <link rel="canonical" href="https://www.freegaming.ca/contact/" />
+        <title>Contact {SITE_NAME}</title>
+        <meta name="description" content={`Get in touch with the ${SITE_NAME} team for business inquiries, game submissions, or general questions.`} />
+        <link rel="canonical" href={`${SITE_URL}/contact/`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${SITE_URL}/contact/`} />
+        <meta property="og:title" content={`Contact ${SITE_NAME}`} />
+        <meta property="og:description" content={`Get in touch with the ${SITE_NAME} team for business inquiries, game submissions, or general questions.`} />
+        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`Contact ${SITE_NAME}`} />
+        <meta name="twitter:description" content={`Get in touch with the ${SITE_NAME} team for business inquiries, game submissions, or general questions.`} />
+        <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+            { "@type": "ListItem", "position": 2, "name": "Contact", "item": `${SITE_URL}/contact/` }
+          ]
+        })}</script>
       </Helmet>
 
       <div style={{ maxWidth: '680px', margin: '0 auto' }}>

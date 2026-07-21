@@ -62,6 +62,10 @@ export default function GamePlayer({ game }: Props) {
         <img
           src={game.thumbnail}
           alt={game.title}
+          width={800}
+          height={500}
+          loading="eager"
+          decoding="async"
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(0.5)' }}
           onError={e => { (e.target as HTMLImageElement).src = `https://placehold.co/800x500/0f1a12/39ff14?text=${encodeURIComponent(game.title)}` }}
         />

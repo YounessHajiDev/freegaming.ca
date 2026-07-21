@@ -15,7 +15,10 @@ export default function GameCard({ game, size = 'md' }: Props) {
         <img
           src={game.thumbnail || `https://placehold.co/400x300/0f1a12/39ff14?text=${encodeURIComponent(game.title)}`}
           alt={game.title}
+          width={400}
+          height={300}
           loading="lazy"
+          decoding="async"
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.3s ease' }}
           onError={e => { (e.target as HTMLImageElement).src = `https://placehold.co/400x300/0f1a12/39ff14?text=${encodeURIComponent(game.title)}` }}
         />
