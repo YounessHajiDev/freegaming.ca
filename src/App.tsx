@@ -23,6 +23,7 @@ import FreeActionGamesPage from './pages/seo/FreeActionGamesPage'
 import FreeSportsGamesPage from './pages/seo/FreeSportsGamesPage'
 import FreeArcadeGamesPage from './pages/seo/FreeArcadeGamesPage'
 import FreeCarGamesPage from './pages/seo/FreeCarGamesPage'
+import OffersPage from './pages/OffersPage'
 import NotFoundPage from './pages/NotFoundPage'
 import { CookieBanner } from './components/ui/CookieBanner'
 
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/free-sports-games" element={<FreeSportsGamesPage />} />
           <Route path="/free-arcade-games" element={<FreeArcadeGamesPage />} />
           <Route path="/free-car-games" element={<FreeCarGamesPage />} />
+          <Route path="/offers" element={<OffersPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/pinterest" element={<PinterestPinsPage />} />
           <Route path="*" element={<NotFoundPage />} />

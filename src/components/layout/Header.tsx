@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search, Dices, Menu, X, Home, Flame, Sparkles, Gamepad2 } from 'lucide-react'
+import { Search, Dices, Menu, X, Home, Flame, Sparkles, Gamepad2, Gift } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import Fuse from 'fuse.js'
 import type { Game, Category } from '../../lib/types'
@@ -164,6 +164,7 @@ export default function Header() {
               { to: '/', label: 'All Games', icon: <Gamepad2 size={15} /> },
               { to: '/popular', label: 'Most Popular', icon: <Flame size={15} /> },
               { to: '/new-games', label: 'New Games', icon: <Sparkles size={15} /> },
+              { to: '/offers', label: 'Offers', icon: <Gift size={15} /> },
               { to: '/search', label: 'Search', icon: <Search size={15} /> },
             ].map(item => (
               <Link
