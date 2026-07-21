@@ -12,7 +12,7 @@ export default function Layout() {
       <LiveTicker />
       <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar />
-        <main style={{ flex: 1, minWidth: 0, padding: '1.5rem', paddingBottom: '5rem' }}>
+        <main className="main-content" style={{ flex: 1, minWidth: 0 }}>
           <Outlet />
         </main>
       </div>

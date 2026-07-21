@@ -51,9 +51,9 @@ export default function GameCarousel({ games, title, icon, accentColor = 'var(--
         </div>
       </div>
 
-      <div ref={scrollRef} className="carousel-scroll" style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '8px' }}>
+      <div ref={scrollRef} className="carousel-responsive">
         {games.map(g => (
-          <div key={g.id} style={{ width: '200px', flexShrink: 0 }}>
+          <div key={g.id} className="carousel-item">
             <GameCard game={g} size="sm" />
           </div>
         ))}

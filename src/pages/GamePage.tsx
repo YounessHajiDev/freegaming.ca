@@ -155,11 +155,11 @@ export default function GamePage() {
         {game.title}
       </h1>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="game-page-layout">
         <div style={{ minWidth: 0 }}>
           <GamePlayer game={game} />
 
-          <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
+          <div className="content-card" style={{ marginTop: '1.5rem' }}>
             <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>About This Game</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: '1.7', margin: 0 }}>{game.description}</p>
 
@@ -220,7 +220,7 @@ export default function GamePage() {
       {related.length > 0 && (
         <section style={{ marginTop: '2.5rem' }}>
           <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>You Might Also Like</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem' }}>
+          <div className="related-grid">
             {related.map(g => <GameCard key={g.id} game={g} size="sm" />)}
           </div>
         </section>

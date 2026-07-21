@@ -63,10 +63,10 @@ export default function Header() {
         backgroundColor: 'var(--bg-glass)', backdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--line-visible)',
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 1.5rem', height: '64px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div className="header-inner">
           {/* Logo */}
           <Link to="/" style={{ textDecoration: 'none', flexShrink: 0 }} onClick={() => setMenuOpen(false)}>
-            <span style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '1.5rem', letterSpacing: '0.02em' }}>
+            <span className="logo-text">
               <span style={{ color: 'var(--ember)' }}>FREE</span>
               <span style={{ color: 'var(--text-primary)' }}>GAMING</span>
               <span style={{ color: 'var(--neon-lime)', fontSize: '1.1rem' }}>.CA</span>
@@ -74,7 +74,7 @@ export default function Header() {
           </Link>
 
           {/* Search */}
-          <div style={{ flex: 1, maxWidth: '480px', position: 'relative' }}>
+          <div className="header-search" style={{ flex: 1, maxWidth: '480px', position: 'relative' }}>
             <div style={{ position: 'relative' }}>
               <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-tertiary)' }} />
               <input
