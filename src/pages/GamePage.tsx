@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Eye } from 'lucide-react'
@@ -232,9 +232,34 @@ export default function GamePage() {
 
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
   const [visible, setVisible] = useState<'pending' | 'show' | 'hide'>('pending')
+
+  const src = useMemo(() => {
+    const loaderId = 'gamemonetize-video-api'
+    const script = [
+      `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#1a56db",getAds:"false"};`,
+      `(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById("${loaderId}")||(a=a.createElement(b),a.id="${loaderId}",a.src="https://api.gamemonetize.com/video.js?v="+Date.now(),d.parentNode.insertBefore(a,d))})(document,"script");`,
+      `var _n=0,_iv=setInterval(function(){`,
+      `var el=document.getElementById("gamemonetize-video");`,
+      `if(el&&el.children.length>0){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:true},"*");}`,
+      `else if(++_n>40){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:false},"*");}`,
+      `},200);`,
+    ].join('')
+
+    const html = [
+      '<!DOCTYPE html><html><head>',
+      '<meta charset="utf-8">',
+      '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000}</style>',
+      '</head><body>',
+      '<div id="gamemonetize-video"></div>',
+      `<script>${script}<\/script>`,
+      '</body></html>',
+    ].join('')
+
+    return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
+  }, [gameId])
+
   const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
     if (!node) return
-    // Give the GameMonetize video API up to 8s to inject content, then hide if empty
     const timer = setTimeout(() => setVisible('hide'), 8000)
     const handleMessage = (e: MessageEvent) => {
       if (e.data?.type === 'gm-wt') {
@@ -247,28 +272,7 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
       clearTimeout(timer)
       window.removeEventListener('message', handleMessage)
     }
-  }, [gameId])
-
-  const script = [
-    `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#1a56db",getAds:"false"};`,
-    `(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://api.gamemonetize.com/video.js?v="+Date.now(),d.parentNode.insertBefore(a,d))})(document,"script","gm-video-api");`,
-    `var _n=0,_iv=setInterval(function(){`,
-    `var el=document.getElementById("gamemonetize-video");`,
-    `if(el&&el.children.length>0){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:true},"*");}`,
-    `else if(++_n>40){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:false},"*");}`,
-    `},200);`,
-  ].join('')
-
-  const html = [
-    '<!DOCTYPE html><html><head>',
-    '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000}</style>',
-    '</head><body>',
-    '<div id="gamemonetize-video"></div>',
-    `<script>${script}<\/script>`,
-    '</body></html>',
-  ].join('')
-
-  const src = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
+  }, [])
 
   if (visible === 'hide') return null
 
