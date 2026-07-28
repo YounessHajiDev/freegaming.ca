@@ -234,9 +234,21 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
   const [visible, setVisible] = useState<'pending' | 'show' | 'hide'>('pending')
 
   const src = useMemo(() => {
+    const options = {
+      gameid: gameId,
+      game: title,
+      width: '100%',
+      height: '480px',
+      color: '#1a56db',
+      getAds: 'true',
+    }
+
+    const jqueryShim = `(function(){if(typeof $!=='undefined')return;window.$=function(s){var e=document.querySelector(s);return{append:function(h){if(e)e.insertAdjacentHTML('beforeend',h);}};}})();`
+
     const loaderId = 'gamemonetize-video-api'
     const script = [
-      `window.VIDEO_OPTIONS={gameid:"${gameId}",width:"100%",height:"480px",color:"#1a56db",getAds:"false"};`,
+      `window.VIDEO_OPTIONS=${JSON.stringify(options)};`,
+      jqueryShim,
       `(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById("${loaderId}")||(a=a.createElement(b),a.id="${loaderId}",a.src="https://api.gamemonetize.com/video.js?v="+Date.now(),d.parentNode.insertBefore(a,d))})(document,"script");`,
       `var _n=0,_iv=setInterval(function(){`,
       `var el=document.getElementById("gamemonetize-video");`,
@@ -256,7 +268,7 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
     ].join('')
 
     return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
-  }, [gameId])
+  }, [gameId, title])
 
   const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
     if (!node) return
@@ -286,7 +298,7 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
         src={src}
         style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
         allow="autoplay"
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
         title={`${title} walkthrough`}
       />
     </div>
