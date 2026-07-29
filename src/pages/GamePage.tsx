@@ -230,45 +230,70 @@ export default function GamePage() {
   )
 }
 
+function getDomain(): string {
+  if (typeof window === 'undefined') return ''
+  return window.location.href.replace(/^(?:https?:\/\/)?(?:\/\/)?(?:www\.)?/i, '').split('/')[0]
+}
+
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
   const [visible, setVisible] = useState<'pending' | 'show' | 'hide'>('pending')
+  const domain = getDomain()
 
   const src = useMemo(() => {
-    const options = {
-      gameid: gameId,
-      game: title,
-      width: '100%',
-      height: '480px',
-      color: '#1a56db',
-      getAds: 'true',
-    }
+    if (!gameId || !domain) return ''
 
-    const jqueryShim = `(function(){if(typeof $!=='undefined')return;window.$=function(s){var e=document.querySelector(s);return{append:function(h){if(e)e.insertAdjacentHTML('beforeend',h);}};}})();`
+    const width = '100%'
+    const height = '480px'
+    const color = '#1a56db'
+    const getads = 'true'
 
-    const loaderId = 'gamemonetize-video-api'
+    const attrs = [
+      `data-domain="${encodeURIComponent(domain)}"`,
+      `data-gameid="${encodeURIComponent(gameId)}"`,
+      `data-game="${encodeURIComponent(title)}"`,
+      `data-getads="${encodeURIComponent(getads)}"`,
+      `data-color="${encodeURIComponent(color)}"`,
+      `data-width="${encodeURIComponent(width)}"`,
+      `data-height="${encodeURIComponent(height)}"`,
+    ].join(' ')
+
     const script = [
-      `window.VIDEO_OPTIONS=${JSON.stringify(options)};`,
-      jqueryShim,
-      `(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById("${loaderId}")||(a=a.createElement(b),a.id="${loaderId}",a.src="https://api.gamemonetize.com/video.js?v="+Date.now(),d.parentNode.insertBefore(a,d))})(document,"script");`,
-      `var _n=0,_iv=setInterval(function(){`,
+      `(function(){`,
       `var el=document.getElementById("gamemonetize-video");`,
-      `if(el&&el.children.length>0){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:true},"*");}`,
-      `else if(++_n>40){clearInterval(_iv);window.parent.postMessage({type:"gm-wt",ok:false},"*");}`,
-      `},200);`,
+      `if(!el){window.parent.postMessage({type:"gm-wt",ok:false},"*");return;}`,
+      `var domain=decodeURIComponent(el.getAttribute("data-domain")||"");`,
+      `var gameid=decodeURIComponent(el.getAttribute("data-gameid")||"");`,
+      `var game=decodeURIComponent(el.getAttribute("data-game")||"");`,
+      `var getads=decodeURIComponent(el.getAttribute("data-getads")||"true");`,
+      `var color=decodeURIComponent(el.getAttribute("data-color")||"");`,
+      `var width=decodeURIComponent(el.getAttribute("data-width")||"100%");`,
+      `var height=decodeURIComponent(el.getAttribute("data-height")||"480px");`,
+      `var style=document.createElement("style");`,
+      `style.textContent="#gamemonetize-video,#gamemonetize-walkthrough{width:"+width+";height:"+height+"; }";`,
+      `document.head.appendChild(style);`,
+      `var iframe=document.createElement("iframe");`,
+      `iframe.id="gamemonetize-walkthrough";`,
+      `iframe.scrolling="no";`,
+      `iframe.frameBorder="0";`,
+      `iframe.allowFullscreen=true;`,
+      `iframe.style.borderRadius="5px";`,
+      `iframe.style.width=width;`,
+      `iframe.style.height=height;`,
+      `iframe.src="https://gamemonetize.video/index.php?domain="+encodeURIComponent(domain)+"&gameid="+encodeURIComponent(gameid)+"&game="+encodeURIComponent(game)+"&getads="+encodeURIComponent(getads)+"&color="+encodeURIComponent(color);`,
+      `el.appendChild(iframe);`,
+      `window.parent.postMessage({type:"gm-wt",ok:true},"*");`,
+      `})();`,
     ].join('')
 
     const html = [
       '<!DOCTYPE html><html><head>',
       '<meta charset="utf-8">',
       '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000}</style>',
-      '</head><body>',
-      '<div id="gamemonetize-video"></div>',
-      `<script>${script}<\/script>`,
-      '</body></html>',
+      `</head><body><div id="gamemonetize-video" ${attrs}></div><script>${script}<\/script></body></html>`,
     ].join('')
 
     return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
-  }, [gameId, title])
+  }, [gameId, title, domain])
 
   const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
     if (!node) return
@@ -298,7 +323,8 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
         src={src}
         style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
         allow="autoplay"
-        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+        referrerPolicy="unsafe-url"
         title={`${title} walkthrough`}
       />
     </div>
