@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Eye } from 'lucide-react'
@@ -236,82 +236,20 @@ function getDomain(): string {
 }
 
 function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
-  const [visible, setVisible] = useState<'pending' | 'show' | 'hide'>('pending')
-  const domain = getDomain()
+  const [src, setSrc] = useState<string | null>(null)
 
-  const src = useMemo(() => {
-    if (!gameId || !domain) return ''
+  useEffect(() => {
+    if (!gameId) return
+    const domain = getDomain()
+    if (!domain) return
 
-    const width = '100%'
-    const height = '480px'
     const color = '#1a56db'
     const getads = 'true'
+    const url = `https://gamemonetize.video/index.php?domain=${encodeURIComponent(domain)}&gameid=${encodeURIComponent(gameId)}&game=${encodeURIComponent(title)}&getads=${encodeURIComponent(getads)}&color=${encodeURIComponent(color)}`
+    setSrc(url)
+  }, [gameId, title])
 
-    const attrs = [
-      `data-domain="${encodeURIComponent(domain)}"`,
-      `data-gameid="${encodeURIComponent(gameId)}"`,
-      `data-game="${encodeURIComponent(title)}"`,
-      `data-getads="${encodeURIComponent(getads)}"`,
-      `data-color="${encodeURIComponent(color)}"`,
-      `data-width="${encodeURIComponent(width)}"`,
-      `data-height="${encodeURIComponent(height)}"`,
-    ].join(' ')
-
-    const script = [
-      `(function(){`,
-      `var el=document.getElementById("gamemonetize-video");`,
-      `if(!el){window.parent.postMessage({type:"gm-wt",ok:false},"*");return;}`,
-      `var domain=decodeURIComponent(el.getAttribute("data-domain")||"");`,
-      `var gameid=decodeURIComponent(el.getAttribute("data-gameid")||"");`,
-      `var game=decodeURIComponent(el.getAttribute("data-game")||"");`,
-      `var getads=decodeURIComponent(el.getAttribute("data-getads")||"true");`,
-      `var color=decodeURIComponent(el.getAttribute("data-color")||"");`,
-      `var width=decodeURIComponent(el.getAttribute("data-width")||"100%");`,
-      `var height=decodeURIComponent(el.getAttribute("data-height")||"480px");`,
-      `var style=document.createElement("style");`,
-      `style.textContent="#gamemonetize-video,#gamemonetize-walkthrough{width:"+width+";height:"+height+"; }";`,
-      `document.head.appendChild(style);`,
-      `var iframe=document.createElement("iframe");`,
-      `iframe.id="gamemonetize-walkthrough";`,
-      `iframe.scrolling="no";`,
-      `iframe.frameBorder="0";`,
-      `iframe.allowFullscreen=true;`,
-      `iframe.style.borderRadius="5px";`,
-      `iframe.style.width=width;`,
-      `iframe.style.height=height;`,
-      `iframe.src="https://gamemonetize.video/index.php?domain="+encodeURIComponent(domain)+"&gameid="+encodeURIComponent(gameid)+"&game="+encodeURIComponent(game)+"&getads="+encodeURIComponent(getads)+"&color="+encodeURIComponent(color);`,
-      `el.appendChild(iframe);`,
-      `window.parent.postMessage({type:"gm-wt",ok:true},"*");`,
-      `})();`,
-    ].join('')
-
-    const html = [
-      '<!DOCTYPE html><html><head>',
-      '<meta charset="utf-8">',
-      '<style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000}</style>',
-      `</head><body><div id="gamemonetize-video" ${attrs}></div><script>${script}<\/script></body></html>`,
-    ].join('')
-
-    return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
-  }, [gameId, title, domain])
-
-  const iframeRef = useCallback((node: HTMLIFrameElement | null) => {
-    if (!node) return
-    const timer = setTimeout(() => setVisible('hide'), 8000)
-    const handleMessage = (e: MessageEvent) => {
-      if (e.data?.type === 'gm-wt') {
-        clearTimeout(timer)
-        setVisible(e.data.ok ? 'show' : 'hide')
-      }
-    }
-    window.addEventListener('message', handleMessage)
-    return () => {
-      clearTimeout(timer)
-      window.removeEventListener('message', handleMessage)
-    }
-  }, [])
-
-  if (visible === 'hide') return null
+  if (!src) return null
 
   return (
     <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: 'var(--bg-surface)', borderRadius: '12px', border: '1px solid var(--line-subtle)' }}>
@@ -319,11 +257,10 @@ function GameWalkthrough({ gameId, title }: { gameId: string; title: string }) {
         {title} — Walkthrough
       </h2>
       <iframe
-        ref={iframeRef}
         src={src}
         style={{ width: '100%', height: '500px', border: 'none', display: 'block', borderRadius: '8px' }}
-        allow="autoplay"
-        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+        allow="autoplay; fullscreen"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
         referrerPolicy="unsafe-url"
         title={`${title} walkthrough`}
       />
