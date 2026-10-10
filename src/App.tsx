@@ -23,6 +23,12 @@ import FreeActionGamesPage from './pages/seo/FreeActionGamesPage'
 import FreeSportsGamesPage from './pages/seo/FreeSportsGamesPage'
 import FreeArcadeGamesPage from './pages/seo/FreeArcadeGamesPage'
 import FreeCarGamesPage from './pages/seo/FreeCarGamesPage'
+import IoGamesPage from './pages/seo/IoGamesPage'
+import ShootingGamesPage from './pages/seo/ShootingGamesPage'
+import CardGamesPage from './pages/seo/CardGamesPage'
+import StrategyGamesPage from './pages/seo/StrategyGamesPage'
+import CasualGamesPage from './pages/seo/CasualGamesPage'
+import BrainGamesPage from './pages/seo/BrainGamesPage'
 import OffersPage from './pages/OffersPage'
 import NotFoundPage from './pages/NotFoundPage'
 import { CookieBanner } from './components/ui/CookieBanner'
@@ -53,6 +59,12 @@ export default function App() {
           <Route path="/free-sports-games" element={<FreeSportsGamesPage />} />
           <Route path="/free-arcade-games" element={<FreeArcadeGamesPage />} />
           <Route path="/free-car-games" element={<FreeCarGamesPage />} />
+          <Route path="/io-games" element={<IoGamesPage />} />
+          <Route path="/shooting-games" element={<ShootingGamesPage />} />
+          <Route path="/card-games" element={<CardGamesPage />} />
+          <Route path="/strategy-games" element={<StrategyGamesPage />} />
+          <Route path="/casual-games" element={<CasualGamesPage />} />
+          <Route path="/brain-games" element={<BrainGamesPage />} />
           <Route path="/offers" element={<OffersPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/pinterest" element={<PinterestPinsPage />} />

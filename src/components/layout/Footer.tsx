@@ -49,6 +49,12 @@ export default function Footer() {
                 ['/unblocked-games', 'Unblocked Games'],
                 ['/games-for-kids', 'Games for Kids'],
                 ['/2-player-games', '2 Player Games'],
+                ['/io-games', 'IO Games'],
+                ['/brain-games', 'Brain Games'],
+                ['/casual-games', 'Casual Games'],
+                ['/shooting-games', 'Shooting Games'],
+                ['/card-games', 'Card Games'],
+                ['/strategy-games', 'Strategy Games'],
               ].map(([href, label]) => (
                 <Link key={href} to={href} style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', textDecoration: 'none', transition: 'color 0.15s' }}
                   onMouseEnter={e => (e.currentTarget.style.color = 'var(--neon-lime)')}
