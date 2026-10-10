@@ -63,6 +63,12 @@ export default function PrivacyPolicyPage() {
               <li><strong style={{ color: 'var(--text-primary)' }}>Cookies:</strong> We use cookies to improve your experience and serve relevant advertising. You may control cookie preferences via your browser settings or through our cookie consent banner.</li>
               <li><strong style={{ color: 'var(--text-primary)' }}>Advertising Data:</strong> Third-party advertising partners (including Google AdSense and GameMonetize) may use cookies and similar technologies to display relevant ads and measure performance.</li>
             </ul>
+            <p style={{ marginTop: '0.75rem' }}>
+              Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this and other websites. Google's use of advertising cookies enables it and its partners to serve ads based on your browsing. You may opt out of personalized advertising at any time via{' '}
+              <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ember)', textDecoration: 'none' }}>Google Ads Settings</a>
+              {' '}or by visiting{' '}
+              <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ember)', textDecoration: 'none' }}>www.aboutads.info/choices</a>.
+            </p>
           </Section>
 
           <Section title="How We Use Your Information">
