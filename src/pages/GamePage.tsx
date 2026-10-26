@@ -4,21 +4,28 @@ import { Helmet } from 'react-helmet-async'
 import { Eye } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { SITE_URL, SITE_NAME } from '../lib/seo'
-import type { Game } from '../lib/types'
+import { CARD_SELECT, fetchGameInstructions, type CardGame, type FullGame } from '../lib/queries'
+import { usePrerenderData } from '../lib/prerender'
+import { decodeEntities } from '../lib/text'
 import GamePlayer from '../components/games/GamePlayer'
 import GameCard from '../components/games/GameCard'
 import GameCardSkeleton from '../components/games/GameCardSkeleton'
 
+export interface GamePageData { game: FullGame; related: CardGame[]; instructions: string | null }
+
 export default function GamePage() {
   const { slug } = useParams<{ slug: string }>()
-  const [game, setGame] = useState<Game & { categories?: { name: string; slug: string } } | null>(null)
-  const [related, setRelated] = useState<(Game & { categories?: { name: string } })[]>([])
-  const [loading, setLoading] = useState(true)
+  const seeded = usePrerenderData<GamePageData>(`game:${slug}`)
+  const [game, setGame] = useState<FullGame | null>(seeded?.game ?? null)
+  const [related, setRelated] = useState<CardGame[]>(seeded?.related ?? [])
+  const [instructions, setInstructions] = useState<string | null>(seeded?.instructions ?? null)
+  const [loading, setLoading] = useState(!seeded)
   const [notFound, setNotFound] = useState(false)
 
   const loadGame = useCallback(async () => {
     if (!slug) return
-    setLoading(true)
+    setNotFound(false)
+    setLoading(prev => prev || game?.slug !== slug)
 
     const { data, error } = await supabase
       .from('games')
@@ -29,30 +36,37 @@ export default function GamePage() {
 
     if (error || !data) { setNotFound(true); setLoading(false); return }
 
-    setGame(data as Game & { categories?: { name: string; slug: string } })
+    const loaded = data as FullGame
+    setGame(loaded)
     setLoading(false)
 
+    fetchGameInstructions().then(map => setInstructions(map[loaded.source_id] ?? null))
+
     // Increment view count
-    const newViews = (data as Game).views + 1
-    await (supabase.from('games') as ReturnType<typeof supabase.from>).update({ views: newViews }).eq('id', (data as Game).id)
+    await (supabase.from('games') as ReturnType<typeof supabase.from>).update({ views: loaded.views + 1 }).eq('id', loaded.id)
 
     // Load related games
     const { data: rel } = await supabase
       .from('games')
-      .select('id, title, slug, thumbnail, short_description, is_new, is_hot, is_featured, views, category_id, categories(name)')
+      .select(CARD_SELECT)
       .eq('is_active', true)
-      .eq('category_id', (data as Game).category_id)
-      .neq('id', (data as Game).id)
+      .eq('category_id', loaded.category_id)
+      .neq('id', loaded.id)
       .order('views', { ascending: false })
       .limit(8)
 
-    setRelated((rel ?? []) as (Game & { categories?: { name: string } })[])
+    setRelated((rel ?? []) as CardGame[])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
   useEffect(() => { loadGame() }, [loadGame])
 
   if (notFound) return (
     <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+      <Helmet>
+        <title>Game Not Found | FreeGaming.ca</title>
+        <meta name="robots" content="noindex, follow" />
+      </Helmet>
       <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '2rem', color: 'var(--text-primary)' }}>Game Not Found</h1>
       <Link to="/" className="btn-primary" style={{ display: 'inline-flex', marginTop: '1.5rem' }}>Back to Home</Link>
     </div>
@@ -65,8 +79,11 @@ export default function GamePage() {
     </div>
   )
 
-  const catName = (game as Game & { categories?: { name: string; slug: string } }).categories?.name ?? ''
-  const catSlug = (game as Game & { categories?: { name: string; slug: string } }).categories?.slug ?? ''
+  const catName = game.categories?.name ?? ''
+  const catSlug = game.categories?.slug ?? ''
+  const description = decodeEntities(game.description)
+  const addedOn = game.created_at ? new Date(game.created_at).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }) : null
+  const publisher = game.source === 'GAMEMONETIZE' ? 'GameMonetize' : game.source === 'GAMEDISTRIBUTION' ? 'GameDistribution' : game.source === 'HTML5GAMES' ? 'HTML5Games.com' : 'FreeGaming.ca'
   const pageTitle = `${game.title} — Play Free Online | ${catName} | ${SITE_NAME}`
   const pageDesc = `Play ${game.title} for free online at ${SITE_NAME}. No download, no signup — just click and play! ${catName} game for desktop and mobile.`
 
@@ -79,7 +96,7 @@ export default function GamePage() {
     "@context": "https://schema.org",
     "@type": "VideoGame",
     "name": game.title,
-    "description": game.description,
+    "description": description,
     "image": game.thumbnail,
     "screenshot": { "@type": "ImageObject", "url": game.thumbnail, "description": `Screenshot of ${game.title}` },
     "url": `${SITE_URL}/games/${game.slug}/`,
@@ -162,7 +179,24 @@ export default function GamePage() {
 
           <div className="content-card" style={{ marginTop: '1.5rem' }}>
             <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '0.75rem' }}>About This Game</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: '1.7', margin: 0 }}>{game.description}</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: '1.7', margin: 0 }}>{description}</p>
+
+            {instructions && (
+              <>
+                <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', margin: '1.5rem 0 0.75rem' }}>How to Play {game.title}</h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: '1.7', margin: 0 }}>{instructions}</p>
+              </>
+            )}
+
+            <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.25rem', textTransform: 'uppercase', color: 'var(--text-primary)', margin: '1.5rem 0 0.75rem' }}>Game Details</h2>
+            <dl className="game-details">
+              {catName && (<><dt>Genre</dt><dd><Link to={`/category/${catSlug}/`} style={{ color: 'var(--ice)', textDecoration: 'none' }}>{catName}</Link></dd></>)}
+              <dt>Publisher</dt><dd>{publisher}</dd>
+              <dt>Platforms</dt><dd>Web browser (desktop, tablet and mobile)</dd>
+              <dt>Players</dt><dd>{isMultiplayer ? '1–2 players or online multiplayer' : 'Single player'}</dd>
+              <dt>Price</dt><dd>Free — supported by ads</dd>
+              {addedOn && (<><dt>Added</dt><dd>{addedOn}</dd></>)}
+            </dl>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1.25rem' }}>
               {game.tags.map(tag => (

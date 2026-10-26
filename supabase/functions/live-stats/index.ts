@@ -30,11 +30,8 @@ Deno.serve(async (req: Request) => {
     const topGame = topGameRes.data?.title ?? 'Rally Race Pro'
     const newToday = recentRes.count ?? 0
 
-    // Simulate live player count
-    const totalPlayers = Math.floor(totalGames * 8 + Math.random() * 500)
-
     return new Response(
-      JSON.stringify({ totalPlayers, topGame, newToday, totalGames }),
+      JSON.stringify({ topGame, newToday, totalGames }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (err) {

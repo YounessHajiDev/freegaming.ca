@@ -7,7 +7,9 @@ const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 
 export default function LiveTicker() {
   const [stats, setStats] = useState<string[]>([
-    '⚡ Loading live stats...',
+    '🎮 Free browser games — no download required',
+    '🍁 Made in Canada',
+    '⚡ No signup. Just play.',
   ])
 
   useEffect(() => {
@@ -19,17 +21,16 @@ export default function LiveTicker() {
         if (!res.ok) return
         const data: LiveStats = await res.json()
         setStats([
-          `⚡ ${data.totalPlayers.toLocaleString('en-CA')} players online right now`,
-          `🔥 Most played today: ${data.topGame}`,
-          `✨ ${data.newToday} new games added this week`,
+          `🔥 Most played: ${data.topGame}`,
+          ...(data.newToday > 0 ? [`✨ ${data.newToday} new games added this week`] : []),
           `🎮 ${data.totalGames.toLocaleString('en-CA')} free games in our library`,
-          `🍁 Canada's #1 free gaming portal`,
+          `🍁 Made in Canada`,
           `⚡ No download. No signup. Just play.`,
         ])
       } catch {
         setStats([
-          `🎮 Thousands of free games — no download required`,
-          `🍁 Canada's #1 free online gaming portal`,
+          `🎮 Hundreds of free games — no download required`,
+          `🍁 Made in Canada`,
           `⚡ No signup. Just play.`,
         ])
       }

@@ -45,7 +45,6 @@ export interface SyncLog {
 }
 
 export interface LiveStats {
-  totalPlayers: number
   topGame: string
   newToday: number
   totalGames: number

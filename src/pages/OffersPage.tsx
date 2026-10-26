@@ -32,6 +32,7 @@ export default function OffersPage() {
     <>
       <Helmet>
         <title>{pageTitle}</title>
+        <meta name="robots" content="noindex, follow" />
         <meta name="description" content={pageDesc} />
         <link rel="canonical" href={`${SITE_URL}/offers/`} />
         <meta property="og:type" content="website" />

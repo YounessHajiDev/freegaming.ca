@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
-import { supabase } from '../../lib/supabase'
+import { fetchCollectionGames, type CardGame } from '../../lib/queries'
+import { usePrerenderData } from '../../lib/prerender'
 import { SITE_URL, DEFAULT_OG_IMAGE } from '../../lib/seo'
-import type { Game } from '../../lib/types'
 import GameGrid from '../games/GameGrid'
 
 interface FaqItem { q: string; a: string }
 
-interface SeoPageConfig {
+export interface SeoPageConfig {
   title: string
   metaDescription: string
   canonical: string
@@ -21,24 +21,12 @@ interface SeoPageConfig {
 }
 
 export default function SeoGamePageTemplate({ cfg }: { cfg: SeoPageConfig }) {
-  const [games, setGames] = useState<(Game & { categories?: { name: string } })[]>([])
-  const [loading, setLoading] = useState(true)
+  const seeded = usePrerenderData<CardGame[]>(`collection:${cfg.canonical}`)
+  const [games, setGames] = useState<CardGame[]>(seeded ?? [])
+  const [loading, setLoading] = useState(!seeded)
 
   useEffect(() => {
-    let q = supabase
-      .from('games')
-      .select('id, title, slug, thumbnail, short_description, is_new, is_hot, is_featured, views, category_id, categories!inner(name, slug)')
-      .eq('is_active', true)
-      .order('views', { ascending: false })
-
-    if (cfg.categorySlugs?.length) {
-      q = q.in('categories.slug', cfg.categorySlugs)
-    }
-
-    q.limit(48).then(({ data }) => {
-      setGames((data ?? []) as (Game & { categories?: { name: string } })[])
-      setLoading(false)
-    })
+    fetchCollectionGames(cfg.categorySlugs).then(g => { setGames(g); setLoading(false) })
   }, [cfg.categorySlugs?.join(',')])
 
   const collectionSchema = {

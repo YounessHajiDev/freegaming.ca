@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { SITE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../lib/seo'
 
-const UPDATED = 'July 1, 2026'
+const UPDATED = 'October 26, 2026'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -59,7 +59,7 @@ export default function PrivacyPolicyPage() {
           <Section title="Information We Collect">
             <p style={{ marginBottom: '0.75rem' }}>We do not require registration or account creation to use FreeGaming.ca. We collect limited data automatically:</p>
             <ul style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <li><strong style={{ color: 'var(--text-primary)' }}>Usage Data:</strong> Pages visited, games played, time on site, device type, browser, and referring URL — collected via standard web server logs and analytics.</li>
+              <li><strong style={{ color: 'var(--text-primary)' }}>Usage Data:</strong> Pages visited, games played, time on site, device type, browser, and referring URL — collected via standard web server logs and our hosting provider.</li>
               <li><strong style={{ color: 'var(--text-primary)' }}>Cookies:</strong> We use cookies to improve your experience and serve relevant advertising. You may control cookie preferences via your browser settings or through our cookie consent banner.</li>
               <li><strong style={{ color: 'var(--text-primary)' }}>Advertising Data:</strong> Third-party advertising partners (including Google AdSense and GameMonetize) may use cookies and similar technologies to display relevant ads and measure performance.</li>
             </ul>
@@ -83,13 +83,19 @@ export default function PrivacyPolicyPage() {
           <Section title="Third-Party Services">
             <p style={{ marginBottom: '0.75rem' }}>We use the following third-party services, each governed by their own privacy policies:</p>
             <ul style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <li><strong style={{ color: 'var(--text-primary)' }}>Google Analytics:</strong> Website analytics</li>
               <li><strong style={{ color: 'var(--text-primary)' }}>Google AdSense:</strong> Display advertising</li>
               <li><strong style={{ color: 'var(--text-primary)' }}>GameMonetize / GameDistribution:</strong> Game content and in-game advertising</li>
+              <li><strong style={{ color: 'var(--text-primary)' }}>OGAds:</strong> Optional mobile app offers shown on our Offers page</li>
+              <li><strong style={{ color: 'var(--text-primary)' }}>Vercel:</strong> Website hosting and server logs</li>
               <li><strong style={{ color: 'var(--text-primary)' }}>Supabase:</strong> Backend infrastructure (no personal user data is stored)</li>
             </ul>
           </Section>
 
+          <Section title="Advertising Cookies & Your Choices">
+            <p style={{ marginBottom: '0.75rem' }}>Google, as a third-party vendor, uses cookies (including the DoubleClick cookie) to serve ads on FreeGaming.ca. Google and its partners may use these cookies to show you ads based on your visits to this and other websites. You can learn more about <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ember)', textDecoration: 'none' }}>how Google uses information from sites that use its services</a> and <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ember)', textDecoration: 'none' }}>how Google uses cookies in advertising</a>.</p>
+            <p style={{ marginBottom: '0.75rem' }}>You can opt out of personalized advertising from Google at <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ember)', textDecoration: 'none' }}>google.com/settings/ads</a>, and from other participating vendors at <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ember)', textDecoration: 'none' }}>aboutads.info/choices</a> or, in Canada, <a href="https://youradchoices.ca/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ember)', textDecoration: 'none' }}>youradchoices.ca</a>.</p>
+            <p>If you click <strong style={{ color: 'var(--text-primary)' }}>Decline</strong> on our cookie banner, FreeGaming.ca asks Google to serve only non-personalized ads in your browser. To change your choice later, clear this site's data in your browser and the banner will appear again.</p>
+          </Section>
           <Section title="Your Rights (PIPEDA & CASL)">
             <p>As a Canadian-based service, we comply with the Personal Information Protection and Electronic Documents Act (PIPEDA). You have the right to access, correct, or request deletion of any personal information we hold about you. To exercise these rights, contact us at <a href="mailto:legal@freegaming.ca" style={{ color: 'var(--ember)', textDecoration: 'none' }}>legal@freegaming.ca</a>.</p>
           </Section>

@@ -1,27 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Sparkles } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { fetchNewGames, type CardGame } from '../lib/queries'
+import { usePrerenderData } from '../lib/prerender'
 import { SITE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../lib/seo'
-import type { Game } from '../lib/types'
 import GameGrid from '../components/games/GameGrid'
 
 export default function NewGamesPage() {
-  const [games, setGames] = useState<(Game & { categories?: { name: string } })[]>([])
-  const [loading, setLoading] = useState(true)
+  const seeded = usePrerenderData<CardGame[]>('new-games')
+  const [games, setGames] = useState<CardGame[]>(seeded ?? [])
+  const [loading, setLoading] = useState(!seeded)
 
   useEffect(() => {
-    supabase
-      .from('games')
-      .select('id, title, slug, thumbnail, short_description, is_new, is_hot, is_featured, views, category_id, categories(name)')
-      .eq('is_active', true)
-      .eq('is_new', true)
-      .order('created_at', { ascending: false })
-      .limit(60)
-      .then(({ data }) => {
-        setGames((data ?? []) as (Game & { categories?: { name: string } })[])
-        setLoading(false)
-      })
+    fetchNewGames().then(g => { setGames(g); setLoading(false) })
   }, [])
 
   return (
@@ -59,7 +50,7 @@ export default function NewGamesPage() {
             New Games This Week
           </h1>
         </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>Fresh titles added to Canada's best free gaming portal</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>The latest titles added to our free browser-games library</p>
       </div>
 
       <GameGrid games={games} loading={loading} columns={5} />

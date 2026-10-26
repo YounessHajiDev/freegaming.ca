@@ -26,6 +26,14 @@
       rel="stylesheet"
     />
     <meta name="google-adsense-account" content="ca-pub-8010565593674745" />
+    <script>
+      (function () {
+        try {
+          var declined = localStorage.getItem('fg_cookie_consent') === 'declined';
+          (window.adsbygoogle = window.adsbygoogle || []).requestNonPersonalizedAds = declined ? 1 : 0;
+        } catch (e) {}
+      })();
+    </script>
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8010565593674745"

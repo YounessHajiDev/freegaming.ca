@@ -1,60 +1,52 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { supabase } from '../lib/supabase'
+import { fetchCategoryData, type CardGame, type CategoryData } from '../lib/queries'
+import { usePrerenderData } from '../lib/prerender'
+import { CATEGORY_CONTENT } from '../data/categoryContent'
 import { SITE_URL, DEFAULT_OG_IMAGE } from '../lib/seo'
-import type { Game, Category } from '../lib/types'
+import type { Category } from '../lib/types'
 import GameGrid from '../components/games/GameGrid'
 
 const PAGE_SIZE = 20
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>()
-  const [category, setCategory] = useState<Category | null>(null)
-  const [games, setGames] = useState<(Game & { categories?: { name: string } })[]>([])
-  const [total, setTotal] = useState(0)
+  const seeded = usePrerenderData<CategoryData>(`category:${slug}`)
+  const [category, setCategory] = useState<Category | null>(seeded?.category ?? null)
+  const [games, setGames] = useState<CardGame[]>(seeded?.games ?? [])
+  const [total, setTotal] = useState(seeded?.total ?? 0)
   const [page, setPage] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!seeded)
 
   const loadData = useCallback(async () => {
     if (!slug) return
     setLoading(true)
-
-    const [catRes, gamesRes] = await Promise.all([
-      supabase.from('categories').select('*').eq('slug', slug).maybeSingle(),
-      supabase.from('games')
-        .select('id, title, slug, thumbnail, short_description, is_new, is_hot, is_featured, views, category_id, categories!inner(name, slug)')
-        .eq('is_active', true)
-        .eq('categories.slug', slug)
-        .order('views', { ascending: false })
-        .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1),
-    ])
-
-    setCategory(catRes.data as Category | null)
-
-    const { count } = await supabase.from('games')
-      .select('*', { count: 'exact', head: true })
-      .eq('is_active', true)
-      .eq('category_id', (catRes.data as Category | null)?.id ?? 0)
-
-    setTotal(count ?? 0)
-    setGames((gamesRes.data ?? []) as (Game & { categories?: { name: string } })[])
+    const d = await fetchCategoryData(slug, page, PAGE_SIZE)
+    setCategory(d.category)
+    setTotal(d.total)
+    setGames(d.games)
     setLoading(false)
   }, [slug, page])
 
   useEffect(() => { loadData() }, [loadData])
-  useEffect(() => { setPage(0); setGames([]) }, [slug])
+  useEffect(() => { setPage(0) }, [slug])
 
   if (!loading && !category) return (
     <div style={{ textAlign: 'center', padding: '4rem' }}>
+      <Helmet>
+        <title>Category Not Found | FreeGaming.ca</title>
+        <meta name="robots" content="noindex, follow" />
+      </Helmet>
       <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '2rem', color: 'var(--text-primary)' }}>Category Not Found</h1>
       <Link to="/" className="btn-primary" style={{ display: 'inline-flex', marginTop: '1.5rem' }}>Back to Home</Link>
     </div>
   )
 
   const siteName = 'FreeGaming.ca'
+  const content = slug ? CATEGORY_CONTENT[slug] : undefined
   const title = `Free ${category?.name ?? ''} Online — ${total}+ Games | ${siteName}`
-  const desc = `Play ${total}+ free ${(category?.name ?? '').toLowerCase()} online at ${siteName}. No download required. Canada's best selection of free browser ${(category?.name ?? '').toLowerCase()}.`
+  const desc = `Play ${total}+ free ${(category?.name ?? '').toLowerCase()} online at ${siteName}. No download required. Browser games for desktop and mobile.`
 
   return (
     <>
@@ -121,6 +113,14 @@ export default function CategoryPage() {
           {total > 0 ? `${total.toLocaleString('en-CA')} free games — no download, no signup required` : 'Loading games...'}
         </p>
       </div>
+
+      {content && (
+        <section className="content-card" style={{ marginBottom: '2rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: 1.75, margin: 0 }}>{content.intro}</p>
+          <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.125rem', textTransform: 'uppercase', color: 'var(--text-primary)', margin: '1.25rem 0 0.5rem' }}>Tips before you play</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: 1.75, margin: 0 }}>{content.lookFor}</p>
+        </section>
+      )}
 
       <GameGrid games={games} loading={loading} columns={5} />
 

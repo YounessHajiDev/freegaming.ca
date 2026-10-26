@@ -7,19 +7,19 @@ export default function AboutPage() {
     <>
       <Helmet>
         <title>About {SITE_NAME} — Canada's Free Online Games Portal</title>
-        <meta name="description" content={`${SITE_NAME} is Canada's largest free online games portal. Thousands of browser games with no download, no signup — just click and play.`} />
+        <meta name="description" content={`${SITE_NAME} is a Canadian free online games portal. Hundreds of browser games with no download, no signup — just click and play.`} />
         <link rel="canonical" href={`${SITE_URL}/about/`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${SITE_URL}/about/`} />
         <meta property="og:title" content={`About ${SITE_NAME} — Canada's Free Online Games Portal`} />
-        <meta property="og:description" content={`${SITE_NAME} is Canada's largest free online games portal. Thousands of browser games with no download, no signup — just click and play.`} />
+        <meta property="og:description" content={`${SITE_NAME} is a Canadian free online games portal. Hundreds of browser games with no download, no signup — just click and play.`} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:locale" content="en_CA" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`About ${SITE_NAME}`} />
-        <meta name="twitter:description" content={`${SITE_NAME} is Canada's largest free online games portal. Thousands of browser games with no download, no signup.`} />
+        <meta name="twitter:description" content={`${SITE_NAME} is a Canadian free online games portal. Hundreds of browser games with no download, no signup.`} />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
@@ -35,7 +35,7 @@ export default function AboutPage() {
           "@id": `${SITE_URL}/#organization`,
           "name": SITE_NAME,
           "url": SITE_URL,
-          "description": "Canada's free online games portal. Play thousands of browser games with no download.",
+          "description": "Canada's free online games portal. Play hundreds of browser games with no download.",
           "areaServed": { "@type": "Country", "name": "Canada" },
           "inLanguage": "en-CA"
         })}</script>
@@ -51,10 +51,10 @@ export default function AboutPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2.5rem' }}>
           {[
-            { icon: <Gamepad2 size={22} />, label: 'Thousands of Games', desc: 'New titles added every day across dozens of categories.' },
+            { icon: <Gamepad2 size={22} />, label: 'Hundreds of Games', desc: 'New titles added regularly across 14 categories.' },
             { icon: <Zap size={22} />, label: 'Instant Play', desc: 'Click once and play. No downloads, no plugins, no installs.' },
             { icon: <Globe size={22} />, label: 'Works Everywhere', desc: 'Desktop, tablet, and mobile — any device, any browser.' },
-            { icon: <Shield size={22} />, label: 'Safe & Free', desc: 'No account required, no personal data collected to play.' },
+            { icon: <Shield size={22} />, label: 'Safe & Free', desc: 'No account required and no sign-up — you never have to give us your email to play.' },
           ].map(item => (
             <div key={item.label} style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--line-subtle)', borderRadius: '10px', padding: '1.25rem' }}>
               <div style={{ color: 'var(--neon-lime)', marginBottom: '8px' }}>{item.icon}</div>
@@ -70,7 +70,7 @@ export default function AboutPage() {
             FreeGaming.ca launched with one goal: give Canadians — and players everywhere — a clean, fast, and completely free place to play online games. We believe great gaming shouldn't cost a thing or require you to hand over your email address.
           </p>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '1rem' }}>
-            We curate HTML5 browser games across dozens of categories, from puzzle and strategy to racing and action. Our catalogue is updated daily with fresh content sourced from the world's leading HTML5 game publishers, and every game runs directly in your browser.
+            We curate HTML5 browser games across dozens of categories, from puzzle and strategy to racing and action. Our catalogue is updated regularly with new games sourced from the world's leading HTML5 game publishers, and every game runs directly in your browser.
           </p>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8 }}>
             The site is kept free through non-intrusive advertising. We carefully balance monetization with user experience so you can enjoy your game without excessive interruption.

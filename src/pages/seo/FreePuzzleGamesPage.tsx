@@ -4,7 +4,7 @@ export default function FreePuzzleGamesPage() {
   return (
     <SeoGamePageTemplate cfg={{
       title: 'Free Puzzle Games Online — No Download | FreeGaming.ca',
-      metaDescription: 'Play the best free puzzle games online — no download, no signup. Brain teasers, jigsaws, match-3, and more. Canada\'s #1 free puzzle game portal.',
+      metaDescription: 'Play the best free puzzle games online — no download, no signup. Brain teasers, jigsaws, match-3, and more. A Canadian free puzzle game portal.',
       canonical: 'https://www.freegaming.ca/free-puzzle-games/',
       h1: 'Free Puzzle Games Online',
       collectionName: 'Free Puzzle Games',
@@ -12,7 +12,7 @@ export default function FreePuzzleGamesPage() {
       intro: (
         <>
           <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', margin: 0 }}>
-            Welcome to FreeGaming.ca's collection of <strong style={{ color: 'var(--text-primary)' }}>free puzzle games</strong> — the largest selection of brain-teasing browser games available to Canadian players. No download, no account, no cost. Just click and solve.
+            Welcome to FreeGaming.ca's collection of <strong style={{ color: 'var(--text-primary)' }}>free puzzle games</strong> — a hand-picked selection of brain-teasing browser games available to Canadian players. No download, no account, no cost. Just click and solve.
           </p>
           <p style={{ color: 'var(--text-secondary)', lineHeight: '1.75', marginBottom: 0, marginTop: '1rem' }}>
             Our free puzzle game library spans every type of mind-bending challenge: match-3 games, jigsaw puzzles, mahjong solitaire, sliding puzzles, block games, and logic challenges. Whether you enjoy fast-paced colour-matching or slow strategic thinking, we have the perfect free puzzle game for you.
