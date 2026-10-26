@@ -84,6 +84,10 @@ export default function HomePage() {
         })}</script>
       </Helmet>
 
+      <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', textTransform: 'uppercase', color: 'var(--text-primary)', margin: '0 0 1.5rem' }}>
+        Free Online Games — Play Instantly in Your Browser
+      </h1>
+
       {/* Hero / Featured */}
       {(featured.length > 0 || loading) && (
         <section style={{ marginBottom: '2.5rem' }}>
