@@ -27,9 +27,9 @@ import OffersPage from './pages/OffersPage'
 import NotFoundPage from './pages/NotFoundPage'
 import { CookieBanner } from './components/ui/CookieBanner'
 
-export default function App() {
+export function AppRoutes() {
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
@@ -60,6 +60,14 @@ export default function App() {
         </Route>
       </Routes>
       <CookieBanner />
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   )
 }

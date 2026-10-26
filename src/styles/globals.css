@@ -441,3 +441,13 @@
     }
   }
 }
+
+.game-details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1.25rem;
+  margin: 0;
+  font-size: 0.875rem;
+}
+.game-details dt { color: var(--text-tertiary); font-weight: 600; }
+.game-details dd { margin: 0; color: var(--text-secondary); }

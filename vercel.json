@@ -1,1 +1,11 @@
-{"rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]}
+{
+  "trailingSlash": true,
+  "rewrites": [
+    { "source": "/games/:path*", "destination": "/spa.html" },
+    { "source": "/category/:path*", "destination": "/spa.html" },
+    { "source": "/search", "destination": "/spa.html" },
+    { "source": "/offers", "destination": "/spa.html" },
+    { "source": "/admin", "destination": "/spa.html" },
+    { "source": "/admin/:path*", "destination": "/spa.html" }
+  ]
+}

@@ -22,6 +22,10 @@ export function CookieBanner() {
   const decline = () => {
     localStorage.setItem(CONSENT_KEY, 'declined')
     setVisible(false)
+    // Ads requested from now on are non-personalized (see the consent bootstrap in index.html).
+    const w = window as Window & { adsbygoogle?: unknown[] & { requestNonPersonalizedAds?: number } }
+    w.adsbygoogle = w.adsbygoogle ?? []
+    w.adsbygoogle.requestNonPersonalizedAds = 1
   }
 
   if (!visible) return null
@@ -38,7 +42,7 @@ export function CookieBanner() {
       <style>{`@media(min-width:640px){.cookie-banner-desktop{bottom:0!important}}`}</style>
       <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem' }}>
         <p style={{ flex: 1, fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0, minWidth: '280px' }}>
-          FreeGaming.ca uses cookies to improve your experience and show relevant ads (Google AdSense).
+          FreeGaming.ca uses cookies to improve your experience and show ads (Google AdSense). If you decline, you will still see ads, but they will not be personalized.
           In compliance with <strong style={{ color: 'var(--text-primary)' }}>PIPEDA</strong> (Canada's privacy law), your consent is required.{' '}
           <a href="/privacy-policy" style={{ color: 'var(--neon-lime)', textDecoration: 'underline' }}>Privacy Policy</a>
         </p>

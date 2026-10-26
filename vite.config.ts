@@ -3,6 +3,10 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  ssr: {
+    // CommonJS package without proper ESM named exports; bundle it into the prerender entry.
+    noExternal: ['react-helmet-async'],
+  },
   define: {
     // Fallback values so Vercel builds succeed without env vars configured
     'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(

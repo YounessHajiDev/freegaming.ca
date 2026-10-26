@@ -18,7 +18,7 @@ export default function Footer() {
               <span style={{ color: 'var(--neon-lime)', fontSize: '0.9rem' }}>.CA</span>
             </div>
             <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: '1.6', maxWidth: '220px' }}>
-              Canada's free online games portal. Thousands of browser games — no download, no signup required.
+              Canada's free online games portal. Hundreds of browser games — no download, no signup required.
             </p>
           </div>
 

@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { Flame, Sparkles, Puzzle, Car, Trophy, Zap, Gamepad2 } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { fetchHomeData, type HomeData } from '../lib/queries'
+import { usePrerenderData } from '../lib/prerender'
+import { decodeEntities } from '../lib/text'
 import { SITE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../lib/seo'
-import type { Game } from '../lib/types'
 import GameGrid from '../components/games/GameGrid'
 import GameCarousel from '../components/games/GameCarousel'
 
 const homeTitle = `${SITE_NAME} — Free Online Games for Canadians | No Download Required`
-const homeDesc = `Play thousands of free online games at ${SITE_NAME} — Canada's #1 free gaming portal. No download, no signup. Puzzle, racing, sports, shooting & more. Play now!`
+const homeDesc = `Play hundreds of free online games at ${SITE_NAME} — a Canadian free browser-games portal. No download, no signup. Puzzle, racing, sports, shooting & more. Play now!`
 
 const FAQ = [
   { q: 'Are all games on FreeGaming.ca really free?', a: 'Yes — every single game on FreeGaming.ca is 100% free to play. No hidden fees, no subscriptions, no in-app purchases required to enjoy the full game.' },
@@ -20,53 +21,15 @@ const FAQ = [
 ]
 
 export default function HomePage() {
-  const [featured, setFeatured] = useState<(Game & { categories?: { name: string } })[]>([])
-  const [popular, setPopular] = useState<(Game & { categories?: { name: string } })[]>([])
-  const [newGames, setNewGames] = useState<(Game & { categories?: { name: string } })[]>([])
-  const [byCategory, setByCategory] = useState<Record<string, (Game & { categories?: { name: string } })[]>>({})
-  const [loading, setLoading] = useState(true)
+  const seeded = usePrerenderData<HomeData>('home')
+  const [data, setData] = useState<HomeData>(seeded ?? { featured: [], popular: [], newGames: [], byCategory: {} })
+  const [loading, setLoading] = useState(!seeded)
 
   useEffect(() => {
-    const select = 'id, title, slug, thumbnail, short_description, is_new, is_hot, is_featured, views, category_id, categories(name)'
-
-    Promise.all([
-      supabase.from('games').select(select).eq('is_active', true).eq('is_featured', true).order('views', { ascending: false }).limit(10),
-      supabase.from('games').select(select).eq('is_active', true).order('views', { ascending: false }).limit(12),
-      supabase.from('games').select(select).eq('is_active', true).eq('is_new', true).order('created_at', { ascending: false }).limit(10),
-    ]).then(([featRes, popRes, newRes]) => {
-      setFeatured((featRes.data ?? []) as (Game & { categories?: { name: string } })[])
-      setPopular((popRes.data ?? []) as (Game & { categories?: { name: string } })[])
-      setNewGames((newRes.data ?? []) as (Game & { categories?: { name: string } })[])
-      setLoading(false)
-    })
-
-    // Category carousels
-    const cats = [
-      { slug: 'puzzle-games',    label: 'Puzzle Games' },
-      { slug: 'racing-games',    label: 'Racing Games' },
-      { slug: 'sports-games',    label: 'Sports Games' },
-      { slug: 'action-games',    label: 'Action Games' },
-      { slug: 'arcade-games',    label: 'Arcade Games' },
-      { slug: 'strategy-games',  label: 'Strategy Games' },
-    ]
-
-    Promise.all(
-      cats.map(cat =>
-        supabase
-          .from('games')
-          .select(`id, title, slug, thumbnail, short_description, is_new, is_hot, is_featured, views, category_id, categories!inner(name, slug)`)
-          .eq('is_active', true)
-          .eq('categories.slug', cat.slug)
-          .order('views', { ascending: false })
-          .limit(10)
-          .then(({ data }) => ({ slug: cat.slug, games: (data ?? []) as (Game & { categories?: { name: string } })[] }))
-      )
-    ).then(results => {
-      const map: Record<string, (Game & { categories?: { name: string } })[]> = {}
-      results.forEach(r => { map[r.slug] = r.games })
-      setByCategory(map)
-    })
+    fetchHomeData().then(d => { setData(d); setLoading(false) })
   }, [])
+
+  const { featured, popular, newGames, byCategory } = data
 
   const featuredMain = featured[0]
   const featuredRest = featured.slice(1, 5)
@@ -88,7 +51,7 @@ export default function HomePage() {
         <meta property="og:locale" content="en_CA" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${SITE_NAME} — Free Online Games for Canadians`} />
-        <meta name="twitter:description" content={`Play thousands of free online games — Canada's #1 free gaming portal. No download, no signup.`} />
+        <meta name="twitter:description" content={`Play hundreds of free online games in your browser — No download, no signup.`} />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:image:alt" content={`${SITE_NAME} — free online games for Canadians`} />
         <script type="application/ld+json">{JSON.stringify({
@@ -105,7 +68,7 @@ export default function HomePage() {
           "@id": `${SITE_URL}/#organization`,
           "name": SITE_NAME,
           "url": SITE_URL,
-          "description": "Canada's free online games portal. Play thousands of browser games with no download.",
+          "description": "Canada's free online games portal. Play hundreds of browser games with no download.",
           "foundingDate": "2026",
           "areaServed": { "@type": "Country", "name": "Canada" },
           "inLanguage": "en-CA"
@@ -142,7 +105,7 @@ export default function HomePage() {
                       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.5rem', background: 'linear-gradient(transparent, rgba(8,13,10,0.95))' }}>
                         <span className="badge badge-featured" style={{ marginBottom: '6px', display: 'inline-block' }}>Featured</span>
                         <h2 style={{ margin: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)' }}>{featuredMain.title}</h2>
-                        <p style={{ margin: '4px 0 0', fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>{featuredMain.short_description}</p>
+                        <p style={{ margin: '4px 0 0', fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>{decodeEntities(featuredMain.short_description)}</p>
                       </div>
                     </div>
                   </Link>
@@ -191,13 +154,13 @@ export default function HomePage() {
       {/* SEO Text Block */}
       <section className="content-card" style={{ marginTop: '3rem' }}>
         <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: '1.5rem', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
-          Canada's #1 Free Online Games Portal
+          A Canadian Free Online Games Portal
         </h2>
         <div style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)', lineHeight: '1.75', display: 'grid', gap: '1rem' }}>
-          <p>Welcome to FreeGaming.ca — the best free online games destination built specifically for Canadians. Whether you're in Toronto, Vancouver, Montreal, Calgary, or anywhere across Canada, our portal delivers hundreds of high-quality HTML5 browser games you can play instantly, with zero downloads and zero sign-ups required.</p>
+          <p>Welcome to FreeGaming.ca — a free online games portal built in Canada. Whether you're in Toronto, Vancouver, Montreal, Calgary, or anywhere across Canada, our portal delivers hundreds of high-quality HTML5 browser games you can play instantly, with zero downloads and zero sign-ups required.</p>
           <p>Our catalogue spans every genre: puzzle games to sharpen your mind, racing games to get your heart pumping, sports games to channel your inner athlete, action games for pure adrenaline, and casual games perfect for a quick break. We add new games every week and curate our top picks so you always find something worth playing.</p>
           <p>FreeGaming.ca is proudly Canadian. We know what Canadian gamers love — intense competition, clever strategy, and games that work on any device. Every game in our library is playable on desktop, tablet, and mobile browsers. No Flash, no plugins, no nonsense. Just click and play.</p>
-          <p>Our games come from top-tier HTML5 game publishers including GameMonetize and GameDistribution, the same networks that power the world's biggest free gaming portals. We've curated the best titles and made them available to Canadian players under one convenient roof — all for free, forever.</p>
+          <p>Our games come from top-tier HTML5 game publishers including GameMonetize and GameDistribution, the same networks that power the world's biggest free gaming portals. We've picked titles and made them available to Canadian players under one convenient roof — all for free, forever.</p>
         </div>
       </section>
 
